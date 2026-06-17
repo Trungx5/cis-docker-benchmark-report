@@ -6,10 +6,10 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}|
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0973}}|
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2300}}|
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.3379}}|
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.3348}}|@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0950}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2250}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2850}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.3950}}|@{}}
 \hline
 \begin{minipage}[b]{\linewidth}\raggedright
 \textbf{Nhóm section}
@@ -30,18 +30,15 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 \hline
 \textbf{3} & & & \\
 \hline
-\multirow{5}{=}{\textbf{4}} & 4.1: Đảm bảo non-root user cho container. & \multirow{5}{=}{\begin{minipage}[t]{\linewidth}\raggedright
-Module: ansible.builtin.command và ansible.builtin.shell.\\
-Cách thức: Thực thi các lệnh Docker CLI (docker ps, docker inspect, docker history, kiểm tra biến môi trường) để trích xuất cấu hình hoặc lịch sử build, sau đó dùng Ansible để bắt (grep/parse) chuỗi đầu ra (stdout).\strut
-\end{minipage}} & Biến User từ docker inspect KHÔNG phải là: 0, root, [] hoặc <no value>. \\
+\multirow{5}{=}{\textbf{4}} & 4.1: Đảm bảo non-root user cho container. & Module \texttt{ansible.builtin.command} và \texttt{ansible.builtin.shell}; kiểm tra \texttt{docker inspect}. & Biến User từ docker inspect KHÔNG phải là: 0, root, [] hoặc \texttt{<no value>}. \\
 \cline{2-4}
-& 4.5: Bật Docker Content Trust. & & 4.5: Lệnh echo trả về đúng giá trị 1. \\
+& 4.5: Bật Docker Content Trust. & Kiểm tra biến môi trường Docker Content Trust bằng shell. & Lệnh echo trả về đúng giá trị 1. \\
 \cline{2-4}
-& 4.6: Thêm chỉ thị HEALTHCHECK. & & 4.6: Cấu hình các image phải có sẵn phần Healthcheck hoặc được định nghĩa. \\
+& 4.6: Thêm chỉ thị HEALTHCHECK. & Kiểm tra cấu hình image bằng \texttt{docker inspect}. & Cấu hình image phải có sẵn phần Healthcheck hoặc được định nghĩa. \\
 \cline{2-4}
-& 4.7: Lệnh update không đứng độc lập. & & 4.7: Không tìm thấy từ khóa update độc lập trong lịch sử image (output rỗng). \\
+& 4.7: Lệnh update không đứng độc lập. & Kiểm tra lịch sử image bằng \texttt{docker history} và parse stdout. & Không tìm thấy từ khóa update độc lập trong lịch sử image (output rỗng). \\
 \cline{2-4}
-& 4.9: Sử dụng COPY thay cho ADD. & & 4.9: Không bắt được cờ FOUND (không có lệnh ADD) trong lịch sử build. \\
+& 4.9: Sử dụng COPY thay cho ADD. & Kiểm tra lịch sử build bằng \texttt{docker history}. & Không bắt được cờ FOUND (không có lệnh ADD) trong lịch sử build. \\
 \hline
 \multirow{2}{=}{\textbf{6}} & 6.1 - 6.2: Tránh image sprawl và container sprawl. & Module \texttt{ansible.builtin.command} để gọi các lệnh Docker CLI. & Xuất báo cáo đếm số lượng image và container dư thừa ở định dạng JSON. \\
 \hline

@@ -30,6 +30,7 @@
 \fi
 \usepackage{microtype}
 \usepackage{parskip}
+\usepackage{setspace}
 \usepackage{longtable,booktabs,array}
 \newcounter{none}
 \usepackage{multirow}
@@ -51,7 +52,9 @@
 \setlength{\extrarowheight}{2pt}
 \renewcommand{\arraystretch}{1.14}
 
-\newcommand{\TableFont}{\scriptsize}
+\AtBeginDocument{\fontsize{13pt}{19.5pt}\selectfont\setstretch{1.5}}
+
+\newcommand{\TableFont}{\scriptsize\setstretch{1.0}}
 \AtBeginEnvironment{longtable}{\TableFont\sloppy}
 \AtEndEnvironment{longtable}{\normalsize\fussy}
 
