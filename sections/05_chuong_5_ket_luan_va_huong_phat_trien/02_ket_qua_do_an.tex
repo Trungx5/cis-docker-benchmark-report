@@ -1,6 +1,137 @@
-\subsection{Kết quả đồ án}\label{ket-qua-do-an}
+\subsection{Kết quả đạt được}\label{ket-qua-dat-duoc}
 
-Kết quả kiểm toán thực tế của Section 5 được tổng hợp từ báo cáo JSON sinh bởi playbook Audit. Bảng dưới đây giữ cấu trúc theo bảng các hoạt động, nhưng thay cột loại kiểm tra bằng trạng thái PASS/FAIL/INFO và ghi chú bằng chứng chính.
+Kết quả dưới đây được tổng hợp từ các báo cáo audit Section 1 đến Section 6. Section 1 đến Section 5 được lấy từ các file JSON hiện có trong repository, còn Section 6 được tổng hợp từ phần kết quả thực tế trong báo cáo. Đây là ảnh chụp kết quả tại thời điểm tổng hợp, dùng để đánh giá mức độ tuân thủ hiện tại và xác định các mục cần remediation.
+
+\subsubsection*{Thông tin tổng hợp}
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep - 3\arrayrulewidth) * \real{0.3600}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep - 3\arrayrulewidth) * \real{0.6400}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Thông tin}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Giá trị}
+\end{minipage} \\
+\hline
+\endhead
+Target Host & \texttt{192.168.1.8} \\
+\hline
+Hostname & \texttt{Docker-2204-DA-AUTO} \\
+\hline
+Hệ điều hành & Ubuntu 22.04 \\
+\hline
+Docker Engine & 29.4.3 \\
+\hline
+Tổng số record & 106 \\
+\hline
+PASS & 71 \\
+\hline
+INFO & 16 \\
+\hline
+FAIL & 9 \\
+\hline
+SKIP & 10 \\
+\hline
+WARN & 0 \\
+\hline
+Raw PASS rate & 66.98\% \\
+\hline
+Evaluated compliance & 88.75\% \\
+\hline
+\end{longtable}
+}
+
+\subsubsection*{Kết quả theo section}
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.3000}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1100}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1700}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1600}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1300}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1300}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Section}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Tổng}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{PASS}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{FAIL}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{INFO}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{SKIP}
+\end{minipage} \\
+\hline
+\endhead
+Section 1 -- Host Configuration & 20 & 14 & 1 & 5 & 0 \\
+\hline
+Section 2 -- Docker Daemon Configuration & 19 & 13 & 3 & 3 & 0 \\
+\hline
+Section 3 -- Docker Daemon Configuration Files & 22 & 12 & 0 & 0 & 10 \\
+\hline
+Section 4 -- Container Images and Build File & 12 & 3 & 2 & 7 & 0 \\
+\hline
+Section 5 -- Container Runtime Security & 31 & 27 & 3 & 1 & 0 \\
+\hline
+Section 6 -- Docker Security Operations & 2 & 2 & 0 & 0 & 0 \\
+\hline
+Tổng & 106 & 71 & 9 & 16 & 10 \\
+\hline
+\end{longtable}
+}
+
+Raw PASS rate đạt 66.98\% theo công thức PASS/Tổng record. Khi chỉ xét các mục có kết luận đánh giá trực tiếp, evaluated compliance đạt 88.75\% theo công thức PASS/(PASS+FAIL). Các trạng thái INFO và SKIP cần được review thủ công hoặc bổ sung điều kiện audit trước khi tính là đạt chuẩn tuyệt đối.
+
+\subsubsection*{Các lỗi FAIL cần remediation}
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0900}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.1400}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2300}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.5400}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Ưu tiên}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Check}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Section}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Hành động chính}
+\end{minipage} \\
+\hline
+\endhead
+1 & 5.26 & Runtime Security & Thêm \texttt{no-new-privileges:true}. \\
+\hline
+2 & 4.1 & Images & Rebuild image với non-root \texttt{USER}. \\
+\hline
+3 & 2.8 & Daemon & Cấu hình TLS nếu Docker TCP API được sử dụng. \\
+\hline
+4 & 5.28 & Runtime Security & Pin image version hoặc SHA-256 digest. \\
+\hline
+5 & 4.6 & Images & Thêm image-level \texttt{HEALTHCHECK}. \\
+\hline
+6 & 5.15 & Runtime Security & Đổi restart policy thành \texttt{on-failure:5}. \\
+\hline
+7 & 2.9 & Daemon & Thêm \texttt{default-ulimits}. \\
+\hline
+8 & 2.3 & Daemon & Thêm \texttt{"log-level": "info"} trong \texttt{daemon.json}. \\
+\hline
+9 & 1.2.2 & Host & Upgrade Docker packages. \\
+\hline
+\end{longtable}
+}
+
+\subsubsection*{Chi tiết kết quả Section 5}
+
+Bảng dưới đây giữ cấu trúc theo bảng các hoạt động của Section 5, nhưng thay cột loại kiểm tra bằng trạng thái PASS/FAIL/INFO và ghi chú bằng chứng chính.
 
 {\def\LTcaptype{none}
 \begin{longtable}[]{@{}|
@@ -87,4 +218,4 @@ Kết quả kiểm toán thực tế của Section 5 được tổng hợp từ 
 \end{longtable}
 }
 
-Tổng hợp: 27 PASS, 3 FAIL, 1 INFO, 0 SKIP trên 31 kết quả được ghi vào báo cáo; tiêu chí 5.8 chưa được tính vào mẫu số vì chưa append vào \texttt{audit\_results}. Các mục có dấu * cần xem xét lại logic kiểm tra trước khi nghiệm thu cuối cùng.
+Tổng hợp riêng Section 5: 27 PASS, 3 FAIL, 1 INFO, 0 SKIP trên 31 kết quả được ghi vào báo cáo; tiêu chí 5.8 chưa được tính vào mẫu số vì chưa append vào \texttt{audit\_results}. Các mục có dấu * cần xem xét lại logic kiểm tra trước khi nghiệm thu cuối cùng.
