@@ -4,7 +4,10 @@ Khắc phục thủ công được áp dụng đối với các khuyến nghị 
 
 \textbf{Bảng chi tiết các hoạt động Remediation thủ công:}
 
-{\def\LTcaptype{none} % do not increment counter
+{\def\LTcaptype{none}
+\begin{center}
+\captionof{table}{Bảng chi tiết khắc phục thủ công}\label{tab:chi-tiet-khac-phuc-thu-cong}
+\end{center}
 \begin{longtable}[]{@{}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0739}}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2995}}|
@@ -23,326 +26,326 @@ Khắc phục thủ công được áp dụng đối với các khuyến nghị 
 \hline
 \endhead
 
-\multirow{19}{=}{1} & Phân vùng riêng cho các container & Tạo phân vùng LVM riêng và định dạng ext4 & Dừng Docker, backup dữ liệu, mount phân vùng mới, cập nhật /etc/fstab, và khởi động lại Docker \\
-\cline{2-4}
+1 & Phân vùng riêng cho các container & Tạo phân vùng LVM riêng và định dạng ext4 & Dừng Docker, backup dữ liệu, mount phân vùng mới, cập nhật /etc/fstab, và khởi động lại Docker \\
+\hline
 & Chỉ cho trusted user kiểm soát Docker Daemon & Sử dụng gpasswd để xóa các user không được phép khỏi nhóm docker & Chạy lệnh sudo gpasswd -d <username> docker để gỡ bỏ user \\
-\cline{2-4}
+\hline
 & Cấu hình kiểm tra nhật ký cho Docker Daemon & Cấu hình audit rule cho dockerd trong docker.rules & Ghi cấu hình -w /usr/bin/dockerd -k docker và reload auditd \\
-\cline{2-4}
+\hline
 & Audit folder /run/containerd & Cấu hình audit rule cho /run/containerd trong docker.rules & Ghi cấu hình -a exit,always -F path=/run/containerd -F perm=war -k docker và reload auditd \\
-\cline{2-4}
+\hline
 & Audit folder /var/lib/docker & Cấu hình audit rule cho /var/lib/docker trong docker.rules & Ghi cấu hình -a exit,always -F path=/var/lib/docker -F perm=war -k docker và reload auditd \\
-\cline{2-4}
+\hline
 & Audit folder /etc/Docker & Cấu hình audit rule cho /etc/docker trong docker.rules & Ghi cấu hình -w /etc/docker -k docker và reload auditd \\
-\cline{2-4}
+\hline
 & Audit docker.service & Cấu hình audit rule cho docker.service trong docker.rules & \begin{minipage}[t]{\linewidth}\raggedright
 Ghi cấu hình -w /usr/lib/systemd/\\
 system/docker.service -k docker\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
 & Audt containerd.sock & Cấu hình audit rule cho containerd.sock trong docker.rules & Ghi cấu hình -w /run/containerd/containerd.sock -k docker \\
-\cline{2-4}
+\hline
 & Audit docker.sock & Cấu hình audit rule cho docker.sock trong docker.rules & Ghi cấu hình -w /run/docker.sock -k docker \\
-\cline{2-4}
+\hline
 & Audt /etc/default/docker & Cấu hình audit rule cho /etc/default/docker trong docker.rules & Ghi cấu hình -w /etc/default/docker -k docker \\
-\cline{2-4}
+\hline
 & Audit /etc/docker/daemon.json & Cấu hình audit rule cho /etc/docker/daemon.json trong docker.rules & Ghi cấu hình -w /etc/docker/daemon.json -k docker \\
-\cline{2-4}
+\hline
 & Audit /etc/containerd/config.toml & Cấu hình audit rule cho /etc/containerd/config.toml & Ghi cấu hình -w /etc/containerd/config.toml -k docker \\
-\cline{2-4}
+\hline
 & Aduti /etc/sysconfig/docker & Cấu hình audit rule cho /etc/sysconfig/docker & Ghi cấu hình -w /etc/sysconfig/docker -k docker \\
-\cline{2-4}
+\hline
 & Audit /usr/bin/containerd-shim & Cấu hình audit rule cho /usr/bin/containerd-shim & Ghi cấu hình -w /usr/bin/containerd-shim -k docker \\
-\cline{2-4}
+\hline
 & Audit /usr/bin/containerd-shim-runc-v1 & Cấu hình audit rule cho containerd-shim-runc-v1 & Ghi cấu hình -w /usr/bin/containerd-shim-runc-v1 -k docker \\
-\cline{2-4}
+\hline
 & Audit /usr/bin/containerd-shim-runc-v2 & Cấu hình audit rule cho containerd-shim-runc-v2 & Ghi cấu hình -w /usr/bin/containerd-shim-runc-v2 -k docker \\
-\cline{2-4}
+\hline
 & Audit /usr/bin/runc & Cấu hình audit rule cho runc & Ghi cấu hình -w /usr/bin/runc -k docker \\
-\cline{2-4}
+\hline
 & Đảm báo bảo mật cho container & Cấu hình hardening OS của container host & Cập nhật OS, tắt dịch vụ thừa, cấu hình SSH và tường lửa \\
-\cline{2-4}
+\hline
 & Đảm bảo phiên bản mới cho Docker kt & Cập nhật Docker lên phiên bản mới nhất & Cập nhật danh sách gói và chạy apt install --only-upgrade docker-ce \\
 \hline
 
-\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & Cài đặt và cấu hình Docker rootless mode nếu môi trường hỗ trợ. & Tạo user riêng cho Docker, chạy \texttt{dockerd-rootless-setuptool.sh install}, cấu hình biến môi trường và kiểm tra lại bằng \texttt{docker info}. Nếu môi trường production chưa hỗ trợ, ghi nhận lý do và áp dụng kiểm soát truy cập chặt chẽ cho nhóm \texttt{docker}. \\
-\cline{2-4}
+2 & Chạy docker daemon tránh quyền root & Cài đặt và cấu hình Docker rootless mode nếu môi trường hỗ trợ. & Tạo user riêng cho Docker, chạy \texttt{dockerd-rootless-setuptool.sh install}, cấu hình biến môi trường và kiểm tra lại bằng \texttt{docker info}. Nếu môi trường production chưa hỗ trợ, ghi nhận lý do và áp dụng kiểm soát truy cập chặt chẽ cho nhóm \texttt{docker}. \\
+\hline
 & Network traffic được đặt hạn chế giữa các container ở default bridge & Chỉnh cấu hình Docker daemon để hạn chế inter-container communication. & Cập nhật \texttt{/etc/docker/daemon.json} với tùy chọn \texttt{"icc": false}, sau đó restart Docker và kiểm tra lại network mặc định. \\
-\cline{2-4}
+\hline
 & Logging level set ở ``info'' & Cấu hình mức log của Docker daemon trong \texttt{daemon.json}. & Thêm hoặc sửa \texttt{"log-level": "info"}; không sử dụng \texttt{debug} trong môi trường production vì có thể sinh nhiều log và lộ thông tin nhạy cảm. \\
-\cline{2-4}
+\hline
 & Docker được quyền thay đổi iptables & Đảm bảo Docker không bị vô hiệu hóa quyền quản lý iptables. & Xóa cấu hình \texttt{"iptables": false} nếu không có giải pháp network thay thế, hoặc đặt \texttt{"iptables": true}, sau đó restart Docker. \\
-\cline{2-4}
+\hline
 & Đảm bảo không sử dụng registry không an toàn & Loại bỏ insecure registry khỏi cấu hình Docker daemon. & Xóa mục \texttt{insecure-registries} trong \texttt{daemon.json}; chuyển registry nội bộ sang HTTPS/TLS hoặc chỉ cho phép registry đã được phê duyệt. \\
-\cline{2-4}
+\hline
 & Đảm bảo không sử dụng trình điều khiển aufs & Chuyển storage driver sang driver được khuyến nghị. & Backup image, container và volume cần thiết; cấu hình \texttt{"storage-driver": "overlay2"}; sau đó restart Docker và kiểm tra lại bằng \texttt{docker info}. \\
-\cline{2-4}
+\hline
 & Đảm bảo không dùng devicemapper & Không sử dụng \texttt{devicemapper} ở chế độ không phù hợp cho production. & Lập kế hoạch migrate sang \texttt{overlay2}; backup dữ liệu Docker trước khi đổi driver để tránh mất image/container/volume. \\
-\cline{2-4}
+\hline
 & Đảm bảo xác thực TLS cho Docker Daemon & Cấu hình TLS mutual authentication nếu Docker daemon mở TCP API. & Tạo CA, server certificate và client certificate; cấu hình \texttt{tlsverify}, \texttt{tlscacert}, \texttt{tlscert}, \texttt{tlskey} trong \texttt{daemon.json} hoặc systemd override. \\
-\cline{2-4}
+\hline
 & Đảm bảo giới hạn ulimit mặc định & Thiết lập default ulimit cho Docker daemon. & Thêm \texttt{default-ulimits} vào \texttt{daemon.json}, ví dụ giới hạn \texttt{nofile} hoặc \texttt{nproc}; restart Docker và kiểm tra lại container mới. \\
-\cline{2-4}
+\hline
 & Hỗ trợ user namespace & Bật user namespace remapping nếu ứng dụng tương thích. & Cấu hình \texttt{"userns-remap": "default"} trong \texttt{daemon.json}; kiểm tra volume, permission và ứng dụng trước khi áp dụng production. \\
-\cline{2-4}
+\hline
 & Cgroup sử dụng được xác nhận & Kiểm tra và cấu hình \texttt{cgroup-parent} nếu hệ thống có chính sách tài nguyên riêng. & Nếu không có yêu cầu đặc biệt thì giữ mặc định; nếu có, khai báo \texttt{cgroup-parent} rõ ràng và ghi nhận trong tài liệu vận hành. \\
-\cline{2-4}
+\hline
 & Đảm bảo device size không thay đổi trừ khi cần thiết & Loại bỏ cấu hình base device size không cần thiết. & Xóa tùy chọn \texttt{storage-opt dm.basesize} nếu không có nhu cầu; nếu bắt buộc dùng thì cần có phê duyệt và đánh giá tác động. \\
-\cline{2-4}
+\hline
 & Đảm bảo authorization cho Docker client & Triển khai authorization plugin khi cần kiểm soát quyền Docker API. & Cài đặt và cấu hình plugin phân quyền; khai báo \texttt{authorization-plugins} trong cấu hình Docker daemon, sau đó kiểm thử quyền truy cập. \\
-\cline{2-4}
+\hline
 & Đảm bảo container bị hạn chế không cho quyền mới & Bật chính sách \texttt{no-new-privileges} ở cấp daemon hoặc container. & Thêm \texttt{"no-new-privileges": true} vào \texttt{daemon.json} hoặc cấu hình \texttt{security-opt=no-new-privileges} khi chạy container. \\
-\cline{2-4}
+\hline
 & Đảm bảo container có live restore & Bật tính năng live restore của Docker daemon. & Thêm \texttt{"live-restore": true} vào \texttt{daemon.json}; restart Docker và kiểm tra container vẫn tiếp tục chạy khi daemon restart. \\
-\cline{2-4}
+\hline
 & Đảm bảo có log cho đăng nhập gần và từ xa & Cấu hình logging driver hoặc logging tập trung. & Sử dụng \texttt{json-file} có giới hạn dung lượng, hoặc chuyển sang \texttt{syslog}, \texttt{fluentd}, \texttt{gelf} tùy hệ thống log tập trung. \\
-\cline{2-4}
+\hline
 & Đảm bảo Userland Proxy đã tắt & Tắt userland proxy nếu không cần thiết. & Thêm \texttt{"userland-proxy": false} vào \texttt{daemon.json}; restart Docker và kiểm tra lại các dịch vụ publish port. \\
-\cline{2-4}
+\hline
 & Đảm bảo daemon-wide custom seccomp profile được thiết đặt & Thiết kế và áp dụng seccomp profile phù hợp. & Sử dụng default seccomp profile hoặc custom profile đã kiểm thử; không dùng \texttt{seccomp=unconfined} nếu không có phê duyệt. \\
-\cline{2-4}
+\hline
 & Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & Tắt experimental features trên Docker daemon. & Đảm bảo \texttt{"experimental": false} hoặc không khai báo experimental trong \texttt{daemon.json}; restart Docker và kiểm tra lại bằng \texttt{docker version}. \\
 \hline
-\multirow{14}{=}{3} & Đảm bảo quyền root:root cho docker.service & Sửa owner/group của file \texttt{docker.service}. & Chạy \texttt{sudo chown root:root <FragmentPath>} sau khi xác định đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.service}. \\
-\cline{2-4}
+3 & Đảm bảo quyền root:root cho docker.service & Sửa owner/group của file \texttt{docker.service}. & Chạy \texttt{sudo chown root:root <FragmentPath>} sau khi xác định đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.service}. \\
+\hline
 & Đảm bảo docker.service cho quyền hợp lý & Sửa permission của file \texttt{docker.service}. & Chạy \texttt{sudo chmod 644 <FragmentPath>} hoặc quyền hạn chế hơn, sau đó reload systemd nếu cần. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root & Sửa owner/group của file \texttt{docker.socket}. & Xác định đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.socket}, sau đó chạy \texttt{sudo chown root:root <FragmentPath>}. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & Sửa permission của file \texttt{docker.socket}. & Chạy \texttt{sudo chmod 644 <FragmentPath>} hoặc quyền hạn chế hơn để tránh sửa đổi trái phép socket unit. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền sở hữu thư mục /etc/docker được đặt thành root:root & Sửa owner/group của thư mục cấu hình Docker. & Chạy \texttt{sudo chown root:root /etc/docker}; kiểm tra lại bằng \texttt{stat -c \%U:\%G /etc/docker}. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & Sửa permission thư mục \texttt{/etc/docker}. & Chạy \texttt{sudo chmod 755 /etc/docker} hoặc quyền hạn chế hơn nếu phù hợp. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & Sửa permission của Docker socket liên quan. & Kiểm tra \texttt{/var/run/docker.sock} và file unit socket; điều chỉnh quyền theo khuyến nghị, tránh để socket có quyền ghi quá rộng. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền root:root cho sở hữu tệp chứng chỉ & Sửa owner/group của các file certificate. & Chạy \texttt{sudo chown root:root /etc/docker/certs.d/*} với các file chứng chỉ phù hợp; kiểm tra tránh áp dụng sai cho thư mục rỗng. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền truy cập chứng chỉ registry được đặt thành 444 hoặc hạn chế hơn & Sửa permission của certificate registry. & Chạy \texttt{sudo chmod 444} cho certificate public; đối với private key dùng quyền chặt hơn như \texttt{400} hoặc \texttt{440}. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền sở hữu Docker server là root:root và file permission 444 & Sửa owner/group và permission của Docker server certificate. & Chạy \texttt{sudo chown root:root <path\_to\_tlscert>} và \texttt{sudo chmod 444 <path\_to\_tlscert>}; private key phải dùng quyền hạn chế hơn. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền Docker socket file ownership là root:docker và để file permission 660 & Sửa quyền của \texttt{/var/run/docker.sock}. & Chạy \texttt{sudo chown root:docker /var/run/docker.sock} và \texttt{sudo chmod 660 /var/run/docker.sock}. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền daemon.json là root:root và file permission 644 & Sửa owner/group và permission của \texttt{daemon.json}. & Chạy \texttt{sudo chown root:root /etc/docker/daemon.json} và \texttt{sudo chmod 644 /etc/docker/daemon.json}. \\
-\cline{2-4}
+\hline
 & Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644 & Sửa permission file \texttt{/etc/sysconfig/docker} nếu tồn tại. & Chạy \texttt{sudo chown root:root /etc/sysconfig/docker} và \texttt{sudo chmod 644 /etc/sysconfig/docker}; nếu Ubuntu không có file này thì ghi N/A. \\
-\cline{2-4}
+\hline
 & Đảm bảo containerd socket có quyền root:root và permission 660 & Sửa quyền của containerd socket. & Chạy \texttt{chown root:root} và \texttt{chmod 660} cho containerd socket; kiểm tra lại dịch vụ containerd sau khi đổi quyền. \\
 \hline
-\multirow{9}{=}{4} & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & Chọn base image chính thống, tối giản và loại bỏ package thừa. & Sửa Dockerfile để dùng image đáng tin cậy như \texttt{ubuntu}, \texttt{debian-slim}, \texttt{alpine} hoặc image nội bộ đã phê duyệt; gỡ package không cần thiết sau khi cài. \\
-\cline{2-4}
+4 & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & Chọn base image chính thống, tối giản và loại bỏ package thừa. & Sửa Dockerfile để dùng image đáng tin cậy như \texttt{ubuntu}, \texttt{debian-slim}, \texttt{alpine} hoặc image nội bộ đã phê duyệt; gỡ package không cần thiết sau khi cài. \\
+\hline
 & Đảm bảo image được scan và phải có security patches & Quét image và rebuild khi có bản vá bảo mật. & Dùng Trivy/Grype/Clair để scan image; cập nhật base image, rebuild và redeploy image sau khi vá CVE nghiêm trọng. \\
-\cline{2-4}
+\hline
 & Phải có HEALTHCHECK instruction & Thêm \texttt{HEALTHCHECK} vào Dockerfile hoặc cấu hình runtime. & Bổ sung lệnh kiểm tra trạng thái ứng dụng, ví dụ kiểm tra HTTP endpoint hoặc process chính; build lại image và test trạng thái healthy. \\
-\cline{2-4}
+\hline
 & Phải có update instruction và không sử dụng một mình trong Dockerfiles & Gộp lệnh update và install trong cùng một lớp build. & Sửa Dockerfile để dùng một lệnh \texttt{RUN apt-get update \&\& apt-get install ...}; dọn cache package sau khi cài đặt. \\
-\cline{2-4}
+\hline
 & Không cung cấp quyền Setuid và Getuid & Loại bỏ setuid/setgid bit không cần thiết trong image. & Kiểm tra file có setuid/setgid trong image, sau đó sửa Dockerfile để xóa quyền đặc biệt bằng \texttt{chmod a-s} đối với file không cần thiết. \\
-\cline{2-4}
+\hline
 & Dùng COPY thay vì ADD & Thay lệnh \texttt{ADD} bằng \texttt{COPY} khi chỉ cần sao chép file. & Sửa Dockerfile, dùng \texttt{COPY} cho file local; chỉ dùng \texttt{ADD} khi thực sự cần chức năng giải nén hoặc tải từ URL. \\
-\cline{2-4}
+\hline
 & Secrets không được bỏ vào Dockerfiles & Loại bỏ secrets khỏi Dockerfile và image layer. & Xóa password, token, private key khỏi Dockerfile; dùng Docker secrets, Ansible Vault, biến môi trường bảo mật hoặc secret manager. \\
-\cline{2-4}
+\hline
 & Các package phải chính thống khi tải về & Chỉ dùng repository và package có nguồn gốc đáng tin cậy. & Cấu hình repository chính thống, kiểm tra GPG key, pin version nếu cần và tránh tải package từ nguồn không rõ ràng. \\
-\cline{2-4}
+\hline
 & Các signed artifacts phải được kiểm chứng & Xác minh chữ ký artifact trước khi sử dụng hoặc upload. & Dùng GPG, cosign hoặc cơ chế ký nội bộ để verify image/artifact; chỉ đưa artifact đã xác minh vào registry hoặc pipeline. \\
 \hline
-\multirow{32}{=}{5} & 5.1: Không bật swarm mode nếu không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
+5 & 5.1: Không bật swarm mode nếu không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
 Rời Swarm nếu host không dùng cluster.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Chạy docker swarm leave --force sau khi xác nhận không còn workload Swarm.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.2: Bật AppArmor Profile nếu môi trường hỗ trợ & \begin{minipage}[t]{\linewidth}\raggedright
 Khởi chạy container với AppArmor profile phù hợp.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng security-opt apparmor profile hoặc profile mặc định đã phê duyệt.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.3: Thiết lập SELinux security options nếu áp dụng & \begin{minipage}[t]{\linewidth}\raggedright
 Chỉ áp dụng SELinux label khi host thực sự bật SELinux.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bật SELinux đúng môi trường hoặc bỏ label không có tác dụng trên Ubuntu/AppArmor.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.4: Hạn chế Linux kernel capabilities & \begin{minipage}[t]{\linewidth}\raggedright
 Drop capability mặc định và chỉ add lại capability cần thiết.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng cap-drop ALL; kiểm thử rồi chỉ cap-add capability đã được phê duyệt.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.5: Không sử dụng privileged container & \begin{minipage}[t]{\linewidth}\raggedright
 Tái tạo container không dùng privileged mode.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ privileged và thay bằng capability hoặc device cụ thể nếu bắt buộc.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.6: Không mount thư mục hệ thống nhạy cảm của host & \begin{minipage}[t]{\linewidth}\raggedright
 Loại bỏ bind mount nhạy cảm.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ mount /, /etc, /proc, /sys, /dev; nếu bắt buộc thì read-only và có phê duyệt.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.7: Không chạy sshd trong container & \begin{minipage}[t]{\linewidth}\raggedright
 Loại bỏ SSH daemon khỏi image/container.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Quản trị bằng docker exec, logs hoặc orchestration thay vì sshd trong container.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.8: Không ánh xạ privileged port không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
 Gỡ privileged port hoặc ghi nhận phê duyệt.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng port cao hơn hoặc reverse proxy; chỉ giữ port nhỏ hơn 1024 khi có nhu cầu rõ ràng.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.9: Chỉ mở port cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
 Xóa các port publish không dùng.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Cập nhật Docker CLI/Compose/Ansible để chỉ publish port nằm trong thiết kế.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.10: Không chia sẻ network namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
 Recreate container trên network riêng.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ network host; dùng bridge/overlay user-defined network.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.11: Giới hạn memory cho container & \begin{minipage}[t]{\linewidth}\raggedright
 Đặt memory limit theo workload.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng memory limit trong Docker CLI, playbook hoặc compose.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.12: Đặt CPU priority phù hợp & \begin{minipage}[t]{\linewidth}\raggedright
 Đặt CPU shares hoặc quota.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng cpu-shares hoặc CPU quota phù hợp, sau đó test hiệu năng.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.13: Root filesystem ở chế độ read-only & \begin{minipage}[t]{\linewidth}\raggedright
 Chạy container với rootfs read-only.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng read-only và khai báo tmpfs/volume riêng cho đường dẫn cần ghi.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.14: Bind traffic vào interface cụ thể & \begin{minipage}[t]{\linewidth}\raggedright
 Bind port vào IP được phê duyệt.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng 127.0.0.1:port:port hoặc IP NIC cụ thể thay vì 0.0.0.0.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.15: Giới hạn restart policy & \begin{minipage}[t]{\linewidth}\raggedright
 Đổi restart policy sang on-failure có giới hạn.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng restart on-failure:5 hoặc restart policy/retry tương ứng.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.16: Không chia sẻ PID namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
 Recreate container không dùng host PID.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ pid host khỏi cấu hình runtime.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.17: Không chia sẻ IPC namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
 Recreate container không dùng host IPC.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ ipc host; nếu cần chia sẻ IPC thì giới hạn giữa container được phê duyệt.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.18: Không expose trực tiếp host device & \begin{minipage}[t]{\linewidth}\raggedright
 Gỡ device mapping không cần thiết.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ device mapping hoặc giới hạn đúng thiết bị/quyền truy cập theo nghiệp vụ.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.19: Ghi đè ulimit khi cần & \begin{minipage}[t]{\linewidth}\raggedright
 Khai báo ulimit rõ ràng.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng ulimit hoặc default-ulimits trong daemon.json đã được harden.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.20: Không dùng shared mount propagation & \begin{minipage}[t]{\linewidth}\raggedright
 Chuyển mount propagation sang private/slave.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Cập nhật bind propagation và recreate container.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.21: Không chia sẻ UTS namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
 Recreate container không dùng host UTS.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ uts host khỏi cấu hình runtime.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.22: Không tắt default seccomp profile & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ cấu hình seccomp unconfined.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng default seccomp hoặc custom seccomp profile đã kiểm soát.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.23: Không dùng docker exec với privileged option & \begin{minipage}[t]{\linewidth}\raggedright
 Cấm quy trình vận hành dùng exec privileged.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Cập nhật runbook, review quyền admin và bật logging/audit tập trung.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.24: Không dùng docker exec với user root option & \begin{minipage}[t]{\linewidth}\raggedright
 Vận hành bằng user ứng dụng.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng user ứng dụng hoặc sửa image để có USER non-root.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.25: Xác nhận cgroup usage & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ custom cgroup parent nếu không cần.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Loại bỏ cgroup parent hoặc ghi tài liệu phê duyệt kèm resource control.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.26: Ngăn container nhận thêm đặc quyền & \begin{minipage}[t]{\linewidth}\raggedright
 Thêm no-new-privileges.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng security option no-new-privileges=true hoặc security opts trong Ansible.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.27: Có runtime health check & \begin{minipage}[t]{\linewidth}\raggedright
 Sửa healthcheck để phản ánh trạng thái thật.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Thêm HEALTHCHECK hoặc healthcheck command nội bộ; nghiệm thu khi healthy.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.28: Ghim phiên bản image, không dùng latest & \begin{minipage}[t]{\linewidth}\raggedright
 Ghim image bằng version tag hoặc digest.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Đổi nginx latest thành version tag hoặc sha256 digest đã xác minh.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.29: Sử dụng PIDs cgroup limit & \begin{minipage}[t]{\linewidth}\raggedright
 Đặt PID limit.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Dùng pids limit trong Docker CLI, playbook hoặc compose.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.30: Không dùng default bridge docker0 & \begin{minipage}[t]{\linewidth}\raggedright
 Tạo và dùng network riêng.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Chạy docker network create ten-network rồi recreate container trên network đó.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.31: Không chia sẻ user namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ host user namespace.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ userns host; cân nhắc userns-remap ở daemon nếu phù hợp.\strut
 \end{minipage} \\
-\cline{2-4}
+\hline
  & 5.32: Không mount Docker socket vào container & \begin{minipage}[t]{\linewidth}\raggedright
 Gỡ Docker socket bind mount.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
 Bỏ /var/run/docker.sock khỏi volumes; dùng API TLS hoặc công cụ không cần daemon socket.\strut
 \end{minipage} \\
 \hline
-\multirow{2}{=}{6} & Tránh Image sprawl & Xóa bỏ các images không sử dụng thủ công & Chạy lệnh docker image prune -a --force \\
-\cline{2-4}
+6 & Tránh Image sprawl & Xóa bỏ các images không sử dụng thủ công & Chạy lệnh docker image prune -a --force \\
+\hline
 & Tránh container sprawl & Xóa bỏ các containers đã dừng thủ công & Chạy lệnh docker container prune --force \\
 \hline
 \end{longtable}

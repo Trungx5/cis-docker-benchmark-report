@@ -5,7 +5,10 @@ Khắc phục tự động được thực thi qua các playbook Ansible để c
 
 \textbf{Bảng chi tiết các hoạt động Remediation tự động:}
 
-{\def\LTcaptype{none} % do not increment counter
+{\def\LTcaptype{none}
+\begin{center}
+\captionof{table}{Bảng chi tiết khắc phục tự động}\label{tab:chi-tiet-khac-phuc-tu-dong}
+\end{center}
 \begin{longtable}{@{}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0973}}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.1936}}|
@@ -24,71 +27,71 @@ Khắc phục tự động được thực thi qua các playbook Ansible để c
 \hline
 \endhead
 
-\multirow{2}{=}{1} & 1.1.3 - 1.1.18: Cấu hình Audit rules tự động. & Module \texttt{ansible.builtin.apt}, \texttt{ansible.builtin.copy}, \texttt{ansible.builtin.lineinfile} và \texttt{ansible.builtin.service}. Playbook cài đặt \texttt{auditd}, ghi các rule theo dõi Docker daemon, Docker socket, containerd và các file cấu hình liên quan. & Các audit rules được ghi vào hệ thống; dịch vụ \texttt{auditd} được bật và khởi động thành công; các thay đổi liên quan đến Docker được ghi log để phục vụ kiểm toán. \\
-\cline{2-4}
+1 & 1.1.3 - 1.1.18: Cấu hình Audit rules tự động. & Module \texttt{ansible.builtin.apt}, \texttt{ansible.builtin.copy}, \texttt{ansible.builtin.lineinfile} và \texttt{ansible.builtin.service}. Playbook cài đặt \texttt{auditd}, ghi các rule theo dõi Docker daemon, Docker socket, containerd và các file cấu hình liên quan. & Các audit rules được ghi vào hệ thống; dịch vụ \texttt{auditd} được bật và khởi động thành công; các thay đổi liên quan đến Docker được ghi log để phục vụ kiểm toán. \\
+\hline
 
 & 1.2.2: Tự động cập nhật Docker. & Module \texttt{ansible.builtin.apt}; cập nhật package index và nâng cấp Docker Engine nếu có phiên bản mới trong repository. & Docker Engine được cập nhật lên phiên bản phù hợp, giúp giảm rủi ro từ các lỗ hổng bảo mật đã được vá. \\
 \hline
 
-\multirow{6}{=}{2} & 2.2 - 2.3: Hạn chế traffic giữa container và đặt logging level phù hợp. & Module \texttt{ansible.builtin.copy}, \texttt{ansible.builtin.template} hoặc \texttt{ansible.builtin.lineinfile}; chỉnh file \texttt{/etc/docker/daemon.json} để cấu hình \texttt{icc} và \texttt{log-level}. & Inter-container communication trên default bridge được hạn chế nếu chính sách yêu cầu; logging level được đặt về \texttt{info}, tránh dùng \texttt{debug} trong production. \\
-\cline{2-4}
+2 & 2.2 - 2.3: Hạn chế traffic giữa container và đặt logging level phù hợp. & Module \texttt{ansible.builtin.copy}, \texttt{ansible.builtin.template} hoặc \texttt{ansible.builtin.lineinfile}; chỉnh file \texttt{/etc/docker/daemon.json} để cấu hình \texttt{icc} và \texttt{log-level}. & Inter-container communication trên default bridge được hạn chế nếu chính sách yêu cầu; logging level được đặt về \texttt{info}, tránh dùng \texttt{debug} trong production. \\
+\hline
 
 & 2.5: Loại bỏ insecure registry không an toàn. & Module \texttt{ansible.builtin.lineinfile} hoặc \texttt{ansible.builtin.template}; xóa hoặc không khai báo trường \texttt{insecure-registries} trong \texttt{daemon.json}. & Docker daemon không sử dụng registry không mã hóa hoặc không đáng tin cậy; image chỉ được pull từ nguồn được phê duyệt. \\
-\cline{2-4}
+\hline
 
 & 2.6 - 2.7: Sử dụng storage driver phù hợp. & Module \texttt{ansible.builtin.template}; cấu hình \texttt{storage-driver} trong \texttt{daemon.json}. Với môi trường lab có thể đặt \texttt{overlay2}; trong production cần backup dữ liệu trước khi thay đổi. & Docker không dùng \texttt{aufs} hoặc \texttt{devicemapper} không phù hợp; storage driver được cấu hình theo khuyến nghị, ưu tiên \texttt{overlay2}. \\
-\cline{2-4}
+\hline
 
 & 2.9 - 2.10: Cấu hình default ulimit và user namespace. & Module \texttt{ansible.builtin.template}; thêm \texttt{default-ulimits} và \texttt{userns-remap} vào \texttt{daemon.json}. & Container có giới hạn tài nguyên mặc định hợp lý; user namespace remapping được bật nếu chính sách hệ thống yêu cầu. \\
-\cline{2-4}
+\hline
 
 & 2.14 - 2.15: Bật no-new-privileges và live restore. & Module \texttt{ansible.builtin.template}; cấu hình \texttt{no-new-privileges} và \texttt{live-restore} trong \texttt{daemon.json}, sau đó restart Docker bằng handler. & Container không được leo thang đặc quyền mới; container có thể tiếp tục chạy khi Docker daemon restart. \\
-\cline{2-4}
+\hline
 
 & 2.17 - 2.19: Tắt userland proxy, giữ seccomp và tắt experimental features. & Module \texttt{ansible.builtin.template} hoặc \texttt{ansible.builtin.lineinfile}; cấu hình \texttt{userland-proxy}, kiểm soát seccomp profile và \texttt{experimental}. & \texttt{userland-proxy} được tắt nếu không cần thiết; seccomp không bị disable; experimental features không bật trong môi trường production. \\
 \hline
 
-\multirow{6}{=}{3} & 3.1 - 3.2: Quyền file service Docker. & Module \texttt{ansible.\allowbreak builtin.\allowbreak file}; xác định service file bằng \texttt{systemctl show}, sau đó đặt owner/group và mode phù hợp. & File service thuộc sở hữu root; permission là \texttt{0644} hoặc hạn chế hơn. \\
-\cline{2-4}
+3 & 3.1 - 3.2: Quyền file service Docker. & Module \texttt{ansible.\allowbreak builtin.\allowbreak file}; xác định service file bằng \texttt{systemctl show}, sau đó đặt owner/group và mode phù hợp. & File service thuộc sở hữu root; permission là \texttt{0644} hoặc hạn chế hơn. \\
+\hline
 
 & 3.3 - 3.4: Khắc phục ownership và permission của \texttt{docker.socket}. & Module \texttt{ansible.builtin.file}; xác định đường dẫn \texttt{docker.socket} và đặt lại owner/group/mode. & File \texttt{docker.socket} thuộc sở hữu \texttt{root:root}; permission là \texttt{0644} hoặc hạn chế hơn. \\
-\cline{2-4}
+\hline
 
 & 3.5 - 3.6: Khắc phục quyền thư mục \texttt{/etc/docker}. & Module \texttt{ansible.builtin.file}; đặt owner/group và mode cho thư mục cấu hình Docker. & Thư mục \texttt{/etc/docker} thuộc sở hữu \texttt{root:root}; permission là \texttt{0755} hoặc hạn chế hơn. \\
-\cline{2-4}
+\hline
 
 & 3.7 - 3.10: Khắc phục quyền file chứng chỉ registry và Docker TLS. & Module \texttt{ansible.builtin.find} kết hợp \texttt{ansible.builtin.file}; duyệt các file trong \texttt{/etc/docker/certs.d/} và các file certificate/key nếu tồn tại. & Certificate thuộc sở hữu \texttt{root:root}; private key có permission chặt chẽ, không để user không liên quan đọc hoặc ghi. \\
-\cline{2-4}
+\hline
 
 & 3.15 - 3.16: Khắc phục quyền Docker socket thực tế. & Module \texttt{ansible.builtin.file}; đặt owner/group/mode cho \texttt{/var/run/docker.sock}. & Docker socket thuộc sở hữu \texttt{root:docker}; permission là \texttt{0660}, hạn chế truy cập trái phép vào Docker daemon. \\
-\cline{2-4}
+\hline
 
 & 3.17 - 3.18: Khắc phục quyền \texttt{daemon.json}, sysconfig Docker và containerd socket. & Module \texttt{ansible.\allowbreak builtin.\allowbreak file}; kiểm tra file tồn tại rồi đặt owner/group/mode phù hợp. & File cấu hình Docker và containerd socket có ownership đúng; permission không quá rộng. \\
 \hline
 
-\multirow{6}{=}{4} & 4.1: Cấu hình container chạy bằng non-root user. & Chỉnh Dockerfile hoặc cấu hình container bằng Ansible; thêm chỉ thị \texttt{USER} hoặc cấu hình user khi tạo container. & Container không chạy bằng user \texttt{root}, giảm rủi ro leo thang đặc quyền khi container bị khai thác. \\
-\cline{2-4}
+4 & 4.1: Cấu hình container chạy bằng non-root user. & Chỉnh Dockerfile hoặc cấu hình container bằng Ansible; thêm chỉ thị \texttt{USER} hoặc cấu hình user khi tạo container. & Container không chạy bằng user \texttt{root}, giảm rủi ro leo thang đặc quyền khi container bị khai thác. \\
+\hline
 
 & 4.5: Bật Docker Content Trust. & Cấu hình biến môi trường \texttt{DOCKER\_CONTENT\_TRUST=1} trong môi trường build/deploy hoặc pipeline CI/CD. & Docker chỉ pull/run image có chữ ký hợp lệ nếu hệ thống áp dụng Content Trust. \\
-\cline{2-4}
+\hline
 
 & 4.6: Thêm chỉ thị \texttt{HEALTHCHECK}. & Chỉnh Dockerfile hoặc cấu hình \texttt{healthcheck} khi tạo container bằng module Docker của Ansible. & Image hoặc container có healthcheck để Docker theo dõi trạng thái ứng dụng. \\
-\cline{2-4}
+\hline
 
 & 4.7: Không để lệnh update đứng độc lập trong Dockerfile. & Chỉnh Dockerfile, gộp lệnh update và install trong cùng một lớp build, đồng thời dọn cache package sau khi cài đặt. & Dockerfile không có lệnh update độc lập gây cache sai hoặc bỏ sót bản vá. \\
-\cline{2-4}
+\hline
 
 & 4.9: Dùng \texttt{COPY} thay cho \texttt{ADD}. & Chỉnh Dockerfile; thay các lệnh \texttt{ADD} không cần thiết bằng \texttt{COPY}. & Dockerfile dùng \texttt{COPY} cho thao tác sao chép file thông thường, tránh hành vi ngầm của \texttt{ADD}. \\
-\cline{2-4}
+\hline
 
 & 4.10 - 4.12: Không đưa secrets vào Dockerfile và xác minh package/artifact. & Kết hợp Ansible, CI/CD và secret manager; đưa secrets ra biến môi trường hoặc vault, kiểm tra chữ ký package/artifact trước khi build. & Dockerfile không chứa password, token, private key; package và artifact có nguồn gốc đáng tin cậy. \\
 \hline
 
-\multirow{9}{=}{5} & 5.9, 5.14: Giới hạn port và interface. & \begin{minipage}[t]{\linewidth}\raggedright
+5 & 5.9, 5.14: Giới hạn port và interface. & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{community.docker.}\\
 \texttt{docker\_container} với \texttt{published\_ports}.\strut
 \end{minipage} & Port chỉ bind vào interface được phê duyệt, không mở rộng không cần thiết ra toàn bộ host. \\
-\cline{2-4}
+\hline
 
 & 5.10, 5.30: Tạo và sử dụng network riêng. & \begin{minipage}[t]{\linewidth}\raggedright
 \texttt{community.docker.}\\
@@ -96,25 +99,25 @@ Khắc phục tự động được thực thi qua các playbook Ansible để c
 \texttt{community.docker.}\\
 \texttt{docker\_container}.\strut
 \end{minipage} & Container dùng \texttt{secure-net}, không dùng host network hoặc default bridge. \\
-\cline{2-4}
+\hline
 
 & 5.11, 5.12, 5.19, 5.29: Giới hạn tài nguyên. & Thuộc tính \texttt{memory}, \texttt{cpu\_shares}, \texttt{ulimits}, \texttt{pids\_limit}. & Container có giới hạn RAM, CPU priority, file descriptor và PID. \\
-\cline{2-4}
+\hline
 
 & 5.13: Root filesystem read-only. & \texttt{read\_only: true} và các mount \texttt{tmpfs}. & Root filesystem không ghi được; ứng dụng chỉ ghi vào vùng được phép. \\
-\cline{2-4}
+\hline
 
 & 5.15: Giới hạn restart. & \texttt{restart\_policy} và \texttt{restart\_retries}. & \texttt{on-failure} với tối đa 5 lần retry. \\
-\cline{2-4}
+\hline
 
 & 5.26: Chặn leo thang đặc quyền. & \texttt{security\_opts}. & Có \texttt{no-new-privileges}. \\
-\cline{2-4}
+\hline
 
 & 5.27: Thiết lập healthcheck. & Thuộc tính \texttt{healthcheck}. & Healthcheck tồn tại và container đạt trạng thái \texttt{healthy}. \\
-\cline{2-4}
+\hline
 
 & 5.28: Ghim image. & Biến \texttt{image\_name} dùng version tag hoặc digest. & Không dùng \texttt{latest} hoặc image không tag. \\
-\cline{2-4}
+\hline
 
 & 5.4: Thu hẹp capability. & \texttt{cap\_drop} và chỉ add capability cần thiết. & Không giữ capability mặc định không cần thiết. \\
 \hline
