@@ -32,6 +32,32 @@ Khắc phục tự động được thực thi qua các playbook Ansible để c
 \hline
 4 & & & \\
 \hline
+\multirow{9}{=}{5} & 5.9, 5.14: Giới hạn port và interface. & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{community.docker.}\\
+\texttt{docker\_container} với \texttt{published\_ports}.\strut
+\end{minipage} & Port chỉ bind vào interface được phê duyệt. \\
+\cline{2-4}
+& 5.10, 5.30: Tạo và sử dụng network riêng. & \begin{minipage}[t]{\linewidth}\raggedright
+\texttt{community.docker.}\\
+\texttt{docker\_network} và\\
+\texttt{community.docker.}\\
+\texttt{docker\_container}.\strut
+\end{minipage} & Container dùng \texttt{secure-net}, không dùng host network hoặc default bridge. \\
+\cline{2-4}
+& 5.11, 5.12, 5.19, 5.29: Giới hạn tài nguyên. & Thuộc tính \texttt{memory}, \texttt{cpu\_shares}, \texttt{ulimits}, \texttt{pids\_limit}. & Container có giới hạn RAM, CPU priority, file descriptor và PID. \\
+\cline{2-4}
+& 5.13: Root filesystem read-only. & \texttt{read\_only: true} và các mount \texttt{tmpfs}. & Root filesystem không ghi được; ứng dụng chỉ ghi vào vùng được phép. \\
+\cline{2-4}
+& 5.15: Giới hạn restart. & \texttt{restart\_policy} và \texttt{restart\_retries}. & \texttt{on-failure} với tối đa 5 lần retry. \\
+\cline{2-4}
+& 5.26: Chặn leo thang đặc quyền. & \texttt{security\_opts}. & Có \texttt{no-new-privileges}. \\
+\cline{2-4}
+& 5.27: Thiết lập healthcheck. & Thuộc tính \texttt{healthcheck}. & Healthcheck tồn tại và container đạt trạng thái \texttt{healthy}. \\
+\cline{2-4}
+& 5.28: Ghim image. & Biến \texttt{image\_name} dùng version tag hoặc digest. & Không dùng \texttt{latest} hoặc image không tag. \\
+\cline{2-4}
+& 5.4: Thu hẹp capability. & \texttt{cap\_drop} và chỉ add capability cần thiết. & Không giữ capability mặc định không cần thiết. \\
+\hline
 \multirow{2}{=}{6} & 6.1 - 6.2: Tự động dọn dẹp tài nguyên dư thừa. & Module \texttt{ansible.builtin.cron} hoặc chạy prune tự động. & Giải phóng thành công tài nguyên, đĩa sạch và không tích tụ rác. \\
 \hline
 \end{longtable}

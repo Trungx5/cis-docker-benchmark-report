@@ -40,6 +40,18 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 \cline{2-4}
 & 4.9: Sử dụng COPY thay cho ADD. & Kiểm tra lịch sử build bằng \texttt{docker history}. & Không bắt được cờ FOUND (không có lệnh ADD) trong lịch sử build. \\
 \hline
+\multirow{6}{=}{5} & 5.1 - 5.7: Runtime mode, MAC, capability, privileged mode, sensitive mount và SSH daemon. & Module \texttt{ansible.builtin.command}, \texttt{ansible.builtin.shell} và \texttt{ansible.builtin.set\_fact}; thu thập bằng \texttt{docker info}, \texttt{docker inspect}, \texttt{docker exec}. & Swarm inactive; AppArmor/SELinux phù hợp; không privileged; không mount nhạy cảm; không chạy \texttt{sshd}. \\
+\cline{2-4}
+& 5.8: Privileged port. & Hiện chưa append vào \texttt{audit\_results}; cần manual review hoặc bổ sung logic. & Có kết quả Manual/INFO riêng và port đặc quyền được phê duyệt. \\
+\cline{2-4}
+& 5.9 - 5.15: Port, network, memory, CPU, read-only filesystem, interface binding và restart policy. & \texttt{docker inspect} kết hợp filter và regex trong Ansible. & Không bind \texttt{0.0.0.0}; không host network; có resource limit; root filesystem read-only; restart \texttt{on-failure} tối đa 5. \\
+\cline{2-4}
+& 5.16 - 5.22: Namespace, device, ulimit, mount propagation và seccomp. & \texttt{docker inspect} các trường \texttt{HostConfig} và \texttt{Mounts}. & Không chia sẻ namespace host; không expose device trái phép; không shared propagation; seccomp không bị tắt. \\
+\cline{2-4}
+& 5.23 - 5.25: Lịch sử \texttt{docker exec} và cgroup parent. & \texttt{journalctl}, \texttt{grep} và \texttt{docker inspect}. & Không có privileged/root exec trong nguồn log; cgroup usage được xác nhận. \\
+\cline{2-4}
+& 5.26 - 5.32: No-new-privileges, healthcheck, image pinning, PID limit, network, user namespace và Docker socket. & \texttt{docker inspect}, parse JSON và regex. & Có \texttt{no-new-privileges}; healthcheck hợp lệ; image được ghim; có PID limit; không dùng \texttt{docker0}/host userns/docker.sock. \\
+\hline
 \multirow{2}{=}{6} & 6.1 - 6.2: Tránh image sprawl và container sprawl. & Module \texttt{ansible.builtin.command} để gọi các lệnh Docker CLI. & Xuất báo cáo đếm số lượng image và container dư thừa ở định dạng JSON. \\
 \hline
 \end{longtable}

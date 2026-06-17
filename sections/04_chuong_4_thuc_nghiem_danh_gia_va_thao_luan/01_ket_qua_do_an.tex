@@ -1,0 +1,90 @@
+\subsection{Kết quả đồ án}\label{ket-qua-do-an}
+
+Kết quả kiểm toán thực tế của Section 5 được tổng hợp từ báo cáo JSON sinh bởi playbook Audit. Bảng dưới đây giữ cấu trúc theo bảng các hoạt động, nhưng thay cột loại kiểm tra bằng trạng thái PASS/FAIL/INFO và ghi chú bằng chứng chính.
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0800}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.4600}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.1400}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.3200}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Phần}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Benchmark}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Trạng thái}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Ghi chú}
+\end{minipage} \\
+\hline
+\endhead
+\multirow{32}{=}{5} & 5.1: Không bật Swarm mode nếu không cần thiết & PASS & Swarm inactive. \\
+\cline{2-4}
+& 5.2: Bật AppArmor Profile nếu môi trường hỗ trợ & PASS & Container có AppArmor profile \texttt{docker-default}. \\
+\cline{2-4}
+& 5.3: Thiết lập SELinux security options nếu áp dụng & INFO & SELinux disabled trên Ubuntu host; cần đánh giá theo cơ chế AppArmor. \\
+\cline{2-4}
+& 5.4: Hạn chế Linux kernel capabilities & PASS* & Playbook hiện chưa chứng minh capability đã được drop đầy đủ. \\
+\cline{2-4}
+& 5.5: Không sử dụng privileged container & PASS & \texttt{Privileged=false}. \\
+\cline{2-4}
+& 5.6: Không mount thư mục hệ thống nhạy cảm của host & PASS & Không phát hiện sensitive mount. \\
+\cline{2-4}
+& 5.7: Không chạy \texttt{sshd} trong container & PASS* & Không thấy \texttt{sshd}, nhưng image thiếu lệnh \texttt{ps}; cần cải thiện logic audit. \\
+\cline{2-4}
+& 5.8: Không ánh xạ privileged port không cần thiết & N/A & Chưa triển khai đầy đủ trong \texttt{audit\_results}; cần kiểm tra thủ công hoặc bổ sung logic. \\
+\cline{2-4}
+& 5.9: Chỉ mở port cần thiết & PASS & Port bind vào localhost. \\
+\cline{2-4}
+& 5.10: Không chia sẻ network namespace của host & PASS & Container dùng user-defined network. \\
+\cline{2-4}
+& 5.11: Giới hạn memory cho container & PASS & Memory limit 256 MiB. \\
+\cline{2-4}
+& 5.12: Đặt CPU priority phù hợp & PASS & CPU shares bằng 512. \\
+\cline{2-4}
+& 5.13: Root filesystem ở chế độ read-only & PASS & \texttt{ReadonlyRootfs=true}. \\
+\cline{2-4}
+& 5.14: Bind traffic vào interface cụ thể & PASS & Bind vào \texttt{127.0.0.1}. \\
+\cline{2-4}
+& 5.15: Giới hạn restart policy & FAIL & Restart policy đang là \texttt{unless-stopped}, retry bằng 0. \\
+\cline{2-4}
+& 5.16: Không chia sẻ PID namespace của host & PASS & Không dùng host PID namespace. \\
+\cline{2-4}
+& 5.17: Không chia sẻ IPC namespace của host & PASS & IPC private. \\
+\cline{2-4}
+& 5.18: Không expose trực tiếp host device & PASS & Không expose host device. \\
+\cline{2-4}
+& 5.19: Ghi đè ulimit khi cần & PASS & Có cấu hình ulimit. \\
+\cline{2-4}
+& 5.20: Không dùng shared mount propagation & PASS & Không có shared propagation. \\
+\cline{2-4}
+& 5.21: Không chia sẻ UTS namespace của host & PASS & Không dùng host UTS namespace. \\
+\cline{2-4}
+& 5.22: Không tắt default seccomp profile & PASS & Seccomp không bị đặt \texttt{unconfined}. \\
+\cline{2-4}
+& 5.23: Không dùng \texttt{docker exec --privileged} & PASS & Không thấy mẫu privileged exec trong log 7 ngày. \\
+\cline{2-4}
+& 5.24: Không dùng \texttt{docker exec --user=root} & PASS & Không thấy mẫu root exec trong log 7 ngày. \\
+\cline{2-4}
+& 5.25: Xác nhận cgroup usage & PASS & Dùng default cgroup hierarchy. \\
+\cline{2-4}
+& 5.26: Ngăn container nhận thêm đặc quyền & FAIL & Thiếu \texttt{no-new-privileges}. \\
+\cline{2-4}
+& 5.27: Có runtime health check & PASS* & Có healthcheck nhưng runtime status là \texttt{unhealthy}. \\
+\cline{2-4}
+& 5.28: Ghim phiên bản image, không dùng \texttt{latest} & FAIL & Image đang dùng \texttt{nginx:latest}. \\
+\cline{2-4}
+& 5.29: Sử dụng PIDs cgroup limit & PASS & PID limit bằng 100. \\
+\cline{2-4}
+& 5.30: Không dùng default bridge \texttt{docker0} & PASS & Container dùng \texttt{secure-net}. \\
+\cline{2-4}
+& 5.31: Không chia sẻ user namespace của host & PASS & Không dùng host user namespace. \\
+\cline{2-4}
+& 5.32: Không mount Docker socket vào container & PASS & Không mount Docker socket. \\
+\hline
+\end{longtable}
+}
+
+Tổng hợp: 27 PASS, 3 FAIL, 1 INFO, 0 SKIP trên 31 kết quả được ghi vào báo cáo; tiêu chí 5.8 chưa được tính vào mẫu số vì chưa append vào \texttt{audit\_results}. Các mục có dấu * cần xem xét lại logic kiểm tra trước khi nghiệm thu cuối cùng.

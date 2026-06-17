@@ -1,1 +1,103 @@
 \subsection{Code chi tiết cho Section 5}\label{phu-luc-code-section-5}
+
+\noindent\textbf{Tổng quan Audit và Remediation Section 5}
+
+Section 5 đánh giá cấu hình bảo mật tại thời điểm container được tạo và vận hành. Playbook Audit hiện thực hiện 31 kiểm tra tự động trong dải 5.1--5.32; tiêu chí 5.8 đang để Manual/chưa được thêm vào \texttt{audit\_results}. Kết quả thực tế trên host \texttt{Docker-2204-DA-AUTO} đạt 27 PASS, 3 FAIL, 1 INFO và 0 SKIP, tương ứng 87,1\% theo công thức workbook.
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.1500}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2100}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.3000}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.3400}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Nhóm}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Phạm vi}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Audit}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Remediation}
+\end{minipage} \\
+\hline
+\endhead
+5.1--5.7 & Runtime mode, MAC, capability, privileged mode, mount và SSH daemon & Thu thập bằng \texttt{docker info}, \texttt{docker inspect}, \texttt{docker exec}; parse bằng Ansible. & Bỏ Swarm khi không cần, khai báo AppArmor/SELinux phù hợp, không dùng privileged, không mount nhạy cảm, loại bỏ SSH daemon. \\
+\hline
+5.8--5.15 & Port, network, memory, CPU, read-only filesystem, interface binding, restart policy & \texttt{docker inspect} các trường port, network và resource; 5.8 chưa hoàn chỉnh. & Bind port vào interface được phê duyệt, dùng network riêng, đặt resource limit, read-only rootfs, restart \texttt{on-failure:5}. \\
+\hline
+5.16--5.22 & PID/IPC/UTS namespace, device, ulimit, propagation, seccomp & Đọc các trường \texttt{HostConfig} và \texttt{Mounts}. & Không chia sẻ namespace host, không expose host device, khai báo ulimit, giữ seccomp default/custom. \\
+\hline
+5.23--5.25 & Lịch sử \texttt{docker exec} và cgroup parent & Truy vấn \texttt{journalctl}, \texttt{grep} và \texttt{docker inspect}. & Kiểm soát vận hành, logging/audit tập trung và không dùng custom cgroup parent nếu không cần. \\
+\hline
+5.26--5.32 & No-new-privileges, healthcheck, image pinning, PID limit, network, user namespace, Docker socket & Parse JSON và regex từ \texttt{docker inspect}. & Thêm \texttt{no-new-privileges}, sửa healthcheck, ghim image, đặt PID limit, không dùng default bridge/userns host/docker.sock. \\
+\hline
+\end{longtable}
+}
+
+\noindent\textbf{Kết quả kiểm tra thực tế}
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.1400}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.1800}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.6800}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Check}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Status}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Kết quả chính}
+\end{minipage} \\
+\hline
+\endhead
+5.1 & PASS & Swarm inactive. \\
+\hline
+5.2 & PASS & AppArmor \texttt{docker-default}. \\
+\hline
+5.3 & INFO & SELinux disabled trên Ubuntu host. \\
+\hline
+5.4 & PASS* & Không phát hiện theo regex hiện tại; raw output chưa chứng minh capability đã được drop. \\
+\hline
+5.5 & PASS & Không privileged. \\
+\hline
+5.6 & PASS & Không sensitive mount. \\
+\hline
+5.7 & PASS* & Không thấy \texttt{sshd} nhưng lệnh \texttt{ps} không tồn tại trong image. \\
+\hline
+5.8 & N/A & Chưa triển khai trong \texttt{audit\_results}. \\
+\hline
+5.9--5.14 & PASS & Port bind localhost; user-defined network; memory 256 MiB; CPU shares 512; read-only rootfs; bind \texttt{127.0.0.1}. \\
+\hline
+5.15 & FAIL & Restart policy \texttt{unless-stopped}, \texttt{MaxRetry=0}. \\
+\hline
+5.16--5.25 & PASS & Không chia sẻ namespace host, không expose device, có ulimit, seccomp không unconfined, không phát hiện privileged/root exec trong log 7 ngày. \\
+\hline
+5.26 & FAIL & Thiếu \texttt{no-new-privileges}. \\
+\hline
+5.27 & PASS* & Có healthcheck nhưng runtime status là \texttt{unhealthy}. \\
+\hline
+5.28 & FAIL & Image đang dùng \texttt{nginx:latest}. \\
+\hline
+5.29--5.32 & PASS & PID limit 100, dùng \texttt{secure-net}, không host user namespace, không mount Docker socket. \\
+\hline
+\end{longtable}
+}
+
+\noindent\textbf{Cấu hình remediation cần ưu tiên}
+
+\begin{verbatim}
+restart_policy: on-failure
+restart_retries: 5
+
+security_opts:
+  - "no-new-privileges:true"
+
+image_name: "nginx@sha256:<verified-digest>"
+
+cap_drop:
+  - ALL
+\end{verbatim}
+
+Ngoài ba lỗi FAIL trực tiếp, logic Audit cần được hoàn thiện ở 5.4, 5.7, 5.8 và 5.27. Cụ thể: không coi thiếu \texttt{CapDrop} là PASS, không chuyển lỗi thiếu lệnh \texttt{ps} thành PASS, append kết quả 5.8 rõ ràng, và đánh giá health status thực tế thay vì chỉ kiểm tra trường Health tồn tại.
