@@ -4,6 +4,7 @@ This folder contains a DOCX-to-LaTeX conversion of `../Automatic_report.docx`.
 
 - `main.tex`: clean assembly file; it inputs the cover, TOC, front matter, and every section file in order.
 - `preamble.tex`: page layout, hyperlinks, image support, and table settings.
+- `latexmkrc`: tells Overleaf/UiTiOt-style editors to compile with XeLaTeX.
 - `sections/00_front_matter/`: cover, acknowledgements, summary, and list pages.
 - `sections/01_mo_dau/`: chapter 1 and its subsection/subsubsection files.
 - `sections/01_co_so_ly_thuyet/`: chapter 2 and its subsection/subsubsection files.
@@ -30,3 +31,5 @@ powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
 The conversion was generated with Pandoc and validated with Tectonic. The DOCX has 11 tables; the active LaTeX project has 12 bordered `longtable` blocks including the abbreviation list. All tables stay in normal portrait orientation and use full text width. The generated PDF is `main.pdf`.
+
+On UiTiOt/Overleaf, set the compiler to XeLaTeX if it is not selected automatically. The document uses Vietnamese Unicode text and Times New Roman when that font is available on the server; otherwise it falls back to TeX Gyre Termes.

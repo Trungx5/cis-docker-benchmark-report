@@ -2,13 +2,26 @@
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 
+\usepackage{iftex}
+\ifPDFTeX
+  \PackageError{Automatic Report}{This project requires XeLaTeX or LuaLaTeX}{Set the compiler to XeLaTeX in UiTiOt/Overleaf. The project uses Vietnamese Unicode text and system fonts.}
+\fi
+
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{xcolor}
 \usepackage{amsmath,amssymb}
+\usepackage{fontspec}
 \usepackage{unicode-math}
-\defaultfontfeatures{Scale=MatchLowercase}
-\defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\usepackage{lmodern}
+\defaultfontfeatures{Ligatures=TeX}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Arial}
+  {\setsansfont{Arial}}
+  {\setsansfont{TeX Gyre Heros}}
+\IfFontExistsTF{Courier New}
+  {\setmonofont{Courier New}}
+  {\setmonofont{TeX Gyre Cursor}}
 \usepackage{microtype}
 \usepackage{parskip}
 \usepackage{longtable,booktabs,array}
