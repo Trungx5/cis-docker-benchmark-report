@@ -1,1 +1,22 @@
 \subsection{Mô hình}\label{trien-khai-mo-hinh}
+
+Mô hình triển khai của đồ án được thiết kế theo hướng Compliance-as-Code, trong đó toàn bộ quá trình kiểm tra, thu thập bằng chứng, đẩy số liệu giám sát, sinh báo cáo và khắc phục cấu hình được tự động hóa bằng Ansible. Kiến trúc này tách rõ các luồng xử lý chính: luồng audit, luồng evidence, luồng monitoring, luồng reporting và luồng remediation.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{images/media/image.png}
+\caption{Mô hình kiến trúc Compliance-as-Code cho tự động hóa CIS Docker Benchmark}
+\label{fig:compliance-as-code-architecture}
+\end{figure}
+
+Thành phần trung tâm của mô hình là khối Orchestration \& Scanning sử dụng Ansible. Người dùng hoặc lịch chạy tự động kích hoạt các playbook như \texttt{audit\_docker.yml}, \texttt{collect\_results.yml} và \texttt{push\_metrics.yml}. Các playbook này kết nối tới Docker Host thông qua SSH, thực hiện kiểm tra cấu hình Docker Engine theo các tiêu chí của CIS Docker Benchmark, sau đó sinh ra các artifact đầu ra như file JSON và bảng tổng hợp Excel.
+
+Sau khi audit hoàn tất, dữ liệu được đưa vào Evidence \& Data Pipeline. Khối Evidence Collector chịu trách nhiệm thu thập kết quả thô từ các playbook, Normalizer chuẩn hóa dữ liệu theo cùng một cấu trúc, còn Evidence Store lưu lại kết quả đã chuẩn hóa để phục vụ truy vết, kiểm tra lại và sinh báo cáo. Cách thiết kế này giúp tách dữ liệu audit khỏi phần trình bày báo cáo, nhờ đó kết quả có thể được tái sử dụng cho nhiều đầu ra khác nhau.
+
+Đối với giám sát thời gian thực, playbook \texttt{push\_metrics.yml} đẩy metric sang Prometheus Pushgateway. Prometheus định kỳ scrape dữ liệu từ Pushgateway, sau đó Grafana sử dụng nguồn dữ liệu Prometheus để hiển thị dashboard. Luồng này cho phép theo dõi trạng thái PASS/FAIL/INFO của các section theo thời gian thay vì chỉ đọc báo cáo tĩnh.
+
+Khối Reporting nhận dữ liệu đã chuẩn hóa từ Evidence Store để sinh báo cáo HTML/PDF. Báo cáo trình bày số liệu tổng hợp, kết quả theo từng section, các lỗi FAIL cần remediation và các ghi chú cần review thủ công. Nhờ vậy, báo cáo cuối cùng không chỉ mô tả hệ thống mà còn phản ánh được trạng thái tuân thủ thực tế của Docker Host.
+
+Luồng Remediation được tách riêng với luồng audit để tránh thay đổi cấu hình ngoài ý muốn. Khi người vận hành xác nhận các lỗi cần sửa, playbook \texttt{remediate\_docker.yml} mới được chạy qua SSH để áp dụng thay đổi lên Docker Host. Các thông tin nhạy cảm như secret, token, biến môi trường hoặc thông tin kết nối được quản lý ở khối Security \& Secrets thông qua Ansible Vault và file \texttt{.env}. Thiết kế này giúp quy trình khắc phục có kiểm soát hơn và giảm nguy cơ lộ thông tin cấu hình.
+
+Tổng thể, mô hình được thiết kế theo nguyên tắc tách nhiệm vụ rõ ràng: Ansible chịu trách nhiệm điều phối, Docker Host là đối tượng được kiểm tra và khắc phục, Evidence Pipeline đảm bảo dữ liệu có thể lưu trữ và truy vết, Prometheus/Grafana phục vụ giám sát, còn Reporting phục vụ nghiệm thu và trình bày kết quả. Cách tổ chức này giúp hệ thống dễ mở rộng khi cần bổ sung thêm section, thêm rule kiểm tra hoặc thay đổi định dạng báo cáo.
