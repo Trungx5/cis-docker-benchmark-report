@@ -1,0 +1,24 @@
+\subsection{Cấu trúc cơ sở dữ liệu Evidence Store}\label{cau-truc-co-so-du-lieu-evidence-store}
+
+Evidence Store được triển khai bằng SQLite để lưu trữ kết quả audit sau khi dữ liệu JSON đã được thu thập và chuẩn hóa. Cơ sở dữ liệu này đóng vai trò là nơi lưu bằng chứng kiểm toán trung tâm, giúp hệ thống không chỉ có file JSON gốc mà còn có dữ liệu có cấu trúc để phục vụ báo cáo, dashboard và kiểm tra tính toàn vẹn.
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep - 3\arrayrulewidth) * \real{0.2200}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep - 3\arrayrulewidth) * \real{0.7800}}|@{}}
+\hline
+\textbf{Bảng} & \textbf{Chức năng} \\
+\hline
+\endhead
+\texttt{runs} & Lưu thông tin mỗi lần audit, bao gồm UUID của lần chạy, host, section, thời điểm sinh kết quả, đường dẫn nguồn, \texttt{source\_sha256}, \texttt{record\_sha256}, số lượng PASS/FAIL/INFO/SKIP và tỷ lệ compliance. \\
+\hline
+\texttt{checks} & Lưu từng tiêu chí kiểm tra thuộc một lần audit, bao gồm mã check, tiêu đề, section, trạng thái và thông tin chi tiết. Bảng này giúp truy vết từ báo cáo tổng hợp xuống từng tiêu chí cụ thể. \\
+\hline
+\texttt{custody\_log} & Lưu chuỗi hành trình bằng chứng, ví dụ sự kiện \texttt{INGESTED}, \texttt{VERIFIED}, \texttt{INTEGRITY\_FAIL} hoặc \texttt{DUPLICATE}. Mỗi bản ghi có timestamp, actor và mô tả để biết bằng chứng được tạo, lưu hoặc kiểm tra khi nào. \\
+\hline
+\texttt{integrity\_checks} & Lưu kết quả kiểm tra toàn vẹn dữ liệu, bao gồm thời điểm verify, actor, hash tính lại tại thời điểm kiểm tra, trạng thái khớp/không khớp và ghi chú. \\
+\hline
+\end{longtable}
+}
+
+Với cấu trúc này, khi cần trả lời câu hỏi ``bằng chứng kiểm toán được lưu ở đâu'', hệ thống có thể chỉ rõ hai lớp dữ liệu: file JSON gốc trong thư mục kết quả audit và bản ghi đã chuẩn hóa trong SQLite Evidence Store. File JSON giữ vai trò bằng chứng nguồn, còn SQLite giữ vai trò kho dữ liệu truy vấn, đối soát và phục vụ dashboard/report.

@@ -1,0 +1,9 @@
+\subsection{Bài toán đặt ra}\label{bai-toan-dat-ra}
+
+Trong thực tế triển khai, Docker thường được sử dụng để đóng gói và vận hành ứng dụng nhanh hơn so với mô hình cài đặt truyền thống. Tuy nhiên, nếu Docker Host, Docker daemon, image hoặc container runtime bị cấu hình sai, hệ thống có thể phát sinh nhiều rủi ro bảo mật như container chạy với đặc quyền cao, mount nhầm thư mục nhạy cảm của host, dùng image không rõ nguồn gốc, expose Docker API không an toàn hoặc thiếu giới hạn tài nguyên. Những lỗi này có thể làm tăng bề mặt tấn công và tạo điều kiện để kẻ tấn công leo thang đặc quyền từ container ra host.
+
+CIS Docker Benchmark cung cấp một tập tiêu chí chuẩn để đánh giá mức độ an toàn của môi trường Docker. Việc kiểm tra theo benchmark giúp người quản trị biết hệ thống đang đạt, sai hoặc cần xem xét thủ công ở những điểm nào. Tuy nhiên, nếu thực hiện hoàn toàn thủ công, quá trình kiểm tra dễ gặp các hạn chế: mất nhiều thời gian, phụ thuộc vào kinh nghiệm người thực hiện, khó lặp lại trên nhiều host, khó lưu lại bằng chứng kiểm toán và dễ xảy ra sai sót khi phải đọc nhiều cấu hình hệ thống khác nhau.
+
+Vì vậy, bài toán đặt ra của đồ án là xây dựng một quy trình kiểm tra và hỗ trợ khắc phục cấu hình Docker theo hướng tự động hóa. Ansible được sử dụng để điều phối các bước audit, thu thập kết quả, sinh file JSON, lưu bằng chứng, đẩy metric sang hệ thống giám sát và chạy remediation khi cần. Cách tiếp cận này giúp quy trình kiểm tra có khả năng lặp lại, có bằng chứng rõ ràng, giảm thao tác thủ công và phù hợp hơn với mô hình Compliance-as-Code.
+
+Mục tiêu cuối cùng không chỉ là liệt kê các tiêu chí của CIS Docker Benchmark, mà là giải quyết một vấn đề vận hành cụ thể: làm thế nào để đánh giá trạng thái bảo mật Docker một cách có hệ thống, có thể truy vết, có thể kiểm tra lại tính toàn vẹn dữ liệu và có số liệu thực nghiệm để chứng minh hiệu quả của quá trình audit/remediation.

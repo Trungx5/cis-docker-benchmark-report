@@ -5,3 +5,7 @@
 *.xdv
 *.synctex.gz
 main.pdf
+__pycache__/
+*.pyc
+Automation/cismonitoringv2/evidence_pipeline/store/.last_ingest
+images/media/Screenshot*.png

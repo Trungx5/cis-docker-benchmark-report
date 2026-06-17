@@ -1,0 +1,23 @@
+\subsection{Nguyên tắc kiểm toán áp dụng trong hệ thống}\label{nguyen-tac-kiem-toan-ap-dung-trong-he-thong}
+
+Để kết quả audit có giá trị như bằng chứng, hệ thống không chỉ lưu số lượng PASS/FAIL mà còn áp dụng các nguyên tắc kiểm toán liên quan đến định danh, toàn vẹn và khả năng truy vết dữ liệu.
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.2200}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.3000}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.4800}}|@{}}
+\hline
+\textbf{Nguyên tắc} & \textbf{Cơ chế áp dụng} & \textbf{Ý nghĩa trong hệ thống} \\
+\hline
+\endhead
+Chain of Custody & Bảng \texttt{custody\_log} ghi lại các sự kiện như ingest, verify và integrity fail. & Cho biết bằng chứng được tạo, đưa vào Evidence Store, kiểm tra hoặc phát hiện sai lệch vào thời điểm nào và bởi actor nào. \\
+\hline
+Integrity \& Hashing & File JSON gốc có \texttt{source\_sha256}; record đã chuẩn hóa có \texttt{record\_sha256}. & Cho phép phát hiện dữ liệu bị sửa đổi sau khi audit hoặc sau khi đã được chuẩn hóa. \\
+\hline
+Traceability & Mỗi lần audit và mỗi check có UUID; report và dashboard sử dụng dữ liệu từ Evidence Store. & Cho phép truy vết từ dashboard hoặc báo cáo về đúng file JSON, lần audit và từng record trong database. \\
+\hline
+\end{longtable}
+}
+
+UUID được dùng để định danh duy nhất mỗi lần audit và từng tiêu chí kiểm tra sau khi đưa vào Evidence Store. Hash được dùng để kiểm tra tính toàn vẹn của cả file nguồn và dữ liệu chuẩn hóa. Custody log tạo ra nhật ký hành trình bằng chứng, còn traceability giúp người kiểm tra đi ngược từ số liệu tổng hợp trong dashboard/report về nguồn dữ liệu ban đầu.

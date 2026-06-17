@@ -1,0 +1,16 @@
+\subsection{Kiểm tra tính toàn vẹn dữ liệu}\label{kiem-tra-tinh-toan-ven-du-lieu}
+
+Sau khi kết quả audit được lưu vào Evidence Store, hệ thống cần có khả năng kiểm tra lại dữ liệu để bảo đảm file JSON và record trong database chưa bị thay đổi. Quy trình verify integrity được thực hiện theo các bước sau:
+
+\begin{enumerate}
+\item Lấy file JSON gốc tương ứng với lần audit cần kiểm tra.
+\item Tính lại mã băm SHA-256 của file JSON.
+\item So sánh giá trị vừa tính với \texttt{source\_sha256} đã lưu trong bảng \texttt{runs}.
+\item Đọc lại dữ liệu JSON và chuẩn hóa record theo cùng logic của Evidence Pipeline.
+\item Tính lại \texttt{record\_sha256} từ dữ liệu đã chuẩn hóa.
+\item So sánh hash mới với \texttt{record\_sha256} đã lưu. Nếu cả hai giá trị đều khớp thì kết quả được đánh dấu \texttt{VERIFIED}; nếu không khớp thì ghi nhận \texttt{INTEGRITY\_FAIL}.
+\end{enumerate}
+
+Kết quả kiểm tra được lưu vào bảng \texttt{integrity\_checks}, đồng thời sự kiện verify cũng được ghi vào \texttt{custody\_log}. Nhờ đó, hệ thống có thể chứng minh không chỉ rằng một lần audit đã được thực hiện, mà còn chứng minh dữ liệu của lần audit đó còn nguyên vẹn tại thời điểm kiểm tra lại.
+
+Trong dữ liệu thực nghiệm, Evidence Store ghi nhận cả các trường hợp \texttt{VERIFIED} và \texttt{INTEGRITY\_FAIL}. Điều này cho thấy cơ chế verify không chỉ là phần mô tả lý thuyết, mà đã được triển khai để phát hiện sự khác biệt giữa hash hiện tại và hash đã lưu.

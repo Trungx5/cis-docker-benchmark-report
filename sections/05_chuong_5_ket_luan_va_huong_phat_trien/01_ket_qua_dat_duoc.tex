@@ -219,3 +219,64 @@ Bảng dưới đây giữ cấu trúc theo bảng các hoạt động của Sec
 }
 
 Tổng hợp riêng Section 5: 27 PASS, 3 FAIL, 1 INFO, 0 SKIP trên 31 kết quả được ghi vào báo cáo; tiêu chí 5.8 chưa được tính vào mẫu số vì chưa append vào \texttt{audit\_results}. Các mục có dấu * cần xem xét lại logic kiểm tra trước khi nghiệm thu cuối cùng.
+
+\subsubsection*{Kết quả thực nghiệm từ Evidence Store}
+
+Bảng dưới đây tổng hợp kết quả mới nhất được truy vấn từ SQLite Evidence Store sau khi hệ thống audit và ingest dữ liệu. Section 2 và Section 3 được lưu chung trong file \texttt{section2\_3.json}; trong bảng báo cáo, số liệu được tách lại theo nhóm tiêu chí để thuận tiện theo dõi.
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1500}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1300}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.0750}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.0750}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.0750}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.1600}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep - 7\arrayrulewidth) * \real{0.2850}}|@{}}
+\hline
+\textbf{Section} & \textbf{Tổng check} & \textbf{PASS} & \textbf{FAIL} & \textbf{INFO} & \textbf{Compliance} & \textbf{Ghi chú} \\
+\hline
+\endhead
+Section 1 & 20 & 14 & 1 & 5 & 93.33\% & Host Configuration còn lỗi nâng cấp Docker package. \\
+\hline
+Section 2 & 19 & 13 & 3 & 3 & 81.25\% & Docker daemon còn các lỗi logging/TLS/default ulimit. \\
+\hline
+Section 3 & 22 & 16 & 2 & 0 & 88.89\% & Một số mục liên quan certificate hoặc file cấu hình vẫn cần xử lý; 4 mục SKIP do điều kiện môi trường. \\
+\hline
+Section 4 & 12 & 3 & 2 & 7 & 60.00\% & Image còn lỗi non-root user và healthcheck. \\
+\hline
+Section 5 & 31 & 27 & 3 & 1 & 90.00\% & Runtime còn lỗi restart policy, no-new-privileges và image latest. \\
+\hline
+Section 6 & 2 & 2 & 0 & 0 & 100.00\% & Không phát hiện lỗi trong nhóm Docker Security Operations. \\
+\hline
+\textbf{Tổng} & \textbf{106} & \textbf{75} & \textbf{11} & \textbf{16} & \textbf{87.21\%} & Dữ liệu mới nhất từ Evidence Store, còn 4 mục SKIP. \\
+\hline
+\end{longtable}
+}
+
+\subsubsection*{So sánh trước và sau remediation}
+
+Để chứng minh hệ thống chạy thực tế, bảng sau so sánh hai lần ingest trong Evidence Store: một lần trước remediation và một lần sau khi cập nhật logic/khắc phục cấu hình. Tỷ lệ compliance được tính trên các mục có kết luận trực tiếp theo công thức PASS/(PASS+FAIL).
+
+{\def\LTcaptype{none}
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep - 6\arrayrulewidth) * \real{0.1900}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep - 6\arrayrulewidth) * \real{0.0900}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep - 6\arrayrulewidth) * \real{0.0900}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep - 6\arrayrulewidth) * \real{0.0900}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep - 6\arrayrulewidth) * \real{0.1800}}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep - 6\arrayrulewidth) * \real{0.3200}}|@{}}
+\hline
+\textbf{Mốc đánh giá} & \textbf{PASS} & \textbf{FAIL} & \textbf{SKIP} & \textbf{Compliance} & \textbf{Nhận xét} \\
+\hline
+\endhead
+Trước remediation & 38 & 14 & 37 & 73.08\% & Nhiều mục chưa kiểm tra được hoặc chưa có bằng chứng rõ ràng, đặc biệt ở Section 5. \\
+\hline
+Sau remediation & 75 & 11 & 4 & 87.21\% & Số PASS tăng mạnh, số SKIP giảm, dữ liệu được ingest vào Evidence Store và hiển thị trên dashboard. \\
+\hline
+Tỷ lệ cải thiện & +37 & -3 & -33 & +14.13 điểm \% & Hệ thống cho thấy hiệu quả rõ rệt sau khi bổ sung automation, evidence pipeline và remediation. \\
+\hline
+\end{longtable}
+}
+
+Kết quả trên cho thấy đồ án không chỉ dừng ở mức mô tả quy trình, mà đã có số liệu thực nghiệm để chứng minh hệ thống audit, lưu bằng chứng, verify integrity, sinh report và dashboard hoạt động trên dữ liệu thật.
