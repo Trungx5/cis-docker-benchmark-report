@@ -1,0 +1,9 @@
+\subsection{Kết luận đồ án, điểm mạnh và hạn chế}\label{ket-luan-do-an-diem-manh-yeu}
+
+Đồ án đã xây dựng được quy trình kiểm tra và tổng hợp kết quả bảo mật Docker theo CIS Docker Benchmark. Hệ thống có khả năng chạy audit theo từng section, lưu kết quả dưới dạng có cấu trúc, tổng hợp trạng thái PASS/FAIL/INFO/SKIP và chỉ ra các mục cần remediation.
+
+\textbf{Điểm mạnh} của đồ án là quy trình được tổ chức theo hướng Compliance-as-Code, có khả năng lặp lại, dễ mở rộng và có dữ liệu đầu ra phục vụ báo cáo. Phần kết quả đã thể hiện rõ các lỗi quan trọng như thiếu \texttt{no-new-privileges}, image dùng \texttt{latest}, restart policy chưa giới hạn và thiếu một số cấu hình daemon.
+
+\textbf{Hạn chế} hiện tại là một số tiêu chí vẫn cần review thủ công hoặc cần cải thiện logic audit để tránh false PASS. Một số mục INFO/SKIP chưa thể xem là đạt chuẩn tuyệt đối nếu chưa có bằng chứng bổ sung. Ngoài ra, các section cần được chạy trong cùng một audit run đồng bộ để tăng độ tin cậy của kết quả tổng hợp.
+
+\textbf{Hướng hoàn thiện} là bổ sung kiểm tra cho các mục còn thiếu, chuẩn hóa evidence theo từng lần chạy, cải thiện healthcheck/container runtime validation và thực hiện re-audit sau remediation để xác nhận không còn FAIL.
