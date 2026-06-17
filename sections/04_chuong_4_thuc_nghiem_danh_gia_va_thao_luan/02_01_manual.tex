@@ -233,81 +233,197 @@ cosign verify \textless IMAGE\textgreater{}\\
 \# Hoặc kiểm tra chữ ký GPG cho package\strut
 \end{minipage} & \\
 \hline
-\multirow{28}{=}{5} & Không bật swarm mode nếu không cần thiết & docker info -\/-format \textquotesingle\{\{ .Swarm \}\}\textquotesingle{} & \\
+\multirow{32}{=}{5} & 5.1: Khong bat swarm mode neu khong can thiet & \begin{minipage}[t]{\linewidth}\raggedright
+Chay docker info de doc trang thai Swarm.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi Swarm inactive; active thi can xac nhan nhu cau hoac ghi FAIL.\strut
+\end{minipage} \\
 \cline{2-4}
-& Bật AppArmor Profile & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: AppArmorProfile=\{\{ .AppArmorProfile \}\}\textquotesingle{} & \\
+ & 5.2: Bat AppArmor Profile neu moi truong ho tro & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc AppArmorProfile cua tung container.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi moi container co profile, vi du docker-default.\strut
+\end{minipage} \\
 \cline{2-4}
-& Phải có SELinux & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: SecurityOpt=\{\{ .HostConfig.SecurityOpt \}\} MountLabel=\{\{ .MountLabel \}\} ProcessLabel=\{\{ .ProcessLabel \}\}\textquotesingle{} & \\
+ & 5.3: Thiet lap SELinux security options neu ap dung & \begin{minipage}[t]{\linewidth}\raggedright
+Chay getenforce va docker inspect de doc SecurityOpt, MountLabel, ProcessLabel.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Neu host dung AppArmor hoac SELinux disabled thi ghi INFO; neu ap dung SELinux thi phai co label phu hop.\strut
+\end{minipage} \\
 \cline{2-4}
-& Linux Kernel phải để chế độ hạn chế trong containers & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: CapAdd=\{\{ .HostConfig.CapAdd \}\} CapDrop=\{\{ .HostConfig.CapDrop \}\}\textquotesingle{} & \\
+ & 5.4: Han che Linux kernel capabilities & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de kiem tra CapAdd va CapDrop.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Xac nhan khong cap capability nguy hiem va khong giu capability mac dinh khong can thiet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không sử dụng privileged container & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Privileged=\{\{ .HostConfig.Privileged \}\}\textquotesingle{} & \\
+ & 5.5: Khong su dung privileged container & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc HostConfig.Privileged.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi moi container co Privileged=false.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không mount các host system cần bảo vệ chặt trong container & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Volumes=\{\{ .Mounts \}\}\textquotesingle{} & \\
+ & 5.6: Khong mount thu muc he thong nhay cam cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de kiem tra danh sach Mounts.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Khong mount /, /etc, /proc, /sys, /dev hoac thu muc host nhay cam.\strut
+\end{minipage} \\
 \cline{2-4}
-& SSHD không chạy trong containers & docker ps -\/-quiet \textbar{} xargs -I\{\} docker exec \{\} ps -el & \\
+ & 5.7: Khong chay sshd trong container & \begin{minipage}[t]{\linewidth}\raggedright
+Uu tien docker top; neu dung docker exec thi phai xu ly loi thieu ps.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Khong co process sshd; neu khong kiem tra duoc thi ghi INFO, khong tu dong PASS.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không chạy port đặc quyền trong container & docker ps -\/-quiet \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Ports=\{\{ .NetworkSettings.Ports \}\}\textquotesingle{} & \\
+ & 5.8: Khong anh xa privileged port khong can thiet & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de xem port mapping va doi chieu port nho hon 1024.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Chi giu privileged port da duoc phe duyet; muc chua tu dong hoa thi ghi Manual/INFO.\strut
+\end{minipage} \\
 \cline{2-4}
-& Chỉ chạy port cần thiết cho container & docker ps -\/-quiet \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Ports=\{\{ .NetworkSettings.Ports \}\}\textquotesingle{} & \\
+ & 5.9: Chi mo port can thiet & \begin{minipage}[t]{\linewidth}\raggedright
+Kiem tra Config.ExposedPorts va NetworkSettings.Ports.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Chi publish port co trong thiet ke va tranh mo rong khong can thiet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Bảo mật network namespace & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: NetworkMode=\{\{ .HostConfig.NetworkMode \}\}\textquotesingle{} & \\
+ & 5.10: Khong chia se network namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc NetworkMode.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi NetworkMode khong phai host.\strut
+\end{minipage} \\
 \cline{2-4}
-& Sử dụng tài nguyên hợp lý: Memory usage và CPU priority(5.11, 5.12) & \begin{minipage}[t]{\linewidth}\raggedright
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Memory=\{\{ .HostConfig.Memory \}\}\textquotesingle{}\\
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: CpuShares=\{\{ .HostConfig.CpuShares \}\}\textquotesingle{}\strut
-\end{minipage} & \\
+ & 5.11: Gioi han memory cho container & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc HostConfig.Memory.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi memory limit lon hon 0 va phu hop workload.\strut
+\end{minipage} \\
 \cline{2-4}
-& Để filesystem của container's ở quyền ``read only'' & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: ReadonlyRootfs=\{\{ .HostConfig.ReadonlyRootfs \}\}\textquotesingle{} & \\
+ & 5.12: Dat CPU priority phu hop & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc CpuShares hoac CPU quota.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Ghi PASS khi co gia tri CPU ro rang; gia tri mac dinh can review.\strut
+\end{minipage} \\
 \cline{2-4}
-& Mạng lưu thông phải đến một interface được đặt & docker ps -\/-quiet \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Ports=\{\{ .NetworkSettings.Ports \}\}\textquotesingle{} & \\
+ & 5.13: Root filesystem o che do read-only & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc ReadonlyRootfs.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi ReadonlyRootfs=true va vung can ghi duoc tach rieng.\strut
+\end{minipage} \\
 \cline{2-4}
-& Có chính sách ``on-failure'' thì khởi động lại với giá trị 5 & \begin{minipage}[t]{\linewidth}\raggedright
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: RestartPolicyName=\{\{ .HostConfig.RestartPolicy.Name \}\}\\
-MaximumRetryCount=\{\{ .HostConfig.RestartPolicy.\\
-MaximumRetryCount \}\}\textquotesingle{}\strut
-\end{minipage} & \\
+ & 5.14: Bind traffic vao interface cu the & \begin{minipage}[t]{\linewidth}\raggedright
+Kiem tra HostIp trong NetworkSettings.Ports.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi khong bind 0.0.0.0 tru khi co phe duyet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Bảo mật Host's process namespace và IPC namespace(5.16, 5.17) & \begin{minipage}[t]{\linewidth}\raggedright
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: PidMode=\{\{ .HostConfig.PidMode \}\}\textquotesingle{}\\
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: IpcMode=\{\{ .HostConfig.IpcMode \}\}\textquotesingle{}\strut
-\end{minipage} & \\
+ & 5.15: Gioi han restart policy & \begin{minipage}[t]{\linewidth}\raggedright
+Doc RestartPolicy.Name va MaximumRetryCount.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi on-failure va retry tu 1 den 5.\strut
+\end{minipage} \\
 \cline{2-4}
-& Host Devices không nên tương tác chung với containers & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Devices=\{\{ .HostConfig.Devices \}\}\textquotesingle{} & \\
+ & 5.16: Khong chia se PID namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc PidMode.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi PidMode khong phai host.\strut
+\end{minipage} \\
 \cline{2-4}
-& Phải có default limit overwritten trong lúc chạy nếu cần thiết & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Ulimits=\{\{ .HostConfig.Ulimits \}\}\textquotesingle{} & \\
+ & 5.17: Khong chia se IPC namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc IpcMode.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi IpcMode private hoac khong phai host.\strut
+\end{minipage} \\
 \cline{2-4}
-& Để mount propagation và host's UTS namespace bí mật(5.20,5.21) & \begin{minipage}[t]{\linewidth}\raggedright
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Propagation=\{\{range \$mnt := .Mounts\}\} \{\{json \$mnt.Propagation\}\} \{\{end\}\}\textquotesingle{}\\
-docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: UTSMode=\{\{ .HostConfig.UTSMode \}\}\textquotesingle{}\strut
-\end{minipage} & \\
+ & 5.18: Khong expose truc tiep host device & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc Devices.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi Devices rong hoac khong co thiet bi host khong phe duyet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Chế độ của default seccomp profile không tắt & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .HostConfig.SecurityOpt \}\}\textquotesingle{} & \\
+ & 5.19: Ghi de ulimit khi can & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc Ulimits.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Ghi PASS khi co ulimit phu hop hoac daemon default da duoc harden.\strut
+\end{minipage} \\
 \cline{2-4}
-& Khi sử dụng docker exec commands, không sử dụng quyền priviledged option hoặc user=root(5.23,5.24) & \begin{minipage}[t]{\linewidth}\raggedright
-ausearch -k docker \textbar{} grep exec \textbar{} grep privileged\\
-ausearch -k docker \textbar{} grep exec \textbar{} grep user\strut
-\end{minipage} & \\
+ & 5.20: Khong dung shared mount propagation & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc Propagation trong Mounts.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi propagation la private, slave hoac khong shared.\strut
+\end{minipage} \\
 \cline{2-4}
-& Phải có cgroup usage & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: CgroupParent=\{\{ .HostConfig.CgroupParent \}\}\textquotesingle{} & \\
+ & 5.21: Khong chia se UTS namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc UTSMode.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi UTSMode khong phai host.\strut
+\end{minipage} \\
 \cline{2-4}
-& Container chỉ cho quyền cần thiết và không thêm quyền không cần thiết & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .HostConfig.SecurityOpt \}\}\textquotesingle{} & \\
+ & 5.22: Khong tat default seccomp profile & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc SecurityOpt.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi khong co seccomp=unconfined.\strut
+\end{minipage} \\
 \cline{2-4}
-& Container health luôn chạy & docker ps -\/-quiet \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Health=\{\{ .State.Health.Status \}\}\textquotesingle{} & \\
+ & 5.23: Khong dung docker exec voi privileged option & \begin{minipage}[t]{\linewidth}\raggedright
+Kiem tra journalctl hoac audit log cho mau exec privileged.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS chi ap dung trong cua so log duoc truy van va nguon log dang tin cay.\strut
+\end{minipage} \\
 \cline{2-4}
-& Docker command phải sử dụng lệnh mới nhất của image & \begin{minipage}[t]{\linewidth}\raggedright
-\# Kiểm tra image repository\\
-docker pull \textless IMAGE\textgreater{} \# Quan sát status\\
-\# So sánh digest của image đang chạy với image mới nhất\strut
-\end{minipage} & \\
+ & 5.24: Khong dung docker exec voi user root option & \begin{minipage}[t]{\linewidth}\raggedright
+Kiem tra journalctl hoac audit log cho mau exec user root.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi khong co root exec trong log; can logging tap trung de tang do tin cay.\strut
+\end{minipage} \\
 \cline{2-4}
-& PIDs cgroup limit phải được sử dụng & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: PidsLimit=\{\{ .HostConfig.PidsLimit \}\}\textquotesingle{} & \\
+ & 5.25: Xac nhan cgroup usage & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc CgroupParent.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Default hierarchy la PASS; custom cgroup phai co ly do va resource control.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không sử dụng default bridge `docker0' & docker network ls -\/-quiet \textbar{} xargs docker network inspect -\/-format \textquotesingle\{\{ .Name \}\}: \{\{ .Options \}\}\textquotesingle{} & \\
+ & 5.26: Ngan container nhan them dac quyen & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de tim no-new-privileges trong SecurityOpt.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi moi container co no-new-privileges.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không chia sẽ host's user namespace & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: UsernsMode=\{\{ .HostConfig.UsernsMode \}\}\textquotesingle{} & \\
+ & 5.27: Co runtime health check & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc State.Health.Status.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS nen la healthy; starting la INFO, unhealthy la FAIL/WARN.\strut
+\end{minipage} \\
 \cline{2-4}
-& Docker socker không được mount vào bất kỳ container nào & docker ps -\/-quiet -\/-all \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Volumes=\{\{ .Mounts \}\}\textquotesingle{} \textbar{} grep docker.sock & \\
+ & 5.28: Ghim phien ban image, khong dung latest & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc Config.Image.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi image co version tag cu the hoac digest sha256.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.29: Su dung PIDs cgroup limit & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc PidsLimit.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi PidsLimit la so duong phu hop workload.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.30: Khong dung default bridge docker0 & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc NetworkSettings.Networks.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi container dung user-defined network nhu secure-net.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.31: Khong chia se user namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect de doc UsernsMode.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi UsernsMode khong phai host.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.32: Khong mount Docker socket vao container & \begin{minipage}[t]{\linewidth}\raggedright
+Dung docker inspect Mounts va tim docker.sock.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+PASS khi khong mount /var/run/docker.sock hoac socket tuong duong.\strut
+\end{minipage} \\
 \hline
 \multirow{2}{=}{6} & Tránh Image sprawl & \begin{minipage}[t]{\linewidth}\raggedright
 docker images -\/-quiet \textbar{} xargs docker inspect -\/-format \textquotesingle\{\{ .Id \}\}: Image=\{\{ .Config.Image \}\}\textquotesingle{}\\

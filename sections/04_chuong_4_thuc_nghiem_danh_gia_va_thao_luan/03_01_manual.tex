@@ -148,61 +148,197 @@ system/docker.service -k docker\strut
 \cline{2-4}
 & Các signed artifacts phải được kiểm chứng & & \\
 \hline
-\multirow{28}{=}{5} & Không bật swarm mode nếu không cần thiết & & \\
+\multirow{32}{=}{5} & 5.1: Khong bat swarm mode neu khong can thiet & \begin{minipage}[t]{\linewidth}\raggedright
+Roi Swarm neu host khong dung cluster.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Chay docker swarm leave --force sau khi xac nhan khong con workload Swarm.\strut
+\end{minipage} \\
 \cline{2-4}
-& Bật AppArmor Profile & & \\
+ & 5.2: Bat AppArmor Profile neu moi truong ho tro & \begin{minipage}[t]{\linewidth}\raggedright
+Khoi chay container voi AppArmor profile phu hop.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung security-opt apparmor profile hoac profile mac dinh da phe duyet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Phải có SELinux & & \\
+ & 5.3: Thiet lap SELinux security options neu ap dung & \begin{minipage}[t]{\linewidth}\raggedright
+Chi ap dung SELinux label khi host thuc su bat SELinux.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bat SELinux dung moi truong hoac bo label khong co tac dung tren Ubuntu/AppArmor.\strut
+\end{minipage} \\
 \cline{2-4}
-& Linux Kernel phải để chế độ hạn chế trong containers & & \\
+ & 5.4: Han che Linux kernel capabilities & \begin{minipage}[t]{\linewidth}\raggedright
+Drop capability mac dinh va chi add lai capability can thiet.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung cap-drop ALL; kiem thu roi chi cap-add capability da duoc phe duyet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không sử dụng privileged container & & \\
+ & 5.5: Khong su dung privileged container & \begin{minipage}[t]{\linewidth}\raggedright
+Tai tao container khong dung privileged mode.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo privileged va thay bang capability hoac device cu the neu bat buoc.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không mount các host system cần bảo vệ chặt trong container & & \\
+ & 5.6: Khong mount thu muc he thong nhay cam cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Loai bo bind mount nhay cam.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo mount /, /etc, /proc, /sys, /dev; neu bat buoc thi read-only va co phe duyet.\strut
+\end{minipage} \\
 \cline{2-4}
-& SSHD không chạy trong containers & & \\
+ & 5.7: Khong chay sshd trong container & \begin{minipage}[t]{\linewidth}\raggedright
+Loai bo SSH daemon khoi image/container.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Quan tri bang docker exec, logs hoac orchestration thay vi sshd trong container.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không chạy port đặc quyền trong container & & \\
+ & 5.8: Khong anh xa privileged port khong can thiet & \begin{minipage}[t]{\linewidth}\raggedright
+Go privileged port hoac ghi nhan phe duyet.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung port cao hon hoac reverse proxy; chi giu port nho hon 1024 khi co nhu cau ro rang.\strut
+\end{minipage} \\
 \cline{2-4}
-& Chỉ chạy port cần thiết cho container & & \\
+ & 5.9: Chi mo port can thiet & \begin{minipage}[t]{\linewidth}\raggedright
+Xoa cac port publish khong dung.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Cap nhat Docker CLI/Compose/Ansible de chi publish port nam trong thiet ke.\strut
+\end{minipage} \\
 \cline{2-4}
-& Bảo mật network namespace & & \\
+ & 5.10: Khong chia se network namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Recreate container tren network rieng.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo network host; dung bridge/overlay user-defined network.\strut
+\end{minipage} \\
 \cline{2-4}
-& Sử dụng tài nguyên hợp lý: Memory usage và CPU priority(5.11, 5.12) & & \\
+ & 5.11: Gioi han memory cho container & \begin{minipage}[t]{\linewidth}\raggedright
+Dat memory limit theo workload.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung memory limit trong Docker CLI, playbook hoac compose.\strut
+\end{minipage} \\
 \cline{2-4}
-& Để filesystem của container's ở quyền ``read only'' & & \\
+ & 5.12: Dat CPU priority phu hop & \begin{minipage}[t]{\linewidth}\raggedright
+Dat CPU shares hoac quota.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung cpu-shares hoac CPU quota phu hop, sau do test hieu nang.\strut
+\end{minipage} \\
 \cline{2-4}
-& Mạng lưu thông phải đến một interface được đặt & & \\
+ & 5.13: Root filesystem o che do read-only & \begin{minipage}[t]{\linewidth}\raggedright
+Chay container voi rootfs read-only.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung read-only va khai bao tmpfs/volume rieng cho duong dan can ghi.\strut
+\end{minipage} \\
 \cline{2-4}
-& Có chính sách ``on-failure'' thì khởi động lại với giá trị 5 & & \\
+ & 5.14: Bind traffic vao interface cu the & \begin{minipage}[t]{\linewidth}\raggedright
+Bind port vao IP duoc phe duyet.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung 127.0.0.1:port:port hoac IP NIC cu the thay vi 0.0.0.0.\strut
+\end{minipage} \\
 \cline{2-4}
-& Bảo mật Host's process namespace và IPC namespace(5.16, 5.17) & & \\
+ & 5.15: Gioi han restart policy & \begin{minipage}[t]{\linewidth}\raggedright
+Doi restart policy sang on-failure co gioi han.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung restart on-failure:5 hoac restart policy/retry tuong ung.\strut
+\end{minipage} \\
 \cline{2-4}
-& Host Devices không nên tương tác chung với containers & & \\
+ & 5.16: Khong chia se PID namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Recreate container khong dung host PID.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo pid host khoi cau hinh runtime.\strut
+\end{minipage} \\
 \cline{2-4}
-& Phải có default limit overwritten trong lúc chạy nếu cần thiết & & \\
+ & 5.17: Khong chia se IPC namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Recreate container khong dung host IPC.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo ipc host; neu can chia se IPC thi gioi han giua container duoc phe duyet.\strut
+\end{minipage} \\
 \cline{2-4}
-& Để mount propagation và host's UTS namespace bí mật(5.20,5.21) & & \\
+ & 5.18: Khong expose truc tiep host device & \begin{minipage}[t]{\linewidth}\raggedright
+Go device mapping khong can thiet.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo device mapping hoac gioi han dung thiet bi/quyen truy cap theo nghiep vu.\strut
+\end{minipage} \\
 \cline{2-4}
-& Chế độ của default seccomp profile không tắt & & \\
+ & 5.19: Ghi de ulimit khi can & \begin{minipage}[t]{\linewidth}\raggedright
+Khai bao ulimit ro rang.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung ulimit hoac default-ulimits trong daemon.json da duoc harden.\strut
+\end{minipage} \\
 \cline{2-4}
-& Khi sử dụng docker exec commands, không sử dụng quyền priviledged option hoặc user=root(5.23,5.24) & & \\
+ & 5.20: Khong dung shared mount propagation & \begin{minipage}[t]{\linewidth}\raggedright
+Chuyen mount propagation sang private/slave.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Cap nhat bind propagation va recreate container.\strut
+\end{minipage} \\
 \cline{2-4}
-& Phải có cgroup usage & & \\
+ & 5.21: Khong chia se UTS namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Recreate container khong dung host UTS.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo uts host khoi cau hinh runtime.\strut
+\end{minipage} \\
 \cline{2-4}
-& Container chỉ cho quyền cần thiết và không thêm quyền không cần thiết & & \\
+ & 5.22: Khong tat default seccomp profile & \begin{minipage}[t]{\linewidth}\raggedright
+Bo cau hinh seccomp unconfined.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung default seccomp hoac custom seccomp profile da kiem soat.\strut
+\end{minipage} \\
 \cline{2-4}
-& Container health luôn chạy & & \\
+ & 5.23: Khong dung docker exec voi privileged option & \begin{minipage}[t]{\linewidth}\raggedright
+Cam quy trinh van hanh dung exec privileged.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Cap nhat runbook, review quyen admin va bat logging/audit tap trung.\strut
+\end{minipage} \\
 \cline{2-4}
-& Docker command phải sử dụng lệnh mới nhất của image & & \\
+ & 5.24: Khong dung docker exec voi user root option & \begin{minipage}[t]{\linewidth}\raggedright
+Van hanh bang user ung dung.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung user ung dung hoac sua image de co USER non-root.\strut
+\end{minipage} \\
 \cline{2-4}
-& PIDs cgroup limit phải được sử dụng & & \\
+ & 5.25: Xac nhan cgroup usage & \begin{minipage}[t]{\linewidth}\raggedright
+Bo custom cgroup parent neu khong can.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Loai bo cgroup parent hoac ghi tai lieu phe duyet kem resource control.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không sử dụng default bridge `docker0' & & \\
+ & 5.26: Ngan container nhan them dac quyen & \begin{minipage}[t]{\linewidth}\raggedright
+Them no-new-privileges.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung security option no-new-privileges=true hoac security opts trong Ansible.\strut
+\end{minipage} \\
 \cline{2-4}
-& Không chia sẽ host's user namespace & & \\
+ & 5.27: Co runtime health check & \begin{minipage}[t]{\linewidth}\raggedright
+Sua healthcheck de phan anh trang thai that.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Them HEALTHCHECK hoac healthcheck command noi bo; nghiem thu khi healthy.\strut
+\end{minipage} \\
 \cline{2-4}
-& Docker socker không được mount vào bất kỳ container nào & & \\
+ & 5.28: Ghim phien ban image, khong dung latest & \begin{minipage}[t]{\linewidth}\raggedright
+Ghim image bang version tag hoac digest.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Doi nginx latest thanh version tag hoac sha256 digest da xac minh.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.29: Su dung PIDs cgroup limit & \begin{minipage}[t]{\linewidth}\raggedright
+Dat PID limit.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Dung pids limit trong Docker CLI, playbook hoac compose.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.30: Khong dung default bridge docker0 & \begin{minipage}[t]{\linewidth}\raggedright
+Tao va dung network rieng.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Chay docker network create ten-network roi recreate container tren network do.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.31: Khong chia se user namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
+Bo host user namespace.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo userns host; can nhac userns-remap o daemon neu phu hop.\strut
+\end{minipage} \\
+\cline{2-4}
+ & 5.32: Khong mount Docker socket vao container & \begin{minipage}[t]{\linewidth}\raggedright
+Go Docker socket bind mount.\strut
+\end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
+Bo /var/run/docker.sock khoi volumes; dung API TLS hoac cong cu khong can daemon socket.\strut
+\end{minipage} \\
 \hline
 \multirow{2}{=}{6} & Tránh Image sprawl & Xóa bỏ các images không sử dụng thủ công & Chạy lệnh docker image prune -a --force \\
 \cline{2-4}
