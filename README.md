@@ -32,4 +32,4 @@ powershell -ExecutionPolicy Bypass -File .\build.ps1
 
 The conversion was generated with Pandoc and validated with Tectonic. The DOCX has 11 tables; the active LaTeX project has 12 bordered `longtable` blocks including the abbreviation list. All tables stay in normal portrait orientation and use full text width. The generated PDF is `main.pdf`.
 
-On UiTiOt/Overleaf, set the compiler to XeLaTeX if it is not selected automatically. The document uses Vietnamese Unicode text and Times New Roman when that font is available on the server; otherwise it falls back to TeX Gyre Termes.
+On UiTiOt/Overleaf, set the compiler to XeLaTeX if it is not selected automatically. XeLaTeX uses Times New Roman when that font is available on the server; otherwise it falls back to TeX Gyre Termes. If the server insists on pdfLaTeX, the project falls back to Vietnamese-compatible Times-style fonts so it can still produce a PDF.
