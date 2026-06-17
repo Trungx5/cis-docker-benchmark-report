@@ -1,5 +1,44 @@
 \subsection{Code chi tiết cho Section 6}\label{phu-luc-code-section-6}
 
+\noindent\textbf{Chi tiết quy trình kiểm toán thủ công cho Section 6}
+
+\begin{enumerate}
+    \item \textbf{6.1 -- Tránh tích tụ quá nhiều Docker Images dư thừa (Image sprawl):}
+    Đếm và đối chứng số lượng image:
+{\footnotesize
+\begin{verbatim}
+# Số lượng images đang thực sự được sử dụng bởi các container
+docker ps -qa | xargs -r docker inspect --format "{{.Image}}" \
+  | sort -u | wc -l
+
+# Tổng số images hiện có trên máy chủ
+docker image list -a -q | wc -l
+
+# Liệt kê chi tiết để rà soát
+docker image list --format \
+  'table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.Size}}'
+\end{verbatim}
+}
+
+    \item \textbf{6.2 -- Tránh tích tụ quá nhiều Docker Containers đã dừng (Container sprawl):}
+    Rà soát các container dư thừa:
+{\scriptsize
+\begin{verbatim}
+# Đọc thống kê containers từ hệ thống
+docker info --format \
+  'Containers: {{.Containers}},
+   Running: {{.ContainersRunning}},
+   Stopped: {{.ContainersStopped}}'
+
+# Liệt kê tất cả container kèm theo trạng thái hoạt động của chúng
+docker ps -a --format \
+  'table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}'
+\end{verbatim}
+}
+\end{enumerate}
+
+\noindent\textbf{Chi tiết quy trình khắc phục thủ công cho Section 6}
+
 \begin{enumerate}
     \item \textbf{6.1 -- Loại bỏ Docker images dư thừa (Image sprawl):}
     Dọn dẹp các images không còn được sử dụng bởi bất kỳ container nào:
@@ -33,3 +72,49 @@ echo '0 4 * * * root docker container prune --filter "until=48h" -f >> /var/log/
 \end{verbatim}
 }
 \end{enumerate}
+
+\noindent\textbf{Chi tiết kịch bản kiểm toán tự động cho Section 6}
+
+Kịch bản kiểm toán tự động chống image sprawl và container sprawl:
+
+{\footnotesize
+\begin{verbatim}
+# Kiểm toán 6.1: Tránh tích tụ quá nhiều image (image sprawl)
+- name: "6.1 | Count images actively used by running containers"
+  ansible.builtin.shell:
+    cmd: |
+      docker ps -qa | xargs -r docker inspect --format "{{.Image}}" | sort -u | wc -l
+  register: active_images_command
+  changed_when: false
+  failed_when: false
+
+- name: "6.1 | Count all images on host"
+  ansible.builtin.shell:
+    cmd: "docker image list -a -q | wc -l"
+  register: all_images_command
+  changed_when: false
+  failed_when: false
+
+# Kiểm toán 6.2: Tránh tích tụ quá nhiều container dừng (container sprawl)
+- name: "6.2 | Get total container count"
+  ansible.builtin.shell:
+    cmd: "docker info --format '{{ .Containers }}'"
+  register: total_container_command
+  changed_when: false
+  failed_when: false
+
+- name: "6.2 | Get running container count"
+  ansible.builtin.shell:
+    cmd: "docker info --format '{{ .ContainersRunning }}'"
+  register: total_running_container_command
+  changed_when: false
+  failed_when: false
+
+- name: "6.2 | Get stopped container count"
+  ansible.builtin.shell:
+    cmd: "docker info --format '{{ .ContainersStopped }}'"
+  register: total_not_running_container_command
+  changed_when: false
+  failed_when: false
+\end{verbatim}
+}
