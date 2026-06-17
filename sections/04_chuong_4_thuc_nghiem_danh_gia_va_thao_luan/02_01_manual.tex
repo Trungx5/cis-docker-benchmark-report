@@ -233,196 +233,196 @@ cosign verify \textless IMAGE\textgreater{}\\
 \# Hoặc kiểm tra chữ ký GPG cho package\strut
 \end{minipage} & \\
 \hline
-\multirow{32}{=}{5} & 5.1: Khong bat swarm mode neu khong can thiet & \begin{minipage}[t]{\linewidth}\raggedright
-Chay docker info de doc trang thai Swarm.\strut
+\multirow{32}{=}{5} & 5.1: Không bật swarm mode nếu không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
+Chạy docker info để đọc trạng thái Swarm.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi Swarm inactive; active thi can xac nhan nhu cau hoac ghi FAIL.\strut
+PASS khi Swarm inactive; nếu active thì cần xác nhận nhu cầu sử dụng hoặc ghi FAIL.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.2: Bat AppArmor Profile neu moi truong ho tro & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc AppArmorProfile cua tung container.\strut
+ & 5.2: Bật AppArmor Profile nếu môi trường hỗ trợ & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc AppArmorProfile của từng container.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi moi container co profile, vi du docker-default.\strut
+PASS khi mỗi container có profile, ví dụ docker-default.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.3: Thiet lap SELinux security options neu ap dung & \begin{minipage}[t]{\linewidth}\raggedright
-Chay getenforce va docker inspect de doc SecurityOpt, MountLabel, ProcessLabel.\strut
+ & 5.3: Thiết lập SELinux security options nếu áp dụng & \begin{minipage}[t]{\linewidth}\raggedright
+Chạy getenforce và docker inspect để đọc SecurityOpt, MountLabel, ProcessLabel.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Neu host dung AppArmor hoac SELinux disabled thi ghi INFO; neu ap dung SELinux thi phai co label phu hop.\strut
+Nếu host dùng AppArmor hoặc SELinux disabled thì ghi INFO; nếu áp dụng SELinux thì phải có label phù hợp.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.4: Han che Linux kernel capabilities & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de kiem tra CapAdd va CapDrop.\strut
+ & 5.4: Hạn chế Linux kernel capabilities & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để kiểm tra CapAdd và CapDrop.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Xac nhan khong cap capability nguy hiem va khong giu capability mac dinh khong can thiet.\strut
+Xác nhận không cấp capability nguy hiểm và không giữ capability mặc định không cần thiết.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.5: Khong su dung privileged container & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc HostConfig.Privileged.\strut
+ & 5.5: Không sử dụng privileged container & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc HostConfig.Privileged.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi moi container co Privileged=false.\strut
+PASS khi mọi container có Privileged=false.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.6: Khong mount thu muc he thong nhay cam cua host & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de kiem tra danh sach Mounts.\strut
+ & 5.6: Không mount thư mục hệ thống nhạy cảm của host & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để kiểm tra danh sách Mounts.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Khong mount /, /etc, /proc, /sys, /dev hoac thu muc host nhay cam.\strut
+Không mount /, /etc, /proc, /sys, /dev hoặc thư mục host nhạy cảm.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.7: Khong chay sshd trong container & \begin{minipage}[t]{\linewidth}\raggedright
-Uu tien docker top; neu dung docker exec thi phai xu ly loi thieu ps.\strut
+ & 5.7: Không chạy sshd trong container & \begin{minipage}[t]{\linewidth}\raggedright
+Ưu tiên docker top; nếu dùng docker exec thì phải xử lý lỗi thiếu ps.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Khong co process sshd; neu khong kiem tra duoc thi ghi INFO, khong tu dong PASS.\strut
+Không có process sshd; nếu không kiểm tra được thì ghi INFO, không tự động PASS.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.8: Khong anh xa privileged port khong can thiet & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de xem port mapping va doi chieu port nho hon 1024.\strut
+ & 5.8: Không ánh xạ privileged port không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để xem port mapping và đối chiếu port nhỏ hơn 1024.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Chi giu privileged port da duoc phe duyet; muc chua tu dong hoa thi ghi Manual/INFO.\strut
+Chỉ giữ privileged port đã được phê duyệt; mục chưa tự động hóa thì ghi Manual/INFO.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.9: Chi mo port can thiet & \begin{minipage}[t]{\linewidth}\raggedright
-Kiem tra Config.ExposedPorts va NetworkSettings.Ports.\strut
+ & 5.9: Chỉ mở port cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
+Kiểm tra Config.ExposedPorts và NetworkSettings.Ports.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Chi publish port co trong thiet ke va tranh mo rong khong can thiet.\strut
+Chỉ publish port có trong thiết kế và tránh mở rộng không cần thiết.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.10: Khong chia se network namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc NetworkMode.\strut
+ & 5.10: Không chia sẻ network namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc NetworkMode.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi NetworkMode khong phai host.\strut
+PASS khi NetworkMode không phải host.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.11: Gioi han memory cho container & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc HostConfig.Memory.\strut
+ & 5.11: Giới hạn memory cho container & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc HostConfig.Memory.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi memory limit lon hon 0 va phu hop workload.\strut
+PASS khi memory limit lớn hơn 0 và phù hợp workload.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.12: Dat CPU priority phu hop & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc CpuShares hoac CPU quota.\strut
+ & 5.12: Đặt CPU priority phù hợp & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc CpuShares hoặc CPU quota.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Ghi PASS khi co gia tri CPU ro rang; gia tri mac dinh can review.\strut
+Ghi PASS khi có giá trị CPU rõ ràng; giá trị mặc định cần review.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.13: Root filesystem o che do read-only & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc ReadonlyRootfs.\strut
+ & 5.13: Root filesystem ở chế độ read-only & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc ReadonlyRootfs.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi ReadonlyRootfs=true va vung can ghi duoc tach rieng.\strut
+PASS khi ReadonlyRootfs=true và vùng cần ghi được tách riêng.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.14: Bind traffic vao interface cu the & \begin{minipage}[t]{\linewidth}\raggedright
-Kiem tra HostIp trong NetworkSettings.Ports.\strut
+ & 5.14: Bind traffic vào interface cụ thể & \begin{minipage}[t]{\linewidth}\raggedright
+Kiểm tra HostIp trong NetworkSettings.Ports.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi khong bind 0.0.0.0 tru khi co phe duyet.\strut
+PASS khi không bind 0.0.0.0, trừ khi có phê duyệt.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.15: Gioi han restart policy & \begin{minipage}[t]{\linewidth}\raggedright
-Doc RestartPolicy.Name va MaximumRetryCount.\strut
+ & 5.15: Giới hạn restart policy & \begin{minipage}[t]{\linewidth}\raggedright
+Đọc RestartPolicy.Name và MaximumRetryCount.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi on-failure va retry tu 1 den 5.\strut
+PASS khi on-failure và retry từ 1 đến 5.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.16: Khong chia se PID namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc PidMode.\strut
+ & 5.16: Không chia sẻ PID namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc PidMode.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi PidMode khong phai host.\strut
+PASS khi PidMode không phải host.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.17: Khong chia se IPC namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc IpcMode.\strut
+ & 5.17: Không chia sẻ IPC namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc IpcMode.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi IpcMode private hoac khong phai host.\strut
+PASS khi IpcMode private hoặc không phải host.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.18: Khong expose truc tiep host device & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc Devices.\strut
+ & 5.18: Không expose trực tiếp host device & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc Devices.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi Devices rong hoac khong co thiet bi host khong phe duyet.\strut
+PASS khi Devices rỗng hoặc không có thiết bị host chưa phê duyệt.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.19: Ghi de ulimit khi can & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc Ulimits.\strut
+ & 5.19: Ghi đè ulimit khi cần & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc Ulimits.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Ghi PASS khi co ulimit phu hop hoac daemon default da duoc harden.\strut
+Ghi PASS khi có ulimit phù hợp hoặc daemon default đã được harden.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.20: Khong dung shared mount propagation & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc Propagation trong Mounts.\strut
+ & 5.20: Không dùng shared mount propagation & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc Propagation trong Mounts.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi propagation la private, slave hoac khong shared.\strut
+PASS khi propagation là private, slave hoặc không shared.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.21: Khong chia se UTS namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc UTSMode.\strut
+ & 5.21: Không chia sẻ UTS namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc UTSMode.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi UTSMode khong phai host.\strut
+PASS khi UTSMode không phải host.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.22: Khong tat default seccomp profile & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc SecurityOpt.\strut
+ & 5.22: Không tắt default seccomp profile & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc SecurityOpt.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi khong co seccomp=unconfined.\strut
+PASS khi không có seccomp=unconfined.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.23: Khong dung docker exec voi privileged option & \begin{minipage}[t]{\linewidth}\raggedright
-Kiem tra journalctl hoac audit log cho mau exec privileged.\strut
+ & 5.23: Không dùng docker exec với privileged option & \begin{minipage}[t]{\linewidth}\raggedright
+Kiểm tra journalctl hoặc audit log cho mẫu exec privileged.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS chi ap dung trong cua so log duoc truy van va nguon log dang tin cay.\strut
+PASS chỉ áp dụng trong cửa sổ log được truy vấn và nguồn log đáng tin cậy.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.24: Khong dung docker exec voi user root option & \begin{minipage}[t]{\linewidth}\raggedright
-Kiem tra journalctl hoac audit log cho mau exec user root.\strut
+ & 5.24: Không dùng docker exec với user root option & \begin{minipage}[t]{\linewidth}\raggedright
+Kiểm tra journalctl hoặc audit log cho mẫu exec user root.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi khong co root exec trong log; can logging tap trung de tang do tin cay.\strut
+PASS khi không có root exec trong log; cần logging tập trung để tăng độ tin cậy.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.25: Xac nhan cgroup usage & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc CgroupParent.\strut
+ & 5.25: Xác nhận cgroup usage & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc CgroupParent.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-Default hierarchy la PASS; custom cgroup phai co ly do va resource control.\strut
+Default hierarchy là PASS; custom cgroup phải có lý do và resource control.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.26: Ngan container nhan them dac quyen & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de tim no-new-privileges trong SecurityOpt.\strut
+ & 5.26: Ngăn container nhận thêm đặc quyền & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để tìm no-new-privileges trong SecurityOpt.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi moi container co no-new-privileges.\strut
+PASS khi mọi container có no-new-privileges.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.27: Co runtime health check & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc State.Health.Status.\strut
+ & 5.27: Có runtime health check & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc State.Health.Status.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS nen la healthy; starting la INFO, unhealthy la FAIL/WARN.\strut
+PASS nên là healthy; starting là INFO, unhealthy là FAIL/WARN.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.28: Ghim phien ban image, khong dung latest & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc Config.Image.\strut
+ & 5.28: Ghim phiên bản image, không dùng latest & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc Config.Image.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi image co version tag cu the hoac digest sha256.\strut
+PASS khi image có version tag cụ thể hoặc digest sha256.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.29: Su dung PIDs cgroup limit & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc PidsLimit.\strut
+ & 5.29: Sử dụng PIDs cgroup limit & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc PidsLimit.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi PidsLimit la so duong phu hop workload.\strut
+PASS khi PidsLimit là số dương phù hợp workload.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.30: Khong dung default bridge docker0 & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc NetworkSettings.Networks.\strut
+ & 5.30: Không dùng default bridge docker0 & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc NetworkSettings.Networks.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi container dung user-defined network nhu secure-net.\strut
+PASS khi container dùng user-defined network như secure-net.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.31: Khong chia se user namespace cua host & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect de doc UsernsMode.\strut
+ & 5.31: Không chia sẻ user namespace của host & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect để đọc UsernsMode.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi UsernsMode khong phai host.\strut
+PASS khi UsernsMode không phải host.\strut
 \end{minipage} \\
 \cline{2-4}
- & 5.32: Khong mount Docker socket vao container & \begin{minipage}[t]{\linewidth}\raggedright
-Dung docker inspect Mounts va tim docker.sock.\strut
+ & 5.32: Không mount Docker socket vào container & \begin{minipage}[t]{\linewidth}\raggedright
+Dùng docker inspect Mounts và tìm docker.sock.\strut
 \end{minipage} & \begin{minipage}[t]{\linewidth}\raggedright
-PASS khi khong mount /var/run/docker.sock hoac socket tuong duong.\strut
+PASS khi không mount /var/run/docker.sock hoặc socket tương đương.\strut
 \end{minipage} \\
 \hline
 \multirow{2}{=}{6} & Tránh Image sprawl & \begin{minipage}[t]{\linewidth}\raggedright
