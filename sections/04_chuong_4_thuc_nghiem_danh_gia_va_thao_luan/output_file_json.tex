@@ -1,1 +1,53 @@
-\subsubsection{File Json}\label{output-file-json}
+\subsubsection{File JSON}\label{output-file-json}
+
+Sau khi quá trình kiểm tra CIS Docker Benchmark hoàn tất, hệ thống sẽ sinh ra các file kết quả ở định dạng JSON. Đây là định dạng dữ liệu chính được sử dụng trong toàn bộ hệ thống vì JSON có cấu trúc rõ ràng, dễ đọc bằng chương trình và dễ tích hợp với các công cụ xử lý dữ liệu khác.
+
+Trong đồ án, mỗi section sau khi được Ansible playbook kiểm tra sẽ tạo ra một file JSON tương ứng. Các file này được lưu trong thư mục:
+
+\begin{verbatim}
+audit/docker_benchmark_reports/
+\end{verbatim}
+
+Ví dụ, sau khi chạy audit toàn bộ hệ thống, thư mục kết quả có thể chứa các file như:
+
+\begin{verbatim}
+192.168.1.8_section1.json
+192.168.1.8_section2_3.json
+192.168.1.8_section4.json
+192.168.1.8_section5.json
+192.168.1.8_section6.json
+\end{verbatim}
+
+Trong đó, \texttt{192.168.1.8} là địa chỉ của Docker Host được kiểm tra, còn \texttt{section1}, \texttt{section2\_3}, \texttt{section4}, \texttt{section5}, \texttt{section6} là các nhóm kiểm tra tương ứng trong CIS Docker Benchmark.
+
+Mỗi file JSON thường chứa các thông tin chính như: địa chỉ host, section kiểm tra, thời điểm sinh báo cáo, tổng số tiêu chí đã kiểm tra, số lượng tiêu chí PASS, FAIL, INFO và danh sách chi tiết từng mục kiểm tra. Mỗi mục kiểm tra có thể bao gồm mã kiểm tra, tiêu đề, trạng thái, mô tả kết quả và hướng khắc phục nếu không đạt yêu cầu.
+
+Ví dụ cấu trúc tổng quát của một file JSON:
+
+\begin{verbatim}
+{
+  "host": "192.168.1.8",
+  "section": "section5",
+  "generated": "2026-05-29T01:01:00Z",
+  "summary": {
+    "pass": 27,
+    "fail": 3,
+    "info": 1
+  },
+  "results": [
+    {
+      "id": "5.1",
+      "title": "Ensure swarm mode is not enabled",
+      "status": "PASS",
+      "details": "Swarm inactive",
+      "remediation": "Run: docker swarm leave --force"
+    }
+  ]
+}
+\end{verbatim}
+
+File JSON có vai trò quan trọng trong hệ thống vì đây là bằng chứng gốc của quá trình audit. Từ file JSON này, hệ thống có thể thực hiện nhiều bước xử lý tiếp theo như tạo báo cáo Excel, chuyển đổi thành metric để gửi sang Prometheus Pushgateway, lưu vào Evidence Store hoặc kiểm tra tính toàn vẹn dữ liệu.
+
+Việc sử dụng JSON cũng giúp quá trình kiểm toán có khả năng mở rộng tốt hơn. Khi cần thêm section mới hoặc thêm tiêu chí kiểm tra mới, hệ thống chỉ cần bổ sung kết quả vào cấu trúc JSON mà không làm thay đổi toàn bộ luồng xử lý. Nhờ đó, JSON đóng vai trò là lớp trung gian quan trọng giữa quá trình audit, lưu trữ bằng chứng, monitoring và reporting.
+
+Tóm lại, file JSON là output trung tâm của hệ thống. Nó không chỉ lưu kết quả PASS/FAIL của từng tiêu chí kiểm tra mà còn là nguồn dữ liệu đầu vào cho các thành phần khác như Evidence Pipeline, Prometheus, Grafana và báo cáo tổng hợp.

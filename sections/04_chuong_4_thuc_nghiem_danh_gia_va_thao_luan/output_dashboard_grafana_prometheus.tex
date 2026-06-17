@@ -1,1 +1,50 @@
 \subsubsection{Dashboard Grafana và Prometheus}\label{output-dashboard-grafana-prometheus}
+
+Bên cạnh việc sinh file JSON và mã băm để lưu trữ bằng chứng kiểm toán, hệ thống còn triển khai dashboard giám sát sử dụng Prometheus và Grafana. Mục tiêu của phần này là giúp người quản trị theo dõi kết quả CIS Docker Benchmark một cách trực quan, thay vì chỉ kiểm tra kết quả thông qua file báo cáo tĩnh.
+
+Hệ thống monitoring gồm ba thành phần chính: Prometheus Pushgateway, Prometheus và Grafana. Mỗi thành phần đảm nhận một vai trò riêng trong quá trình thu thập, lưu trữ và hiển thị dữ liệu giám sát.
+
+Prometheus Pushgateway đóng vai trò là thành phần trung gian nhận metric từ quá trình audit. Trong hệ thống này, Ansible audit là dạng batch job, tức là chỉ chạy trong một khoảng thời gian ngắn rồi kết thúc. Prometheus thông thường hoạt động theo cơ chế pull, nghĩa là chủ động scrape metric từ các service đang chạy liên tục. Vì Ansible không phải là một service chạy liên tục, nên kết quả audit cần được đẩy vào Pushgateway trước. Sau đó Prometheus sẽ scrape lại metric từ Pushgateway.
+
+Prometheus là hệ thống thu thập và lưu trữ metric dạng time-series. Sau khi Pushgateway nhận metric từ script đẩy dữ liệu, Prometheus sẽ định kỳ scrape các metric này và lưu lại theo thời gian. Nhờ đó, hệ thống có thể theo dõi lịch sử kiểm tra, số lượng PASS/FAIL và xu hướng tuân thủ của Docker Host.
+
+Grafana là công cụ trực quan hóa dữ liệu. Grafana sử dụng Prometheus làm data source để xây dựng dashboard. Người quản trị có thể quan sát kết quả audit dưới dạng biểu đồ, bảng thống kê hoặc các chỉ số tổng quan.
+
+Luồng hoạt động của hệ thống dashboard có thể mô tả như sau:
+
+\begin{verbatim}
+Ansible Audit
+-> JSON Report
+-> push_metrics.py
+-> Prometheus Pushgateway
+-> Prometheus
+-> Grafana Dashboard
+\end{verbatim}
+
+Sau khi audit hoàn tất, script \texttt{push\_metrics.py} sẽ đọc các file JSON trong thư mục kết quả. Script này chuyển đổi dữ liệu PASS/FAIL/INFO thành các metric theo định dạng mà Prometheus có thể hiểu. Sau đó, metric được gửi lên Pushgateway thông qua HTTP.
+
+Một số metric có thể được sử dụng trong hệ thống gồm:
+
+\begin{verbatim}
+cis_docker_checks_total
+cis_docker_pass_total
+cis_docker_fail_total
+cis_docker_info_total
+cis_docker_compliance_percent
+\end{verbatim}
+
+Các metric này cho phép Grafana hiển thị tổng số tiêu chí đã kiểm tra, số tiêu chí đạt, số tiêu chí lỗi, số tiêu chí cần xem xét thủ công và tỷ lệ tuân thủ tổng thể của Docker Host.
+
+Dashboard có thể bao gồm các thành phần như:
+
+\begin{itemize}
+\item Tổng số tiêu chí đã kiểm tra.
+\item Số lượng PASS, FAIL và INFO.
+\item Tỷ lệ tuân thủ theo từng section.
+\item Danh sách các lỗi cần remediation.
+\item Biểu đồ theo dõi xu hướng kết quả audit qua thời gian.
+\end{itemize}
+
+Việc tích hợp Prometheus và Grafana giúp hệ thống không chỉ dừng lại ở việc sinh báo cáo sau mỗi lần kiểm tra, mà còn hỗ trợ giám sát liên tục. Người quản trị có thể nhanh chóng phát hiện khi số lượng lỗi tăng lên, khi một Docker Host không còn tuân thủ hoặc khi remediation chưa đạt hiệu quả.
+
+Tóm lại, Dashboard Grafana và Prometheus giúp hệ thống chuyển từ mô hình báo cáo tĩnh sang mô hình giám sát động. Kết quả audit không chỉ được lưu lại dưới dạng file, mà còn được theo dõi trực quan, hỗ trợ người quản trị phát hiện sớm vấn đề bảo mật và đánh giá hiệu quả của quá trình remediation.
