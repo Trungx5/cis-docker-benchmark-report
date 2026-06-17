@@ -64,89 +64,90 @@ system/docker.service -k docker\strut
 \cline{2-4}
 & Đảm bảo phiên bản mới cho Docker kt & Cập nhật Docker lên phiên bản mới nhất & Cập nhật danh sách gói và chạy apt install --only-upgrade docker-ce \\
 \hline
-\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & & \\
+
+\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & Cài đặt và cấu hình Docker rootless mode nếu môi trường hỗ trợ. & Tạo user riêng cho Docker, chạy \texttt{dockerd-rootless-setuptool.sh install}, cấu hình biến môi trường và kiểm tra lại bằng \texttt{docker info}. Nếu môi trường production chưa hỗ trợ, ghi nhận lý do và áp dụng kiểm soát truy cập chặt chẽ cho nhóm \texttt{docker}. \\
 \cline{2-4}
-& Network trafic được đặt hạn chế giữa các container ở default bridge & & \\
+& Network traffic được đặt hạn chế giữa các container ở default bridge & Chỉnh cấu hình Docker daemon để hạn chế inter-container communication. & Cập nhật \texttt{/etc/docker/daemon.json} với tùy chọn \texttt{"icc": false}, sau đó restart Docker và kiểm tra lại network mặc định. \\
 \cline{2-4}
-& Logging level set ở ``info'' & & \\
+& Logging level set ở ``info'' & Cấu hình mức log của Docker daemon trong \texttt{daemon.json}. & Thêm hoặc sửa \texttt{"log-level": "info"}; không sử dụng \texttt{debug} trong môi trường production vì có thể sinh nhiều log và lộ thông tin nhạy cảm. \\
 \cline{2-4}
-& Docker được quyền thay đổi iptables & & \\
+& Docker được quyền thay đổi iptables & Đảm bảo Docker không bị vô hiệu hóa quyền quản lý iptables. & Xóa cấu hình \texttt{"iptables": false} nếu không có giải pháp network thay thế, hoặc đặt \texttt{"iptables": true}, sau đó restart Docker. \\
 \cline{2-4}
-& Đảm bảo không sử dụng registry không an toàn & & \\
+& Đảm bảo không sử dụng registry không an toàn & Loại bỏ insecure registry khỏi cấu hình Docker daemon. & Xóa mục \texttt{insecure-registries} trong \texttt{daemon.json}; chuyển registry nội bộ sang HTTPS/TLS hoặc chỉ cho phép registry đã được phê duyệt. \\
 \cline{2-4}
-& Đảm bảo không sử dụng trình điều khiển aufs & & \\
+& Đảm bảo không sử dụng trình điều khiển aufs & Chuyển storage driver sang driver được khuyến nghị. & Backup image, container và volume cần thiết; cấu hình \texttt{"storage-driver": "overlay2"}; sau đó restart Docker và kiểm tra lại bằng \texttt{docker info}. \\
 \cline{2-4}
-& Đảm bảo không dùng devicemapper & & \\
+& Đảm bảo không dùng devicemapper & Không sử dụng \texttt{devicemapper} ở chế độ không phù hợp cho production. & Lập kế hoạch migrate sang \texttt{overlay2}; backup dữ liệu Docker trước khi đổi driver để tránh mất image/container/volume. \\
 \cline{2-4}
-& Đảm bảo xác thực TLS cho Docker Daemon & & \\
+& Đảm bảo xác thực TLS cho Docker Daemon & Cấu hình TLS mutual authentication nếu Docker daemon mở TCP API. & Tạo CA, server certificate và client certificate; cấu hình \texttt{tlsverify}, \texttt{tlscacert}, \texttt{tlscert}, \texttt{tlskey} trong \texttt{daemon.json} hoặc systemd override. \\
 \cline{2-4}
-& Đảm bảo giới hạn ulimit mặc định & & \\
+& Đảm bảo giới hạn ulimit mặc định & Thiết lập default ulimit cho Docker daemon. & Thêm \texttt{default-ulimits} vào \texttt{daemon.json}, ví dụ giới hạn \texttt{nofile} hoặc \texttt{nproc}; restart Docker và kiểm tra lại container mới. \\
 \cline{2-4}
-& Hỗ trợ user namespace & & \\
+& Hỗ trợ user namespace & Bật user namespace remapping nếu ứng dụng tương thích. & Cấu hình \texttt{"userns-remap": "default"} trong \texttt{daemon.json}; kiểm tra volume, permission và ứng dụng trước khi áp dụng production. \\
 \cline{2-4}
-& Cgroup sử dụng được xác nhận & & \\
+& Cgroup sử dụng được xác nhận & Kiểm tra và cấu hình \texttt{cgroup-parent} nếu hệ thống có chính sách tài nguyên riêng. & Nếu không có yêu cầu đặc biệt thì giữ mặc định; nếu có, khai báo \texttt{cgroup-parent} rõ ràng và ghi nhận trong tài liệu vận hành. \\
 \cline{2-4}
-& Đảm bảo device size không thay đổi trừ khi cần thiết & & \\
+& Đảm bảo device size không thay đổi trừ khi cần thiết & Loại bỏ cấu hình base device size không cần thiết. & Xóa tùy chọn \texttt{storage-opt dm.basesize} nếu không có nhu cầu; nếu bắt buộc dùng thì cần có phê duyệt và đánh giá tác động. \\
 \cline{2-4}
-& Đảm bảo authorization cho Docker client & & \\
+& Đảm bảo authorization cho Docker client & Triển khai authorization plugin khi cần kiểm soát quyền Docker API. & Cài đặt và cấu hình plugin phân quyền; khai báo \texttt{authorization-plugins} trong cấu hình Docker daemon, sau đó kiểm thử quyền truy cập. \\
 \cline{2-4}
-& Đảm bảo container bj hạn chế không cho quyền mới & & \\
+& Đảm bảo container bị hạn chế không cho quyền mới & Bật chính sách \texttt{no-new-privileges} ở cấp daemon hoặc container. & Thêm \texttt{"no-new-privileges": true} vào \texttt{daemon.json} hoặc cấu hình \texttt{security-opt=no-new-privileges} khi chạy container. \\
 \cline{2-4}
-& Đảm bảo container có live restore & & \\
+& Đảm bảo container có live restore & Bật tính năng live restore của Docker daemon. & Thêm \texttt{"live-restore": true} vào \texttt{daemon.json}; restart Docker và kiểm tra container vẫn tiếp tục chạy khi daemon restart. \\
 \cline{2-4}
-& Đảm bảo có log cho đăng nhập gần và từ xa & & \\
+& Đảm bảo có log cho đăng nhập gần và từ xa & Cấu hình logging driver hoặc logging tập trung. & Sử dụng \texttt{json-file} có giới hạn dung lượng, hoặc chuyển sang \texttt{syslog}, \texttt{fluentd}, \texttt{gelf} tùy hệ thống log tập trung. \\
 \cline{2-4}
-& Đảm bảo Userland Proxy đã tắt & & \\
+& Đảm bảo Userland Proxy đã tắt & Tắt userland proxy nếu không cần thiết. & Thêm \texttt{"userland-proxy": false} vào \texttt{daemon.json}; restart Docker và kiểm tra lại các dịch vụ publish port. \\
 \cline{2-4}
-& Đảm bảo daemon-wide custom seccomp profile được thiết đặt & & \\
+& Đảm bảo daemon-wide custom seccomp profile được thiết đặt & Thiết kế và áp dụng seccomp profile phù hợp. & Sử dụng default seccomp profile hoặc custom profile đã kiểm thử; không dùng \texttt{seccomp=unconfined} nếu không có phê duyệt. \\
 \cline{2-4}
-& Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & & \\
+& Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & Tắt experimental features trên Docker daemon. & Đảm bảo \texttt{"experimental": false} hoặc không khai báo experimental trong \texttt{daemon.json}; restart Docker và kiểm tra lại bằng \texttt{docker version}. \\
 \hline
-\multirow{14}{=}{3} & Đảm bảo quyền root:root cho docker.service & & \\
+\multirow{14}{=}{3} & Đảm bảo quyền root:root cho docker.service & Sửa owner/group của file \texttt{docker.service}. & Chạy \texttt{sudo chown root:root <FragmentPath>} sau khi xác định đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.service}. \\
 \cline{2-4}
-& Đảm bảo docker.service cho quyền hợp lý & & \\
+& Đảm bảo docker.service cho quyền hợp lý & Sửa permission của file \texttt{docker.service}. & Chạy \texttt{sudo chmod 644 <FragmentPath>} hoặc quyền hạn chế hơn, sau đó reload systemd nếu cần. \\
 \cline{2-4}
-& Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root & & \\
+& Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root & Sửa owner/group của file \texttt{docker.socket}. & Xác định đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.socket}, sau đó chạy \texttt{sudo chown root:root <FragmentPath>}. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & & \\
+& Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & Sửa permission của file \texttt{docker.socket}. & Chạy \texttt{sudo chmod 644 <FragmentPath>} hoặc quyền hạn chế hơn để tránh sửa đổi trái phép socket unit. \\
 \cline{2-4}
-& Đảm bảo quyền sỡ hữu thư mục /etc/docker được đặt thành root:root & & \\
+& Đảm bảo quyền sở hữu thư mục /etc/docker được đặt thành root:root & Sửa owner/group của thư mục cấu hình Docker. & Chạy \texttt{sudo chown root:root /etc/docker}; kiểm tra lại bằng \texttt{stat -c \%U:\%G /etc/docker}. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & & \\
+& Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & Sửa permission thư mục \texttt{/etc/docker}. & Chạy \texttt{sudo chmod 755 /etc/docker} hoặc quyền hạn chế hơn nếu phù hợp. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập tệ docker.socker được đặt thành 644 hoặc hạn chế & & \\
+& Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & Sửa permission của Docker socket liên quan. & Kiểm tra \texttt{/var/run/docker.sock} và file unit socket; điều chỉnh quyền theo khuyến nghị, tránh để socket có quyền ghi quá rộng. \\
 \cline{2-4}
-& Đảm bảo quyền root:root cho sỡ hữu tệp chứng chỉ & & \\
+& Đảm bảo quyền root:root cho sở hữu tệp chứng chỉ & Sửa owner/group của các file certificate. & Chạy \texttt{sudo chown root:root /etc/docker/certs.d/*} với các file chứng chỉ phù hợp; kiểm tra tránh áp dụng sai cho thư mục rỗng. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập chứng trí registry được đặt thành 444 hoặc hạn chế hơn & & \\
+& Đảm bảo quyền truy cập chứng chỉ registry được đặt thành 444 hoặc hạn chế hơn & Sửa permission của certificate registry. & Chạy \texttt{sudo chmod 444} cho certificate public; đối với private key dùng quyền chặt hơn như \texttt{400} hoặc \texttt{440}. \\
 \cline{2-4}
-& Đảm bảo quyền sỡ hữu Docker server là root:root và file permission 4444 & & \\
+& Đảm bảo quyền sở hữu Docker server là root:root và file permission 444 & Sửa owner/group và permission của Docker server certificate. & Chạy \texttt{sudo chown root:root <path\_to\_tlscert>} và \texttt{sudo chmod 444 <path\_to\_tlscert>}; private key phải dùng quyền hạn chế hơn. \\
 \cline{2-4}
-& Đảm bảo quyền Docker socker file ownership là root:docker và để file permission 660 & & \\
+& Đảm bảo quyền Docker socket file ownership là root:docker và để file permission 660 & Sửa quyền của \texttt{/var/run/docker.sock}. & Chạy \texttt{sudo chown root:docker /var/run/docker.sock} và \texttt{sudo chmod 660 /var/run/docker.sock}. \\
 \cline{2-4}
-& Đảm bảo quyền daemon.json là root:root và file permssion 644 & & \\
+& Đảm bảo quyền daemon.json là root:root và file permission 644 & Sửa owner/group và permission của \texttt{daemon.json}. & Chạy \texttt{sudo chown root:root /etc/docker/daemon.json} và \texttt{sudo chmod 644 /etc/docker/daemon.json}. \\
 \cline{2-4}
-& Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644 & & \\
+& Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644 & Sửa permission file \texttt{/etc/sysconfig/docker} nếu tồn tại. & Chạy \texttt{sudo chown root:root /etc/sysconfig/docker} và \texttt{sudo chmod 644 /etc/sysconfig/docker}; nếu Ubuntu không có file này thì ghi N/A. \\
 \cline{2-4}
-& Đảm bảo Containered socket có quyền là root:root và file permission 660 & & \\
+& Đảm bảo containerd socket có quyền root:root và permission 660 & Sửa quyền của containerd socket. & Chạy \texttt{chown root:root} và \texttt{chmod 660} cho containerd socket; kiểm tra lại dịch vụ containerd sau khi đổi quyền. \\
 \hline
-\multirow{9}{=}{4} & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & & \\
+\multirow{9}{=}{4} & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & Chọn base image chính thống, tối giản và loại bỏ package thừa. & Sửa Dockerfile để dùng image đáng tin cậy như \texttt{ubuntu}, \texttt{debian-slim}, \texttt{alpine} hoặc image nội bộ đã phê duyệt; gỡ package không cần thiết sau khi cài. \\
 \cline{2-4}
-& Đảm bảo image được scan và phải có security patches & & \\
+& Đảm bảo image được scan và phải có security patches & Quét image và rebuild khi có bản vá bảo mật. & Dùng Trivy/Grype/Clair để scan image; cập nhật base image, rebuild và redeploy image sau khi vá CVE nghiêm trọng. \\
 \cline{2-4}
-& Phải có HEALTHCHECK instruction & & \\
+& Phải có HEALTHCHECK instruction & Thêm \texttt{HEALTHCHECK} vào Dockerfile hoặc cấu hình runtime. & Bổ sung lệnh kiểm tra trạng thái ứng dụng, ví dụ kiểm tra HTTP endpoint hoặc process chính; build lại image và test trạng thái healthy. \\
 \cline{2-4}
-& Phải có update instruction và không sử dụng một mình trong Dockerfiles & & \\
+& Phải có update instruction và không sử dụng một mình trong Dockerfiles & Gộp lệnh update và install trong cùng một lớp build. & Sửa Dockerfile để dùng một lệnh \texttt{RUN apt-get update \&\& apt-get install ...}; dọn cache package sau khi cài đặt. \\
 \cline{2-4}
-& Không cung cấp quyền Setuid và Getuid & & \\
+& Không cung cấp quyền Setuid và Getuid & Loại bỏ setuid/setgid bit không cần thiết trong image. & Kiểm tra file có setuid/setgid trong image, sau đó sửa Dockerfile để xóa quyền đặc biệt bằng \texttt{chmod a-s} đối với file không cần thiết. \\
 \cline{2-4}
-& Dùng COPY thay vì ADD & & \\
+& Dùng COPY thay vì ADD & Thay lệnh \texttt{ADD} bằng \texttt{COPY} khi chỉ cần sao chép file. & Sửa Dockerfile, dùng \texttt{COPY} cho file local; chỉ dùng \texttt{ADD} khi thực sự cần chức năng giải nén hoặc tải từ URL. \\
 \cline{2-4}
-& Secrets không được bỏ vào Dockerfiles & & \\
+& Secrets không được bỏ vào Dockerfiles & Loại bỏ secrets khỏi Dockerfile và image layer. & Xóa password, token, private key khỏi Dockerfile; dùng Docker secrets, Ansible Vault, biến môi trường bảo mật hoặc secret manager. \\
 \cline{2-4}
-& Các package phải chính thống khi tải về & & \\
+& Các package phải chính thống khi tải về & Chỉ dùng repository và package có nguồn gốc đáng tin cậy. & Cấu hình repository chính thống, kiểm tra GPG key, pin version nếu cần và tránh tải package từ nguồn không rõ ràng. \\
 \cline{2-4}
-& Các signed artifacts phải được kiểm chứng & & \\
+& Các signed artifacts phải được kiểm chứng & Xác minh chữ ký artifact trước khi sử dụng hoặc upload. & Dùng GPG, cosign hoặc cơ chế ký nội bộ để verify image/artifact; chỉ đưa artifact đã xác minh vào registry hoặc pipeline. \\
 \hline
 \multirow{32}{=}{5} & 5.1: Không bật swarm mode nếu không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
 Rời Swarm nếu host không dùng cluster.\strut
@@ -346,3 +347,6 @@ Bỏ /var/run/docker.sock khỏi volumes; dùng API TLS hoặc công cụ không
 \hline
 \end{longtable}
 }
+
+
+Sau khi remediation thủ công hoàn tất, quản trị viên cần chạy lại playbook audit để xác nhận các cấu hình đã được khắc phục. Các thay đổi có ảnh hưởng đến Docker daemon, storage driver, network hoặc container đang chạy cần được thực hiện trong thời gian bảo trì để tránh làm gián đoạn dịch vụ.

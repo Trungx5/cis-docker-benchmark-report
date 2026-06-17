@@ -5,7 +5,7 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 \textbf{Bảng chi tiết các hoạt động Audit tự động:}
 
 {\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}|
+\begin{longtable}{@{}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.0950}}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2250}}|
   >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep - 5\arrayrulewidth) * \real{0.2850}}|
@@ -16,43 +16,90 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 \textbf{Nội dung Audit Auto}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\textbf{Phương thức auto cho tất cả(Module gì?)}
+\textbf{Phương thức tự động hóa / Module sử dụng}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\textbf{Kết quả cần đạt/giá trị xuất ra để PASS}
+\textbf{Kết quả cần đạt / Giá trị xuất ra để PASS}
 \end{minipage} \\
 \hline
 \endhead
-\multirow{4}{=}{1} & 1.1.3 - 1.1.18: Cấu hình kiểm toán tệp và thư mục. & Module \texttt{ansible.builtin.shell} và \texttt{ansible.builtin.stat}. & Trạng thái hoạt động của auditd và các quy tắc cấu hình khớp khuyến nghị. \\
+
+\multirow{2}{=}{1} & 1.1.3 - 1.1.18: Cấu hình kiểm toán tệp và thư mục. & Module \texttt{ansible.builtin.shell} và \texttt{ansible.builtin.stat}. & Trạng thái hoạt động của auditd và các quy tắc cấu hình khớp khuyến nghị. \\
 \cline{2-4}
+
 & 1.2.2: Kiểm tra phiên bản Docker. & Module \texttt{ansible.builtin.command} để gọi lệnh \texttt{docker version}. & Phiên bản Docker mới nhất được cập nhật và ghi nhận. \\
 \hline
-2 & & & \\
-\hline
-3 & & & \\
-\hline
-\multirow{5}{=}{4} & 4.1: Đảm bảo non-root user cho container. & Module \texttt{ansible.builtin.command} và \texttt{ansible.builtin.shell}; kiểm tra \texttt{docker inspect}. & Biến User từ docker inspect KHÔNG phải là: 0, root, [] hoặc \texttt{<no value>}. \\
+
+\multirow{6}{=}{2} & 2.1 - 2.3: Kiểm tra Docker daemon, network traffic và logging level. & Module \texttt{ansible.\allowbreak builtin.\allowbreak command} và \texttt{ansible.\allowbreak builtin.\allowbreak shell}; kiểm tra \texttt{dockerd}, \texttt{daemon.json}, \texttt{docker info} và network inspect. & Docker daemon chạy đúng; traffic giữa container được hạn chế nếu cần; logging level không để \texttt{debug}. \\
 \cline{2-4}
+
+& 2.4 - 2.5: Kiểm tra iptables và insecure registry. & Module \texttt{ansible.builtin.shell}; đọc cấu hình daemon và kiểm tra output của \texttt{docker info}. & Docker không vô hiệu hóa iptables nếu không có giải pháp mạng thay thế; không tồn tại insecure registry không được phê duyệt trong cấu hình. \\
+\cline{2-4}
+
+& 2.6 - 2.7: Kiểm tra storage driver. & Module \texttt{ansible.builtin.command}; gọi lệnh \texttt{docker info --format} để lấy storage driver hiện tại. & Storage driver không phải \texttt{aufs}; không dùng \texttt{devicemapper} ở chế độ không phù hợp; ưu tiên \texttt{overlay2}. \\
+\cline{2-4}
+
+& 2.8 - 2.10: Kiểm tra TLS, default ulimit và user namespace. & Module \texttt{ansible.builtin.shell}; kiểm tra tham số \texttt{--tlsverify}, \texttt{default-ulimits}, \texttt{userns-remap} trong \texttt{daemon.json} hoặc output \texttt{docker info}. & Nếu Docker daemon mở qua TCP thì phải bật TLS; default ulimit được cấu hình hợp lý; user namespace remapping được bật nếu chính sách yêu cầu. \\
+\cline{2-4}
+
+& 2.13 - 2.15: Kiểm tra authorization plugin, no-new-privileges và live restore. & Module \texttt{ansible.builtin.shell}; kiểm tra \texttt{authorization-plugins}, \texttt{no-new-privileges}, \texttt{live-restore} trong file cấu hình Docker daemon. & Authorization plugin được cấu hình nếu môi trường yêu cầu; container không được nhận thêm đặc quyền mới; \texttt{live-restore} được bật để tăng tính sẵn sàng. \\
+\cline{2-4}
+
+& 2.16 - 2.19: Kiểm tra logging driver, userland proxy, seccomp profile và experimental features. & Module \texttt{ansible.builtin.command}, \texttt{ansible.builtin.shell}; dùng \texttt{docker info}, \texttt{docker version} và đọc \texttt{daemon.json}. & Logging driver phù hợp; \texttt{userland-proxy} được tắt nếu không cần thiết; seccomp không bị vô hiệu hóa; experimental features không bật trong môi trường production. \\
+\hline
+
+\multirow{6}{=}{3} & 3.1 - 3.2: Kiểm tra ownership và permission của \texttt{docker.service}. & Module \texttt{ansible.builtin.stat}; lấy đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.service}. & File \texttt{docker.service} thuộc sở hữu \texttt{root:root}; permission là \texttt{644} hoặc hạn chế hơn. \\
+\cline{2-4}
+
+& 3.3 - 3.4: Kiểm tra ownership và permission của \texttt{docker.socket}. & Module \texttt{ansible.builtin.stat}; lấy đường dẫn bằng \texttt{systemctl show -p FragmentPath docker.socket}. & File \texttt{docker.socket} thuộc sở hữu \texttt{root:root}; permission là \texttt{644} hoặc hạn chế hơn. \\
+\cline{2-4}
+
+& 3.5 - 3.6: Kiểm tra ownership và permission của thư mục \texttt{/etc/docker}. & Module \texttt{ansible.builtin.stat}; kiểm tra owner, group và permission của thư mục cấu hình Docker. & Thư mục \texttt{/etc/docker} thuộc sở hữu \texttt{root:root}; permission là \texttt{755} hoặc hạn chế hơn. \\
+\cline{2-4}
+
+& 3.7 - 3.10: Kiểm tra các file chứng chỉ registry và Docker TLS. & Module \texttt{ansible.builtin.find} và \texttt{ansible.builtin.stat}; kiểm tra các file trong \texttt{/etc/docker/certs.d/} và các file certificate/key nếu tồn tại. & Các file chứng chỉ thuộc sở hữu \texttt{root:root}; permission của certificate và key không quá rộng, tránh bị giả mạo hoặc đánh cắp. \\
+\cline{2-4}
+
+& 3.15 - 3.16: Kiểm tra Docker socket thực tế. & Module \texttt{ansible.builtin.stat}; kiểm tra file \texttt{/var/run/docker.sock}. & Docker socket thuộc sở hữu \texttt{root:docker}; permission là \texttt{660} hoặc hạn chế hơn. \\
+\cline{2-4}
+
+& 3.17 - 3.18: Kiểm tra \texttt{daemon.json}, sysconfig Docker và containerd socket. & Module \texttt{ansible.\allowbreak builtin.\allowbreak stat}; kiểm tra \texttt{daemon.json}, sysconfig Docker nếu tồn tại và socket containerd. & File cấu hình Docker và containerd socket có owner/group đúng; permission không quá rộng. \\
+\hline
+
+\multirow{5}{=}{4} & 4.1: Đảm bảo non-root user cho container. & Module \texttt{ansible.builtin.command} và \texttt{ansible.builtin.shell}; kiểm tra \texttt{docker inspect}. & Biến User từ docker inspect KHÔNG phải là: 0, root, [] hoặc \texttt{\textless no value\textgreater}. \\
+\cline{2-4}
+
 & 4.5: Bật Docker Content Trust. & Kiểm tra biến môi trường Docker Content Trust bằng shell. & Lệnh echo trả về đúng giá trị 1. \\
 \cline{2-4}
+
 & 4.6: Thêm chỉ thị HEALTHCHECK. & Kiểm tra cấu hình image bằng \texttt{docker inspect}. & Cấu hình image phải có sẵn phần Healthcheck hoặc được định nghĩa. \\
 \cline{2-4}
+
 & 4.7: Lệnh update không đứng độc lập. & Kiểm tra lịch sử image bằng \texttt{docker history} và parse stdout. & Không tìm thấy từ khóa update độc lập trong lịch sử image (output rỗng). \\
 \cline{2-4}
-& 4.9: Sử dụng COPY thay cho ADD. & Kiểm tra lịch sử build bằng \texttt{docker history}. & Không bắt được cờ FOUND (không có lệnh ADD) trong lịch sử build. \\
+
+& 4.9: Sử dụng COPY thay cho ADD. & Kiểm tra lịch sử build bằng \texttt{docker history}. & Không bắt được cờ FOUND, nghĩa là không có lệnh ADD không cần thiết trong lịch sử build. \\
 \hline
+
 \multirow{6}{=}{5} & 5.1 - 5.7: Runtime mode, MAC, capability, privileged mode, sensitive mount và SSH daemon. & Module \texttt{ansible.builtin.command}, \texttt{ansible.builtin.shell} và \texttt{ansible.builtin.set\_fact}; thu thập bằng \texttt{docker info}, \texttt{docker inspect}, \texttt{docker exec}. & Swarm inactive; AppArmor/SELinux phù hợp; không privileged; không mount nhạy cảm; không chạy \texttt{sshd}. \\
 \cline{2-4}
+
 & 5.8: Privileged port. & Hiện chưa append vào \texttt{audit\_results}; cần manual review hoặc bổ sung logic. & Có kết quả Manual/INFO riêng và port đặc quyền được phê duyệt. \\
 \cline{2-4}
+
 & 5.9 - 5.15: Port, network, memory, CPU, read-only filesystem, interface binding và restart policy. & \texttt{docker inspect} kết hợp filter và regex trong Ansible. & Không bind \texttt{0.0.0.0}; không host network; có resource limit; root filesystem read-only; restart \texttt{on-failure} tối đa 5. \\
 \cline{2-4}
+
 & 5.16 - 5.22: Namespace, device, ulimit, mount propagation và seccomp. & \texttt{docker inspect} các trường \texttt{HostConfig} và \texttt{Mounts}. & Không chia sẻ namespace host; không expose device trái phép; không shared propagation; seccomp không bị tắt. \\
 \cline{2-4}
+
 & 5.23 - 5.25: Lịch sử \texttt{docker exec} và cgroup parent. & \texttt{journalctl}, \texttt{grep} và \texttt{docker inspect}. & Không có privileged/root exec trong nguồn log; cgroup usage được xác nhận. \\
 \cline{2-4}
+
 & 5.26 - 5.32: No-new-privileges, healthcheck, image pinning, PID limit, network, user namespace và Docker socket. & \texttt{docker inspect}, parse JSON và regex. & Có \texttt{no-new-privileges}; healthcheck hợp lệ; image được ghim; có PID limit; không dùng \texttt{docker0}/host userns/docker.sock. \\
 \hline
-\multirow{2}{=}{6} & 6.1 - 6.2: Tránh image sprawl và container sprawl. & Module \texttt{ansible.builtin.command} để gọi các lệnh Docker CLI. & Xuất báo cáo đếm số lượng image và container dư thừa ở định dạng JSON. \\
+
+6 & 6.1 - 6.2: Tránh image sprawl và container sprawl. & Module \texttt{ansible.builtin.command} để gọi các lệnh Docker CLI. & Xuất báo cáo đếm số lượng image và container dư thừa ở định dạng JSON. \\
 \hline
+
 \end{longtable}
 }

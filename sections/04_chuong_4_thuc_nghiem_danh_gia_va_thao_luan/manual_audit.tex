@@ -73,165 +73,166 @@ auditctl -l \textbar{} grep docker.sock\strut
 \cline{2-4}
 & Đảm bảo phiên bản mới cho Docker kt & docker version & Đối chiếu phiên bản hiện tại của Docker với bản phát hành mới nhất. \\
 \hline
-\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & ps -fe \textbar{} grep \textquotesingle dockerd\textquotesingle{} & \\
+
+\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & ps -fe \textbar{} grep \textquotesingle dockerd\textquotesingle{} & Kiểm tra tiến trình \texttt{dockerd} để xác định Docker daemon đang chạy với quyền nào. Nếu daemon chạy với quyền root thì cần đánh giá rủi ro hoặc cân nhắc rootless mode nếu hệ thống hỗ trợ. \\
 \cline{2-4}
-& Network trafic được đặt hạn chế giữa các container ở default bridge & docker network ls -\/-quiet \textbar{} xargs docker network inspect -\/-format \textquotesingle\{\{ .Name \}\}: \{\{ .Options \}\}\textquotesingle{} & \\
+& Network traffic được đặt hạn chế giữa các container ở default bridge & docker network ls -\/-quiet \textbar{} xargs docker network inspect -\/-format \textquotesingle\{\{ .Name \}\}: \{\{ .Options \}\}\textquotesingle{} & Kiểm tra cấu hình network mặc định của Docker, đặc biệt là khả năng giao tiếp giữa các container trên default bridge. Nếu traffic giữa container không được kiểm soát thì cần cấu hình hạn chế bằng tùy chọn phù hợp. \\
 \cline{2-4}
-& Logging level set ở ``info'' & grep "log-level" /etc/docker/daemon.json & \\
+& Logging level set ở ``info'' & grep "log-level" /etc/docker/daemon.json & Kiểm tra file \texttt{daemon.json} để xác nhận Docker daemon đang dùng mức log \texttt{info}. Nếu đang dùng \texttt{debug} trong môi trường production thì cần điều chỉnh lại. \\
 \cline{2-4}
-& Docker được quyền thay đổi iptables & grep "-\/-iptables" /etc/docker/daemon.json & \\
+& Docker được quyền thay đổi iptables & grep -- "-\/-iptables" /etc/docker/daemon.json & Kiểm tra Docker daemon có bị vô hiệu hóa quyền quản lý iptables hay không. Nếu không có giải pháp network thay thế thì không nên tắt chức năng iptables của Docker. \\
 \cline{2-4}
-& Đảm bảo không sử dụng registry không an toàn & docker info -\/-format \textquotesingle Insecure Registries:\textquotesingle{} & \\
+& Đảm bảo không sử dụng registry không an toàn & docker info \textbar{} grep -A5 "Insecure Registries" & Kiểm tra danh sách insecure registries trong Docker. Nếu tồn tại registry không an toàn, cần xác minh có được phê duyệt hay không và hạn chế sử dụng trong production. \\
 \cline{2-4}
-& Đảm bảo không sử dụng trình điều khiển aufs & docker info -\/-format \textquotesingle Storage Driver: \{\{ .Driver \}\}\textquotesingle{} & \\
+& Đảm bảo không sử dụng trình điều khiển aufs & docker info -\/-format \textquotesingle Storage Driver: \{\{ .Driver \}\}\textquotesingle{} & Kiểm tra storage driver hiện tại của Docker. Nếu kết quả là \texttt{aufs}, cần xem xét chuyển sang driver khuyến nghị hơn như \texttt{overlay2}. \\
 \cline{2-4}
-& Đảm bảo không dùng devicemapper & docker info -\/-format \textquotesingle Storage Driver: \{\{ .Driver \}\}\textquotesingle{} & \\
+& Đảm bảo không dùng devicemapper & docker info -\/-format \textquotesingle Storage Driver: \{\{ .Driver \}\}\textquotesingle{} & Kiểm tra Docker có đang dùng \texttt{devicemapper} hay không. Nếu dùng trong môi trường production không phù hợp, cần đánh giá và chuyển sang storage driver an toàn hơn. \\
 \cline{2-4}
-& Đảm bảo xác thực TLS cho Docker Daemon & grep "-\/-tls" /etc/docker/daemon.json & \\
+& Đảm bảo xác thực TLS cho Docker Daemon & grep "-\/-tls" /etc/docker/daemon.json & Kiểm tra Docker daemon có cấu hình TLS khi mở API qua TCP hay không. Nếu Docker API lắng nghe từ xa mà không có TLS thì cần cấu hình chứng chỉ và bật xác thực TLS. \\
 \cline{2-4}
 & Đảm bảo giới hạn ulimit mặc định & \begin{minipage}[t]{\linewidth}\raggedright
 ps -ef \textbar{} grep dockerd\\
 grep "default-ulimit" /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra Docker daemon có cấu hình giới hạn \texttt{ulimit} mặc định hay không. Nếu chưa có giới hạn phù hợp, container có thể sử dụng tài nguyên vượt mức cần thiết. \\
 \cline{2-4}
 & Hỗ trợ user namespace & \begin{minipage}[t]{\linewidth}\raggedright
 docker info \textbar{} grep -i userns\\
 docker info -\/-format \textquotesingle\{\{ .SecurityOptions \}\}\textquotesingle{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra Docker có bật user namespace remapping hay không. Nếu chưa bật, root trong container có thể ánh xạ gần với quyền cao hơn trên host, cần đánh giá theo chính sách bảo mật. \\
 \cline{2-4}
-& Cgroup sử dụng được xác nhận & grep "-\/-cgroup-parent" /etc/docker/daemon.json & \\
+& Cgroup sử dụng được xác nhận & grep "-\/-cgroup-parent" /etc/docker/daemon.json & Kiểm tra Docker daemon có cấu hình \texttt{cgroup-parent} hay không. Nếu hệ thống dùng chính sách quản lý tài nguyên riêng thì cần xác nhận cgroup được cấu hình đúng. \\
 \cline{2-4}
-& Đảm bảo device size không thay đổi trừ khi cần thiết & grep "-\/-storage-opt dm.basesize" /etc/docker/daemon.json & \\
+& Đảm bảo device size không thay đổi trừ khi cần thiết & grep "-\/-storage-opt dm.basesize" /etc/docker/daemon.json & Kiểm tra cấu hình base device size. Nếu có thay đổi, cần xác minh lý do vận hành vì thay đổi tùy tiện có thể ảnh hưởng đến bảo mật và hiệu năng. \\
 \cline{2-4}
 & Đảm bảo authorization cho Docker client & \begin{minipage}[t]{\linewidth}\raggedright
 ps -ef \textbar{} grep dockerd\\
 grep "authorization-plugins" /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra Docker daemon có sử dụng authorization plugin hay không. Nếu môi trường có nhiều người dùng hoặc yêu cầu phân quyền truy cập Docker API, cần cấu hình plugin phù hợp. \\
 \cline{2-4}
-& Đảm bảo container bj hạn chế không cho quyền mới & \begin{minipage}[t]{\linewidth}\raggedright
+& Đảm bảo container bị hạn chế không cho quyền mới & \begin{minipage}[t]{\linewidth}\raggedright
 ps -ef \textbar{} grep dockerd\\
 grep "no-new-privileges" /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra cấu hình \texttt{no-new-privileges}. Nếu chưa bật, container có thể có nguy cơ leo thang đặc quyền thông qua các cơ chế như setuid hoặc setgid. \\
 \cline{2-4}
 & Đảm bảo container có live restore & \begin{minipage}[t]{\linewidth}\raggedright
 docker info -\/-format \textquotesingle\{\{ .LiveRestoreEnabled \}\}\textquotesingle{}\\
 grep "live-restore" /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra tính năng \texttt{live-restore}. Nếu chưa bật, container có thể bị ảnh hưởng khi Docker daemon restart, làm giảm tính sẵn sàng của dịch vụ. \\
 \cline{2-4}
 & Đảm bảo có log cho đăng nhập gần và từ xa & \begin{minipage}[t]{\linewidth}\raggedright
 docker info -\/-format \textquotesingle\{\{ .LoggingDriver \}\}\textquotesingle{}\\
 grep "-\/-log-driver" /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra logging driver của Docker. Nếu hệ thống yêu cầu giám sát tập trung, cần cấu hình logging driver phù hợp để gửi log về hệ thống quản lý log. \\
 \cline{2-4}
 & Đảm bảo Userland Proxy đã tắt & \begin{minipage}[t]{\linewidth}\raggedright
 ps -ef \textbar{} grep dockerd\\
 grep "userland-proxy" /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra trạng thái \texttt{userland-proxy}. Nếu không cần thiết, nên tắt để giảm bề mặt tấn công và phụ thuộc vào cơ chế NAT của kernel. \\
 \cline{2-4}
-& Đảm bảo daemon-wide custom seccomp profile được thiết đặt & docker info -\/-format \textquotesingle\{\{ .SecurityOptions \}\}\textquotesingle{} & \\
+& Đảm bảo daemon-wide custom seccomp profile được thiết đặt & docker info -\/-format \textquotesingle\{\{ .SecurityOptions \}\}\textquotesingle{} & Kiểm tra Docker có sử dụng seccomp profile hay không. Nếu seccomp bị vô hiệu hóa hoặc không có profile phù hợp, cần đánh giá lại chính sách hạn chế system call. \\
 \cline{2-4}
-& Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & docker version -\/-format \textquotesingle\{\{ .Server.Experimental \}\}\textquotesingle{} & \\
+& Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & docker version -\/-format \textquotesingle\{\{ .Server.Experimental \}\}\textquotesingle{} & Kiểm tra Docker daemon có bật experimental features hay không. Nếu kết quả là \texttt{true} trong môi trường production, cần tắt để tránh rủi ro từ tính năng chưa ổn định. \\
 \hline
 \multirow{14}{=}{3} & Đảm bảo quyền root:root cho docker.service & \begin{minipage}[t]{\linewidth}\raggedright
 systemctl show -p FragmentPath docker.service\\
 stat -c \%U:\%G \textless FragmentPath\textgreater{} \textbar{} grep -v root:root\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra owner và group của file \texttt{docker.service}. File này phải thuộc sở hữu \texttt{root:root} để tránh người dùng không có quyền chỉnh sửa cấu hình khởi động Docker daemon. \\
 \cline{2-4}
 & Đảm bảo docker.service cho quyền hợp lý & \begin{minipage}[t]{\linewidth}\raggedright
 systemctl show -p FragmentPath docker.service\\
 stat -c \%a \textless FragmentPath\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra permission của file \texttt{docker.service}. Quyền truy cập phải là \texttt{644} hoặc hạn chế hơn để tránh sửa đổi trái phép. \\
 \cline{2-4}
 & Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root & \begin{minipage}[t]{\linewidth}\raggedright
 systemctl show -p FragmentPath docker.socket\\
 stat -c \%U:\%G \textless FragmentPath\textgreater{} \textbar{} grep -v root:root\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra owner và group của file \texttt{docker.socket}. File socket unit cần thuộc sở hữu \texttt{root:root} để bảo vệ điểm giao tiếp với Docker daemon. \\
 \cline{2-4}
 & Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & \begin{minipage}[t]{\linewidth}\raggedright
 systemctl show -p FragmentPath docker.socket\\
 stat -c \%a \textless FragmentPath\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra permission của file \texttt{docker.socket}. Quyền truy cập phải đủ hạn chế, không cho phép user không liên quan chỉnh sửa socket unit. \\
 \cline{2-4}
-& Đảm bảo quyền sỡ hữu thư mục /etc/docker được đặt thành root:root & stat -c \%U:\%G /etc/docker \textbar{} grep -v root:root & \\
+& Đảm bảo quyền sở hữu thư mục /etc/docker được đặt thành root:root & stat -c \%U:\%G /etc/docker \textbar{} grep -v root:root & Kiểm tra owner và group của thư mục \texttt{/etc/docker}. Đây là thư mục chứa cấu hình Docker nên phải thuộc sở hữu \texttt{root:root}. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & stat -c \%a /etc/docker & \\
+& Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & stat -c \%a /etc/docker & Kiểm tra permission của thư mục \texttt{/etc/docker}. Quyền truy cập nên là \texttt{755} hoặc hạn chế hơn để bảo vệ cấu hình daemon và chứng chỉ liên quan. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập tệ docker.socker được đặt thành 644 hoặc hạn chế & \begin{minipage}[t]{\linewidth}\raggedright
+& Đảm bảo quyền truy cập tệp docker.socket & \begin{minipage}[t]{\linewidth}\raggedright
 stat -c \%a /var/run/docker.sock\\
 stat -c \%a /usr/lib/systemd/\\
 system/docker.socket\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra permission của Docker socket và file unit. Nếu quyền quá rộng, user không được phép có thể truy cập Docker daemon. \\
 \cline{2-4}
-& Đảm bảo quyền root:root cho sỡ hữu tệp chứng chỉ & stat -c \%U:\%G /etc/docker/certs.d/* \textbar{} grep -v root:root & \\
+& Đảm bảo quyền root:root cho sở hữu tệp chứng chỉ & stat -c \%U:\%G /etc/docker/certs.d/* \textbar{} grep -v root:root & Kiểm tra owner và group của các file chứng chỉ registry. Các file chứng chỉ cần thuộc sở hữu \texttt{root:root} để tránh bị thay đổi trái phép. \\
 \cline{2-4}
-& Đảm bảo quyền truy cập chứng trí registry được đặt thành 444 hoặc hạn chế hơn & find /etc/docker/certs.d/ -type f -exec stat -c "\%a \%n" \{\} \textbackslash; & \\
+& Đảm bảo quyền truy cập chứng chỉ registry được đặt thành 444 hoặc hạn chế hơn & find /etc/docker/certs.d/ -type f -exec stat -c "\%a \%n" \{\} \textbackslash; & Kiểm tra permission của các file chứng chỉ registry. Certificate nên chỉ cho phép đọc và không cho phép ghi bởi user không có quyền. \\
 \cline{2-4}
-& Đảm bảo quyền sỡ hữu Docker server là root:root và file permission 4444 & \begin{minipage}[t]{\linewidth}\raggedright
+& Đảm bảo quyền sở hữu Docker server certificate là root:root và file permission 444 & \begin{minipage}[t]{\linewidth}\raggedright
 stat -c \%U:\%G \textless path\_to\_tlscert\textgreater{} \textbar{} grep -v root:root\\
 stat -c \%a \textless path\_to\_tlscert\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra quyền sở hữu và permission của Docker server certificate. Certificate phải thuộc \texttt{root:root} và có permission đọc hạn chế để tránh bị giả mạo hoặc thay đổi. \\
 \cline{2-4}
-& Đảm bảo quyền Docker socker file ownership là root:docker và để file permission 660 & \begin{minipage}[t]{\linewidth}\raggedright
+& Đảm bảo quyền Docker socket file ownership là root:docker và file permission 660 & \begin{minipage}[t]{\linewidth}\raggedright
 stat -c \%U:\%G /var/run/docker.sock \textbar{} grep -v root:docker\\
 stat -c \%a /var/run/docker.sock\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra Docker socket thực tế. Socket nên thuộc sở hữu \texttt{root:docker} và permission \texttt{660}, chỉ cho phép root và nhóm docker truy cập. \\
 \cline{2-4}
-& Đảm bảo quyền daemon.json là root:root và file permssion 644 & \begin{minipage}[t]{\linewidth}\raggedright
+& Đảm bảo quyền daemon.json là root:root và file permission 644 & \begin{minipage}[t]{\linewidth}\raggedright
 stat -c \%U:\%G /etc/docker/daemon.json \textbar{} grep -v root:root\\
 stat -c \%a /etc/docker/daemon.json\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra quyền sở hữu và permission của file \texttt{daemon.json}. Đây là file cấu hình chính của Docker daemon nên phải được bảo vệ chặt chẽ. \\
 \cline{2-4}
 & Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644 & \begin{minipage}[t]{\linewidth}\raggedright
 stat -c \%U:\%G /etc/sysconfig/docker \textbar{} grep -v root:root\\
 stat -c \%a /etc/sysconfig/docker\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra file \texttt{/etc/sysconfig/docker} nếu tồn tại. File này cần thuộc \texttt{root:root} và có permission \texttt{644} hoặc hạn chế hơn. \\
 \cline{2-4}
-& Đảm bảo Containered socket có quyền là root:root và file permission 660 & \begin{minipage}[t]{\linewidth}\raggedright
+& Đảm bảo containerd socket có quyền root:root và file permission 660 & \begin{minipage}[t]{\linewidth}\raggedright
 stat -c \%U:\%G /run/containerd/containerd.sock \textbar{} grep -v root:root\\
 stat -c \%a /run/containerd/containerd.sock\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra owner, group và permission của \texttt{containerd.sock}. Socket này là điểm giao tiếp với container runtime nên cần giới hạn quyền truy cập. \\
 \hline
 \multirow{9}{=}{4} & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & \begin{minipage}[t]{\linewidth}\raggedright
 docker images\\
 docker history \textless imageName\textgreater{}\\
 docker exec \$INSTANCE\_ID rpm -qa \# hoặc dpkg -l\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra image đang sử dụng có đến từ nguồn tin cậy hay không, đồng thời rà soát package bên trong container để phát hiện các gói không cần thiết. \\
 \cline{2-4}
 & Đảm bảo image được scan và phải có security patches & \begin{minipage}[t]{\linewidth}\raggedright
 docker ps -\/-quiet\\
 \# Dùng tool scan (Trivy, Grype, Clair...):\\
 trivy image \textless IMAGE\_NAME\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Quét image để phát hiện lỗ hổng bảo mật. Nếu có CVE nghiêm trọng, cần cập nhật base image, rebuild image và triển khai lại container. \\
 \cline{2-4}
-& Phải có HEALTHCHECK instruction & docker inspect -\/-format=\textquotesingle\{\{ .Config.Healthcheck \}\}\textquotesingle{} \textless IMAGE\textgreater{} & \\
+& Phải có HEALTHCHECK instruction & docker inspect -\/-format=\textquotesingle\{\{ .Config.Healthcheck \}\}\textquotesingle{} \textless IMAGE\textgreater{} & Kiểm tra image có khai báo \texttt{HEALTHCHECK} hay không. Nếu không có, cần bổ sung HEALTHCHECK trong Dockerfile hoặc cấu hình runtime. \\
 \cline{2-4}
 & Phải có update instruction và không sử dụng một mình trong Dockerfiles & \begin{minipage}[t]{\linewidth}\raggedright
 docker images\\
 docker history \textless Image\_ID\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra lịch sử build để bảo đảm lệnh update không đứng riêng lẻ. Nếu phát hiện, cần sửa Dockerfile bằng cách gộp update và install trong cùng một lớp build. \\
 \cline{2-4}
-& Không cung cấp quyền Setuid và Getuid & docker export \textless IMAGE\_ID\textgreater{} \textbar{} tar -tv 2\textgreater/dev/null \textbar{} grep -E \textquotesingle\^{}{[}-rwx{]}.*(s\textbar S).*\textbackslash s{[}0-9{]}\textquotesingle{} & \\
+& Không cung cấp quyền Setuid và Getuid & docker export \textless IMAGE\_ID\textgreater{} \textbar{} tar -tv 2\textgreater/dev/null \textbar{} grep -E \textquotesingle\^{}{[}-rwx{]}.*(s\textbar S).*\textbackslash s{[}0-9{]}\textquotesingle{} & Kiểm tra các file có setuid/setgid bit trong image. Nếu có file không cần thiết, cần loại bỏ quyền đặc biệt để giảm rủi ro leo thang đặc quyền. \\
 \cline{2-4}
 & Dùng COPY thay vì ADD & \begin{minipage}[t]{\linewidth}\raggedright
 docker images\\
 docker history \textless IMAGE\_ID\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra Dockerfile hoặc lịch sử build. Nếu dùng \texttt{ADD} không cần thiết, nên thay bằng \texttt{COPY}. \\
 \cline{2-4}
 & Secrets không được bỏ vào Dockerfiles & \begin{minipage}[t]{\linewidth}\raggedright
 docker images\\
 docker history \textless IMAGE\_ID\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra Dockerfile, image layer và lịch sử build để phát hiện password, token, private key hoặc secrets bị nhúng vào image. \\
 \cline{2-4}
 & Các package phải chính thống khi tải về & \begin{minipage}[t]{\linewidth}\raggedright
 docker images\\
 docker history \textless IMAGE\_ID\textgreater{}\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra nguồn cài đặt package, repository và GPG key. Chỉ sử dụng package từ nguồn đáng tin cậy hoặc repository nội bộ đã phê duyệt. \\
 \cline{2-4}
 & Các signed artifacts phải được kiểm chứng & \begin{minipage}[t]{\linewidth}\raggedright
 \# Xác minh chữ ký của artifact trước khi upload:\\
 cosign verify \textless IMAGE\textgreater{}\\
 \# Hoặc kiểm tra chữ ký GPG cho package\strut
-\end{minipage} & \\
+\end{minipage} & Kiểm tra chữ ký của image, package hoặc artifact trước khi đưa vào registry hoặc pipeline. Nếu xác minh thất bại thì không được sử dụng artifact đó. \\
 \hline
 \multirow{32}{=}{5} & 5.1: Không bật swarm mode nếu không cần thiết & \begin{minipage}[t]{\linewidth}\raggedright
 Chạy docker info để đọc trạng thái Swarm.\strut

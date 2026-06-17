@@ -48,7 +48,7 @@ Khắc phục tự động được thực thi qua các playbook Ansible để c
 & 2.17 - 2.19: Tắt userland proxy, giữ seccomp và tắt experimental features. & Module \texttt{ansible.builtin.template} hoặc \texttt{ansible.builtin.lineinfile}; cấu hình \texttt{userland-proxy}, kiểm soát seccomp profile và \texttt{experimental}. & \texttt{userland-proxy} được tắt nếu không cần thiết; seccomp không bị disable; experimental features không bật trong môi trường production. \\
 \hline
 
-\multirow{6}{=}{3} & 3.1 - 3.2: Quyền file service Docker. & Module \texttt{ansible.\allowbreak builtin.\allowbreak file}; xác định service file bằng \texttt{systemctl show} rồi đặt owner/group và mode phù hợp. & File service thuộc sở hữu root; permission là \texttt{0644} hoặc hạn chế hơn. \\
+\multirow{6}{=}{3} & 3.1 - 3.2: Quyền file service Docker. & Module \texttt{ansible.\allowbreak builtin.\allowbreak file}; xác định service file bằng \texttt{systemctl show}, sau đó đặt owner/group và mode phù hợp. & File service thuộc sở hữu root; permission là \texttt{0644} hoặc hạn chế hơn. \\
 \cline{2-4}
 
 & 3.3 - 3.4: Khắc phục ownership và permission của \texttt{docker.socket}. & Module \texttt{ansible.builtin.file}; xác định đường dẫn \texttt{docker.socket} và đặt lại owner/group/mode. & File \texttt{docker.socket} thuộc sở hữu \texttt{root:root}; permission là \texttt{0644} hoặc hạn chế hơn. \\
@@ -63,7 +63,7 @@ Khắc phục tự động được thực thi qua các playbook Ansible để c
 & 3.15 - 3.16: Khắc phục quyền Docker socket thực tế. & Module \texttt{ansible.builtin.file}; đặt owner/group/mode cho \texttt{/var/run/docker.sock}. & Docker socket thuộc sở hữu \texttt{root:docker}; permission là \texttt{0660}, hạn chế truy cập trái phép vào Docker daemon. \\
 \cline{2-4}
 
-& 3.17 - 3.18: Khắc phục quyền \texttt{daemon.json}, sysconfig Docker và containerd socket. & Module \texttt{ansible.builtin.file}; kiểm tra file tồn tại rồi đặt owner/group/mode phù hợp. & File cấu hình Docker và containerd socket có ownership đúng; permission không quá rộng, giảm nguy cơ bị chỉnh sửa trái phép. \\
+& 3.17 - 3.18: Khắc phục quyền \texttt{daemon.json}, sysconfig Docker và containerd socket. & Module \texttt{ansible.\allowbreak builtin.\allowbreak file}; kiểm tra file tồn tại rồi đặt owner/group/mode phù hợp. & File cấu hình Docker và containerd socket có ownership đúng; permission không quá rộng. \\
 \hline
 
 \multirow{6}{=}{4} & 4.1: Cấu hình container chạy bằng non-root user. & Chỉnh Dockerfile hoặc cấu hình container bằng Ansible; thêm chỉ thị \texttt{USER} hoặc cấu hình user khi tạo container. & Container không chạy bằng user \texttt{root}, giảm rủi ro leo thang đặc quyền khi container bị khai thác. \\
