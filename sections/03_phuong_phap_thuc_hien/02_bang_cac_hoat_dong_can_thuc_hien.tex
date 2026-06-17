@@ -14,192 +14,192 @@
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 \textbf{Loại(Auto/Manual)}
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-\textbf{\textbf{Nội dung}}
+\textbf{Nội dung}
 \end{minipage} \\
 \hline
 \endhead
 
-\multirow{19}{=}{\textbf{1}} & \textbf{Phân vùng riêng cho các container} & \textbf{Manual} & \textbf{Đảm bảo tạo phân vùng riêng biệt cho các container. Toàn bộ dữ liệu Docker được lưu tại /var/lib/docker; cần mount điểm này vào một phân vùng riêng để tránh ảnh hưởng đến hệ thống khi đĩa đầy.} \\
+\multirow{19}{=}{1} & Phân vùng riêng cho các container & Manual & Đảm bảo tạo phân vùng riêng biệt cho các container. Toàn bộ dữ liệu Docker được lưu tại /var/lib/docker; cần mount điểm này vào một phân vùng riêng để tránh ảnh hưởng đến hệ thống khi đĩa đầy. \\
 \cline{2-4}
-& \textbf{Chỉ cho trusted user kiểm soát Docker Daemon} & \textbf{Manual} & \textbf{Chỉ những người dùng đáng tin cậy mới được phép kiểm soát Docker daemon. Docker daemon socket mặc định thuộc sở hữu của root và nhóm docker; quyền truy cập không kiểm soát có thể dẫn đến leo thang đặc quyền.} \\
+& Chỉ cho trusted user kiểm soát Docker Daemon & Manual & Chỉ những người dùng đáng tin cậy mới được phép kiểm soát Docker daemon. Docker daemon socket mặc định thuộc sở hữu của root và nhóm docker; quyền truy cập không kiểm soát có thể dẫn đến leo thang đặc quyền. \\
 \cline{2-4}
-& \textbf{Cấu hình kiểm tra nhật ký cho Docker Daemon} & \textbf{Automated} & \textbf{Cấu hình audit cho Docker daemon. Kiểm tra log hoạt động của Docker daemon giúp phát hiện hành vi bất thường và đảm bảo tuân thủ chính sách bảo mật.} \\
+& Cấu hình kiểm tra nhật ký cho Docker Daemon & Automated & Cấu hình audit cho Docker daemon. Kiểm tra log hoạt động của Docker daemon giúp phát hiện hành vi bất thường và đảm bảo tuân thủ chính sách bảo mật. \\
 \cline{2-4}
-& \textbf{Audit folder /run/containerd} & \textbf{Manual} & \textbf{Cấu hình audit cho thư mục /run/containerd. Việc giám sát thư mục này đảm bảo theo dõi được các hoạt động liên quan đến containerd runtime.} \\
+& Audit folder /run/containerd & Manual & Cấu hình audit cho thư mục /run/containerd. Việc giám sát thư mục này đảm bảo theo dõi được các hoạt động liên quan đến containerd runtime. \\
 \cline{2-4}
-& \textbf{Audit folder /var/lib/docker} & \textbf{Manual} & \textbf{Cấu hình audit cho thư mục /var/lib/docker. Thư mục này lưu trữ toàn bộ dữ liệu Docker bao gồm image và container; cần được giám sát chặt chẽ.} \\
+& Audit folder /var/lib/docker & Manual & Cấu hình audit cho thư mục /var/lib/docker. Thư mục này lưu trữ toàn bộ dữ liệu Docker bao gồm image và container; cần được giám sát chặt chẽ. \\
 \cline{2-4}
-& \textbf{Audit folder /etc/Docker} & \textbf{Automated} & \textbf{Cấu hình audit cho thư mục /etc/docker. Đây là nơi lưu các tệp cấu hình TLS và chứng chỉ của Docker; cần kiểm soát mọi thay đổi.} \\
+& Audit folder /etc/Docker & Automated & Cấu hình audit cho thư mục /etc/docker. Đây là nơi lưu các tệp cấu hình TLS và chứng chỉ của Docker; cần kiểm soát mọi thay đổi. \\
 \cline{2-4}
-& \textbf{Audit docker.service} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp docker.service (nếu có). Giám sát tệp service giúp phát hiện thay đổi trái phép đối với cấu hình khởi động Docker daemon.} \\
+& Audit docker.service & Automated & Cấu hình audit cho tệp docker.service (nếu có). Giám sát tệp service giúp phát hiện thay đổi trái phép đối với cấu hình khởi động Docker daemon. \\
 \cline{2-4}
-& \textbf{Audt containerd.sock} & \textbf{Automated} & \textbf{Cấu hình audit cho socket containerd.sock (nếu có). Socket này là điểm giao tiếp với containerd; mọi truy cập cần được ghi nhận.} \\
+& Audt containerd.sock & Automated & Cấu hình audit cho socket containerd.sock (nếu có). Socket này là điểm giao tiếp với containerd; mọi truy cập cần được ghi nhận. \\
 \cline{2-4}
-& \textbf{Audit docker.sock} & \textbf{Automated} & \textbf{Cấu hình audit cho socket docker.sock (nếu có). Docker socket là giao diện chính để tương tác với Docker daemon; cần theo dõi toàn bộ hoạt động.} \\
+& Audit docker.sock & Automated & Cấu hình audit cho socket docker.sock (nếu có). Docker socket là giao diện chính để tương tác với Docker daemon; cần theo dõi toàn bộ hoạt động. \\
 \cline{2-4}
-& \textbf{Audt /etc/default/docker} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /etc/default/docker (nếu có). Tệp này chứa các biến môi trường và tùy chọn khởi động cho Docker daemon.} \\
+& Audt /etc/default/docker & Automated & Cấu hình audit cho tệp /etc/default/docker (nếu có). Tệp này chứa các biến môi trường và tùy chọn khởi động cho Docker daemon. \\
 \cline{2-4}
-& \textbf{Audit /etc/docker/daemon.json} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /etc/docker/daemon.json (nếu có). Đây là tệp cấu hình chính của Docker daemon; mọi thay đổi cần được theo dõi.} \\
+& Audit /etc/docker/daemon.json & Automated & Cấu hình audit cho tệp /etc/docker/daemon.json (nếu có). Đây là tệp cấu hình chính của Docker daemon; mọi thay đổi cần được theo dõi. \\
 \cline{2-4}
-& \textbf{Audit /etc/containerd/config.toml} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /etc/containerd/config.toml (nếu có). Tệp cấu hình của containerd cần được giám sát để phát hiện thay đổi trái phép.} \\
+& Audit /etc/containerd/config.toml & Automated & Cấu hình audit cho tệp /etc/containerd/config.toml (nếu có). Tệp cấu hình của containerd cần được giám sát để phát hiện thay đổi trái phép. \\
 \cline{2-4}
-& \textbf{Aduti /etc/sysconfig/docker} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /etc/sysconfig/docker (nếu có). Tệp cấu hình hệ thống cho Docker trên các distro dùng sysconfig (như RHEL/CentOS).} \\
+& Aduti /etc/sysconfig/docker & Automated & Cấu hình audit cho tệp /etc/sysconfig/docker (nếu có). Tệp cấu hình hệ thống cho Docker trên các distro dùng sysconfig (như RHEL/CentOS). \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/containerd-shim} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /usr/bin/containerd-shim (nếu có). Binary này là thành phần trung gian giữa containerd và container runtime; cần kiểm tra tính toàn vẹn.} \\
+& Audit /usr/bin/containerd-shim & Automated & Cấu hình audit cho tệp /usr/bin/containerd-shim (nếu có). Binary này là thành phần trung gian giữa containerd và container runtime; cần kiểm tra tính toàn vẹn. \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/containerd-shim-runc-v1} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /usr/bin/containerd-shim-runc-v1 (nếu có). Đây là binary shim cho runc v1; cần đảm bảo mọi truy cập được ghi nhận.} \\
+& Audit /usr/bin/containerd-shim-runc-v1 & Automated & Cấu hình audit cho tệp /usr/bin/containerd-shim-runc-v1 (nếu có). Đây là binary shim cho runc v1; cần đảm bảo mọi truy cập được ghi nhận. \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/containerd-shim-runc-v2} & \textbf{Manual} & \textbf{Cấu hình audit cho tệp /usr/bin/containerd-shim-runc-v2 (nếu có). Binary shim cho runc v2; cần kiểm soát và ghi lại mọi thay đổi.} \\
+& Audit /usr/bin/containerd-shim-runc-v2 & Manual & Cấu hình audit cho tệp /usr/bin/containerd-shim-runc-v2 (nếu có). Binary shim cho runc v2; cần kiểm soát và ghi lại mọi thay đổi. \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/runc} & \textbf{Automated} & \textbf{Cấu hình audit cho tệp /usr/bin/runc (nếu có). runc là container runtime cấp thấp; bất kỳ thay đổi nào đối với binary này đều có thể ảnh hưởng nghiêm trọng đến bảo mật.} \\
+& Audit /usr/bin/runc & Automated & Cấu hình audit cho tệp /usr/bin/runc (nếu có). runc là container runtime cấp thấp; bất kỳ thay đổi nào đối với binary này đều có thể ảnh hưởng nghiêm trọng đến bảo mật. \\
 \cline{2-4}
-& \textbf{Đảm báo bảo mật cho container} & \textbf{Manual} & \textbf{Đảm bảo máy chủ container đã được hardening đúng cách. Máy chủ Docker cần được cấu hình bảo mật chặt chẽ bao gồm vá lỗi, tắt dịch vụ không cần thiết và tuân theo các tiêu chuẩn bảo mật hệ thống.} \\
+& Đảm báo bảo mật cho container & Manual & Đảm bảo máy chủ container đã được hardening đúng cách. Máy chủ Docker cần được cấu hình bảo mật chặt chẽ bao gồm vá lỗi, tắt dịch vụ không cần thiết và tuân theo các tiêu chuẩn bảo mật hệ thống. \\
 \cline{2-4}
-& \textbf{Đảm bảo phiên bản mới cho Docker} & \textbf{Manual} & \textbf{Đảm bảo Docker đang sử dụng phiên bản mới nhất. Các phiên bản mới thường khắc phục lỗ hổng bảo mật; cần theo dõi và nâng cấp định kỳ.} \\
+& Đảm bảo phiên bản mới cho Docker & Manual & Đảm bảo Docker đang sử dụng phiên bản mới nhất. Các phiên bản mới thường khắc phục lỗ hổng bảo mật; cần theo dõi và nâng cấp định kỳ. \\
 \hline
-\multirow{19}{=}{\textbf{2}} & \textbf{Chạy docker daemon tránh quyền root} & \textbf{Manual} & \textbf{Chạy Docker daemon với chế độ rootless nếu có thể. Rootless mode thực thi Docker daemon và container trong user namespace, không yêu cầu quyền root, giảm thiểu rủi ro leo thang đặc quyền.} \\
+\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & Manual & Chạy Docker daemon với chế độ rootless nếu có thể. Rootless mode thực thi Docker daemon và container trong user namespace, không yêu cầu quyền root, giảm thiểu rủi ro leo thang đặc quyền. \\
 \cline{2-4}
-& \textbf{Network trafic được đặt hạn chế giữa các container ở default bridge} & \textbf{Manual} & \textbf{Hạn chế lưu lượng mạng giữa các container trên default bridge network. Mặc định tất cả container trên cùng host có thể giao tiếp; cần giới hạn bằng cách sử dụng tùy chọn -\/-icc=false.} \\
+& Network trafic được đặt hạn chế giữa các container ở default bridge & Manual & Hạn chế lưu lượng mạng giữa các container trên default bridge network. Mặc định tất cả container trên cùng host có thể giao tiếp; cần giới hạn bằng cách sử dụng tùy chọn -\/-icc=false. \\
 \cline{2-4}
-& \textbf{Logging level set ở ``info''} & \textbf{Manual} & \textbf{Đặt mức độ log của Docker daemon ở mức \textquotesingle info\textquotesingle. Mức log \textquotesingle info\textquotesingle{} cung cấp đủ thông tin để giám sát mà không gây quá tải; tránh dùng \textquotesingle debug\textquotesingle{} trong môi trường production.} \\
+& Logging level set ở ``info'' & Manual & Đặt mức độ log của Docker daemon ở mức \textquotesingle info\textquotesingle. Mức log \textquotesingle info\textquotesingle{} cung cấp đủ thông tin để giám sát mà không gây quá tải; tránh dùng \textquotesingle debug\textquotesingle{} trong môi trường production. \\
 \cline{2-4}
-& \textbf{Docker được quyền thay đổi iptables} & \textbf{Manual} & \textbf{Cho phép Docker daemon thay đổi rules iptables. Docker cần được quyền quản lý iptables để thiết lập kết nối mạng cho container; không nên vô hiệu hóa tính năng này.} \\
+& Docker được quyền thay đổi iptables & Manual & Cho phép Docker daemon thay đổi rules iptables. Docker cần được quyền quản lý iptables để thiết lập kết nối mạng cho container; không nên vô hiệu hóa tính năng này. \\
 \cline{2-4}
-& \textbf{Đảm bảo không sử dụng registry không an toàn} & \textbf{Manual} & \textbf{Không sử dụng insecure registry. Docker mặc định coi registry là an toàn; việc cấu hình insecure-registries có thể dẫn đến tải image từ nguồn không tin cậy qua kết nối không mã hóa.} \\
+& Đảm bảo không sử dụng registry không an toàn & Manual & Không sử dụng insecure registry. Docker mặc định coi registry là an toàn; việc cấu hình insecure-registries có thể dẫn đến tải image từ nguồn không tin cậy qua kết nối không mã hóa. \\
 \cline{2-4}
-& \textbf{Đảm bảo không sử dụng trình điều khiển aufs} & \textbf{Manual} & \textbf{Không sử dụng storage driver aufs. aufs là driver lỗi thời, không được hỗ trợ trên nhiều kernel hiện đại và có thể gây ra các vấn đề bảo mật; nên dùng overlay2.} \\
+& Đảm bảo không sử dụng trình điều khiển aufs & Manual & Không sử dụng storage driver aufs. aufs là driver lỗi thời, không được hỗ trợ trên nhiều kernel hiện đại và có thể gây ra các vấn đề bảo mật; nên dùng overlay2. \\
 \cline{2-4}
-& \textbf{Đảm bảo không dùng devicemapper} & \textbf{Manual} & \textbf{Không sử dụng storage driver devicemapper. devicemapper ở chế độ loop-lvm không phù hợp cho production do hiệu suất kém và các rủi ro bảo mật tiềm ẩn.} \\
+& Đảm bảo không dùng devicemapper & Manual & Không sử dụng storage driver devicemapper. devicemapper ở chế độ loop-lvm không phù hợp cho production do hiệu suất kém và các rủi ro bảo mật tiềm ẩn. \\
 \cline{2-4}
-& \textbf{Đảm bảo xác thực TLS cho Docker Daemon} & \textbf{Manual} & \textbf{Cấu hình xác thực TLS cho Docker daemon khi mở qua TCP. Kết nối TCP tới Docker daemon cần được bảo mật bằng TLS mutual authentication để ngăn chặn truy cập trái phép.} \\
+& Đảm bảo xác thực TLS cho Docker Daemon & Manual & Cấu hình xác thực TLS cho Docker daemon khi mở qua TCP. Kết nối TCP tới Docker daemon cần được bảo mật bằng TLS mutual authentication để ngăn chặn truy cập trái phép. \\
 \cline{2-4}
-& \textbf{Đảm bảo giới hạn ulimit mặc định} & \textbf{Manual} & \textbf{Cấu hình giới hạn ulimit mặc định phù hợp. Giới hạn ulimit kiểm soát tài nguyên hệ thống mà container có thể sử dụng; cần đặt giá trị hợp lý để tránh lạm dụng tài nguyên.} \\
+& Đảm bảo giới hạn ulimit mặc định & Manual & Cấu hình giới hạn ulimit mặc định phù hợp. Giới hạn ulimit kiểm soát tài nguyên hệ thống mà container có thể sử dụng; cần đặt giá trị hợp lý để tránh lạm dụng tài nguyên. \\
 \cline{2-4}
-& \textbf{Hỗ trợ user namespace} & \textbf{Manual} & \textbf{Bật hỗ trợ user namespace trong Docker daemon. User namespace cho phép ánh xạ user trong container sang user không có quyền trên host, giảm thiểu rủi ro nếu container bị xâm phạm.} \\
+& Hỗ trợ user namespace & Manual & Bật hỗ trợ user namespace trong Docker daemon. User namespace cho phép ánh xạ user trong container sang user không có quyền trên host, giảm thiểu rủi ro nếu container bị xâm phạm. \\
 \cline{2-4}
-& \textbf{Cgroup sử dụng được xác nhận} & \textbf{Manual} & \textbf{Xác nhận cgroup đang sử dụng là phù hợp. Tùy chọn -\/-cgroup-parent cho phép đặt cgroup cha mặc định; nếu không có yêu cầu đặc biệt nên để mặc định.} \\
+& Cgroup sử dụng được xác nhận & Manual & Xác nhận cgroup đang sử dụng là phù hợp. Tùy chọn -\/-cgroup-parent cho phép đặt cgroup cha mặc định; nếu không có yêu cầu đặc biệt nên để mặc định. \\
 \cline{2-4}
-& \textbf{Đảm bảo device size không thay đổi trừ khi cần thiết} & \textbf{Manual} & \textbf{Không thay đổi base device size nếu không cần thiết. Thay đổi kích thước thiết bị cơ sở có thể ảnh hưởng đến bảo mật và hiệu suất; chỉ thực hiện khi thực sự cần.} \\
+& Đảm bảo device size không thay đổi trừ khi cần thiết & Manual & Không thay đổi base device size nếu không cần thiết. Thay đổi kích thước thiết bị cơ sở có thể ảnh hưởng đến bảo mật và hiệu suất; chỉ thực hiện khi thực sự cần. \\
 \cline{2-4}
-& \textbf{Đảm bảo authorization cho Docker client} & \textbf{Manual} & \textbf{Bật authorization plugin cho các lệnh Docker client. Sử dụng plugin phân quyền gốc của Docker hoặc cơ chế bên thứ ba để kiểm soát quyền truy cập vào Docker daemon.} \\
+& Đảm bảo authorization cho Docker client & Manual & Bật authorization plugin cho các lệnh Docker client. Sử dụng plugin phân quyền gốc của Docker hoặc cơ chế bên thứ ba để kiểm soát quyền truy cập vào Docker daemon. \\
 \cline{2-4}
-& \textbf{Đảm bảo container bj hạn chế không cho quyền mới} & \textbf{Manual} & \textbf{Hạn chế container không được phép nhận thêm quyền mới. Cấu hình -\/-no-new-privileges ngăn container leo thang đặc quyền thông qua suid hoặc sgid.} \\
+& Đảm bảo container bj hạn chế không cho quyền mới & Manual & Hạn chế container không được phép nhận thêm quyền mới. Cấu hình -\/-no-new-privileges ngăn container leo thang đặc quyền thông qua suid hoặc sgid. \\
 \cline{2-4}
-& \textbf{Đảm bảo container có live restore} & \textbf{Manual} & \textbf{Bật tính năng live restore cho Docker daemon. -\/-live-restore đảm bảo container tiếp tục chạy khi Docker daemon khởi động lại, tăng tính sẵn sàng của dịch vụ.} \\
+& Đảm bảo container có live restore & Manual & Bật tính năng live restore cho Docker daemon. -\/-live-restore đảm bảo container tiếp tục chạy khi Docker daemon khởi động lại, tăng tính sẵn sàng của dịch vụ. \\
 \cline{2-4}
-& \textbf{Đảm bảo có log cho đăng nhập gần và từ xa} & \textbf{Manual} & \textbf{Cấu hình centralized và remote logging. Logging tập trung giúp quản lý, phân tích log từ nhiều container và phát hiện sự cố bảo mật kịp thời.} \\
+& Đảm bảo có log cho đăng nhập gần và từ xa & Manual & Cấu hình centralized và remote logging. Logging tập trung giúp quản lý, phân tích log từ nhiều container và phát hiện sự cố bảo mật kịp thời. \\
 \cline{2-4}
-& \textbf{Đảm bảo Userland Proxy đã tắt} & \textbf{Manual} & \textbf{Tắt Userland Proxy nếu không cần thiết. Docker userland proxy xử lý chuyển tiếp cổng; khi hairpin NAT khả dụng, proxy này là dư thừa và có thể bị tắt để giảm bề mặt tấn công.} \\
+& Đảm bảo Userland Proxy đã tắt & Manual & Tắt Userland Proxy nếu không cần thiết. Docker userland proxy xử lý chuyển tiếp cổng; khi hairpin NAT khả dụng, proxy này là dư thừa và có thể bị tắt để giảm bề mặt tấn công. \\
 \cline{2-4}
-& \textbf{Đảm bảo daemon-wide custom seccomp profile được thiết đặt} & \textbf{Manual} & \textbf{Áp dụng custom seccomp profile ở cấp daemon nếu phù hợp. Seccomp profile tùy chỉnh giúp hạn chế các system call mà container có thể thực hiện, tăng cường bảo mật.} \\
+& Đảm bảo daemon-wide custom seccomp profile được thiết đặt & Manual & Áp dụng custom seccomp profile ở cấp daemon nếu phù hợp. Seccomp profile tùy chỉnh giúp hạn chế các system call mà container có thể thực hiện, tăng cường bảo mật. \\
 \cline{2-4}
-& \textbf{Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất} & \textbf{Manual} & \textbf{Không bật experimental features trong môi trường production. Các tính năng thử nghiệm chưa được kiểm tra đầy đủ và có thể chứa lỗ hổng bảo mật chưa được vá.} \\
+& Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & Manual & Không bật experimental features trong môi trường production. Các tính năng thử nghiệm chưa được kiểm tra đầy đủ và có thể chứa lỗ hổng bảo mật chưa được vá. \\
 \hline
-\multirow{14}{=}{\textbf{3}} & \textbf{Đảm bảo quyền root:root cho docker.service} & \textbf{Automated} & \textbf{Đảm bảo file docker.service thuộc sở hữu của root:root. Quyền sở hữu không đúng có thể cho phép người dùng không có quyền sửa đổi cấu hình service Docker.} \\
+\multirow{14}{=}{3} & Đảm bảo quyền root:root cho docker.service & Automated & Đảm bảo file docker.service thuộc sở hữu của root:root. Quyền sở hữu không đúng có thể cho phép người dùng không có quyền sửa đổi cấu hình service Docker. \\
 \cline{2-4}
-& \textbf{Đảm bảo docker.service cho quyền hợp lý} & \textbf{Automated} & \textbf{Đảm bảo file docker.service có file permissions được đặt thành 644 hoặc hạn chế hơn. Quyền truy cập quá rộng có thể bị lợi dụng để sửa đổi cấu hình Docker daemon.} \\
+& Đảm bảo docker.service cho quyền hợp lý & Automated & Đảm bảo file docker.service có file permissions được đặt thành 644 hoặc hạn chế hơn. Quyền truy cập quá rộng có thể bị lợi dụng để sửa đổi cấu hình Docker daemon. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root} & \textbf{Automated} & \textbf{Đảm bảo file docker.socket thuộc sở hữu root:root. Docker socket là điểm truy cập chính tới daemon; quyền sở hữu không đúng có thể dẫn đến truy cập trái phép.} \\
+& Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root & Automated & Đảm bảo file docker.socket thuộc sở hữu root:root. Docker socket là điểm truy cập chính tới daemon; quyền sở hữu không đúng có thể dẫn đến truy cập trái phép. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế} & \textbf{Automated} & \textbf{Đảm bảo file docker.socket có permissions 644 hoặc hạn chế hơn. Giới hạn quyền truy cập vào socket file ngăn chặn người dùng không được phép tương tác với Docker daemon.} \\
+& Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & Automated & Đảm bảo file docker.socket có permissions 644 hoặc hạn chế hơn. Giới hạn quyền truy cập vào socket file ngăn chặn người dùng không được phép tương tác với Docker daemon. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền sỡ hữu thư mục /etc/docker được đặt thành root:root} & \textbf{Automated} & \textbf{Đảm bảo thư mục /etc/docker thuộc sở hữu root:root. Thư mục này chứa chứng chỉ TLS và cấu hình nhạy cảm; cần được bảo vệ chặt chẽ.} \\
+& Đảm bảo quyền sỡ hữu thư mục /etc/docker được đặt thành root:root & Automated & Đảm bảo thư mục /etc/docker thuộc sở hữu root:root. Thư mục này chứa chứng chỉ TLS và cấu hình nhạy cảm; cần được bảo vệ chặt chẽ. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế} & \textbf{Automated} & \textbf{Đảm bảo thư mục /etc/docker có permissions 755 hoặc hạn chế hơn. Quyền truy cập thư mục cấu hình cần được kiểm soát để tránh truy cập trái phép.} \\
+& Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & Automated & Đảm bảo thư mục /etc/docker có permissions 755 hoặc hạn chế hơn. Quyền truy cập thư mục cấu hình cần được kiểm soát để tránh truy cập trái phép. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập tệ docker.socker được đặt thành 644 hoặc hạn chế} & \textbf{Automated} & \textbf{Kiểm tra lại permissions của docker.socket file là 644 hoặc hạn chế hơn để đảm bảo không có quyền ghi thừa.} \\
+& Đảm bảo quyền truy cập tệ docker.socker được đặt thành 644 hoặc hạn chế & Automated & Kiểm tra lại permissions của docker.socket file là 644 hoặc hạn chế hơn để đảm bảo không có quyền ghi thừa. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền root:root cho sỡ hữu tệp chứng chỉ} & \textbf{Manual} & \textbf{Đảm bảo các file chứng chỉ registry (thường trong /etc/docker/certs.d/) thuộc sở hữu root:root. Chứng chỉ không được bảo vệ có thể bị giả mạo hoặc đánh cắp.} \\
+& Đảm bảo quyền root:root cho sỡ hữu tệp chứng chỉ & Manual & Đảm bảo các file chứng chỉ registry (thường trong /etc/docker/certs.d/) thuộc sở hữu root:root. Chứng chỉ không được bảo vệ có thể bị giả mạo hoặc đánh cắp. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập chứng trí registry được đặt thành 444 hoặc hạn chế hơn} & \textbf{Manual} & \textbf{Đảm bảo các file chứng chỉ registry có permissions 444 hoặc hạn chế hơn. Chứng chỉ chỉ nên được đọc, không được phép ghi hay thực thi bởi bất kỳ ai.} \\
+& Đảm bảo quyền truy cập chứng trí registry được đặt thành 444 hoặc hạn chế hơn & Manual & Đảm bảo các file chứng chỉ registry có permissions 444 hoặc hạn chế hơn. Chứng chỉ chỉ nên được đọc, không được phép ghi hay thực thi bởi bất kỳ ai. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền sỡ hữu Docker server là root:root và file permission 4444} & \textbf{Manual} & \textbf{Đảm bảo file Docker server certificate (-\/-tlscert) thuộc sở hữu root:root với permissions 444. Certificate server cần được bảo vệ để đảm bảo tính xác thực của daemon.} \\
+& Đảm bảo quyền sỡ hữu Docker server là root:root và file permission 4444 & Manual & Đảm bảo file Docker server certificate (-\/-tlscert) thuộc sở hữu root:root với permissions 444. Certificate server cần được bảo vệ để đảm bảo tính xác thực của daemon. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền Docker socker file ownership là root:docker và để file permission 660} & \textbf{Automated} & \textbf{Đảm bảo Docker socket file thuộc sở hữu root:docker với permissions 660. Cấu hình này cho phép nhóm docker truy cập socket trong khi ngăn chặn người dùng không có quyền.} \\
+& Đảm bảo quyền Docker socker file ownership là root:docker và để file permission 660 & Automated & Đảm bảo Docker socket file thuộc sở hữu root:docker với permissions 660. Cấu hình này cho phép nhóm docker truy cập socket trong khi ngăn chặn người dùng không có quyền. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền daemon.json là root:root và file permssion 644} & \textbf{Manual} & \textbf{Đảm bảo file daemon.json (nếu có) thuộc sở hữu root:root với permissions 644. File cấu hình daemon chứa các thiết lập nhạy cảm cần được bảo vệ.} \\
+& Đảm bảo quyền daemon.json là root:root và file permssion 644 & Manual & Đảm bảo file daemon.json (nếu có) thuộc sở hữu root:root với permissions 644. File cấu hình daemon chứa các thiết lập nhạy cảm cần được bảo vệ. \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644} & \textbf{Manual} & \textbf{Đảm bảo file /etc/sysconfig/docker thuộc sở hữu root:root với permissions 644. File cấu hình hệ thống này chứa các tùy chọn môi trường cho Docker daemon.} \\
+& Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644 & Manual & Đảm bảo file /etc/sysconfig/docker thuộc sở hữu root:root với permissions 644. File cấu hình hệ thống này chứa các tùy chọn môi trường cho Docker daemon. \\
 \cline{2-4}
-& \textbf{Đảm bảo Containered socket có quyền là root:root và file permission 660} & \textbf{Automated} & \textbf{Đảm bảo Containerd socket file thuộc sở hữu root:root với permissions 660 hoặc hạn chế hơn. Kiểm soát quyền truy cập socket containerd ngăn chặn tương tác trái phép với runtime.} \\
+& Đảm bảo Containered socket có quyền là root:root và file permission 660 & Automated & Đảm bảo Containerd socket file thuộc sở hữu root:root với permissions 660 hoặc hạn chế hơn. Kiểm soát quyền truy cập socket containerd ngăn chặn tương tác trái phép với runtime. \\
 \hline
-\multirow{9}{=}{\textbf{4}} & \textbf{Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về.} & \textbf{Manual} & \textbf{Container phải được tạo từ trusted base images và không chứa package không cần thiết. Sử dụng image tin cậy từ nguồn chính thống, giảm thiểu attack surface bằng cách loại bỏ các gói thừa.} \\
+\multirow{9}{=}{4} & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & Manual & Container phải được tạo từ trusted base images và không chứa package không cần thiết. Sử dụng image tin cậy từ nguồn chính thống, giảm thiểu attack surface bằng cách loại bỏ các gói thừa. \\
 \cline{2-4}
-& \textbf{Đảm bảo image được scan và phải có security patches} & \textbf{Manual} & \textbf{Quét image thường xuyên và rebuild để bao gồm các bản vá bảo mật. Image cần được scan định kỳ để phát hiện CVE và rebuild với patches mới nhất.} \\
+& Đảm bảo image được scan và phải có security patches & Manual & Quét image thường xuyên và rebuild để bao gồm các bản vá bảo mật. Image cần được scan định kỳ để phát hiện CVE và rebuild với patches mới nhất. \\
 \cline{2-4}
-& \textbf{Phải có HEALTHCHECK instruction} & \textbf{Manual} & \textbf{Thêm HEALTHCHECK instruction vào Dockerfile. HEALTHCHECK giúp Docker tự động kiểm tra tình trạng container đang chạy, phát hiện sự cố kịp thời.} \\
+& Phải có HEALTHCHECK instruction & Manual & Thêm HEALTHCHECK instruction vào Dockerfile. HEALTHCHECK giúp Docker tự động kiểm tra tình trạng container đang chạy, phát hiện sự cố kịp thời. \\
 \cline{2-4}
-& \textbf{Phải có update instruction và không sử dụng một mình trong Dockerfiles} & \textbf{Manual} & \textbf{Không sử dụng lệnh update (như apt-get update) một mình trong Dockerfile. Lệnh update độc lập có thể cache lại và không đảm bảo cài đặt phiên bản mới nhất khi build.} \\
+& Phải có update instruction và không sử dụng một mình trong Dockerfiles & Manual & Không sử dụng lệnh update (như apt-get update) một mình trong Dockerfile. Lệnh update độc lập có thể cache lại và không đảm bảo cài đặt phiên bản mới nhất khi build. \\
 \cline{2-4}
-& \textbf{Không cung cấp quyền Setuid và Getuid} & \textbf{Manual} & \textbf{Loại bỏ các quyền setuid và setgid khỏi image. Bit setuid/setgid có thể bị khai thác để leo thang đặc quyền trong container; cần loại bỏ khi không cần thiết.} \\
+& Không cung cấp quyền Setuid và Getuid & Manual & Loại bỏ các quyền setuid và setgid khỏi image. Bit setuid/setgid có thể bị khai thác để leo thang đặc quyền trong container; cần loại bỏ khi không cần thiết. \\
 \cline{2-4}
-& \textbf{Dùng COPY thay vì ADD} & \textbf{Manual} & \textbf{Sử dụng instruction COPY thay vì ADD trong Dockerfile. COPY chỉ sao chép file cục bộ, trong khi ADD có thêm tính năng ngầm (giải nén, tải URL) có thể gây ra rủi ro bảo mật.} \\
+& Dùng COPY thay vì ADD & Manual & Sử dụng instruction COPY thay vì ADD trong Dockerfile. COPY chỉ sao chép file cục bộ, trong khi ADD có thêm tính năng ngầm (giải nén, tải URL) có thể gây ra rủi ro bảo mật. \\
 \cline{2-4}
-& \textbf{Secrets không được bỏ vào Dockerfiles} & \textbf{Manual} & \textbf{Không lưu trữ secrets (password, key, token) trong Dockerfile. Secrets trong Dockerfile sẽ bị lộ trong image layers và có thể bị trích xuất bởi bất kỳ ai có quyền truy cập image.} \\
+& Secrets không được bỏ vào Dockerfiles & Manual & Không lưu trữ secrets (password, key, token) trong Dockerfile. Secrets trong Dockerfile sẽ bị lộ trong image layers và có thể bị trích xuất bởi bất kỳ ai có quyền truy cập image. \\
 \cline{2-4}
-& \textbf{Các package phải chính thống khi tải về} & \textbf{Manual} & \textbf{Chỉ cài đặt các package đã được xác minh tính xác thực. Kiểm tra chữ ký và tính toàn vẹn của package trước khi cài đặt để tránh cài phần mềm độc hại.} \\
+& Các package phải chính thống khi tải về & Manual & Chỉ cài đặt các package đã được xác minh tính xác thực. Kiểm tra chữ ký và tính toàn vẹn của package trước khi cài đặt để tránh cài phần mềm độc hại. \\
 \cline{2-4}
-& \textbf{Các signed artifacts phải được kiểm chứng} & \textbf{Manual} & \textbf{Xác thực chữ ký của tất cả artifacts trước khi upload lên package registry. Đảm bảo tính toàn vẹn và nguồn gốc của artifacts trong chuỗi cung ứng phần mềm.} \\
+& Các signed artifacts phải được kiểm chứng & Manual & Xác thực chữ ký của tất cả artifacts trước khi upload lên package registry. Đảm bảo tính toàn vẹn và nguồn gốc của artifacts trong chuỗi cung ứng phần mềm. \\
 \hline
-\multirow{28}{=}{\textbf{5}} & \textbf{Không bật swarm mode nếu không cần thiết} & \textbf{Manual} & \textbf{Không bật Docker Swarm mode trừ khi cần thiết. Swarm mode mở thêm các cổng mạng và dịch vụ; nếu không sử dụng clustering nên tắt để giảm bề mặt tấn công.} \\
+\multirow{28}{=}{5} & Không bật swarm mode nếu không cần thiết & Manual & Không bật Docker Swarm mode trừ khi cần thiết. Swarm mode mở thêm các cổng mạng và dịch vụ; nếu không sử dụng clustering nên tắt để giảm bề mặt tấn công. \\
 \cline{2-4}
-& \textbf{Bật AppArmor Profile} & \textbf{Manual} & \textbf{Bật AppArmor profile cho container (nếu hệ thống hỗ trợ). AppArmor là hệ thống bảo mật Linux giúp giới hạn khả năng của tiến trình trong container, ngăn chặn hành vi độc hại.} \\
+& Bật AppArmor Profile & Manual & Bật AppArmor profile cho container (nếu hệ thống hỗ trợ). AppArmor là hệ thống bảo mật Linux giúp giới hạn khả năng của tiến trình trong container, ngăn chặn hành vi độc hại. \\
 \cline{2-4}
-& \textbf{Phải có SELinux} & \textbf{Manual} & \textbf{Cấu hình SELinux security options cho container (nếu hệ thống hỗ trợ). SELinux cung cấp mandatory access control, hạn chế quyền truy cập của container vào tài nguyên hệ thống.} \\
+& Phải có SELinux & Manual & Cấu hình SELinux security options cho container (nếu hệ thống hỗ trợ). SELinux cung cấp mandatory access control, hạn chế quyền truy cập của container vào tài nguyên hệ thống. \\
 \cline{2-4}
-& \textbf{Linux Kernel phải để chế độ hạn chế trong containers} & \textbf{Manual} & \textbf{Hạn chế Linux kernel capabilities trong container. Docker mặc định chạy với tập capabilities giới hạn; chỉ thêm capabilities thực sự cần thiết và loại bỏ những capabilities không dùng.} \\
+& Linux Kernel phải để chế độ hạn chế trong containers & Manual & Hạn chế Linux kernel capabilities trong container. Docker mặc định chạy với tập capabilities giới hạn; chỉ thêm capabilities thực sự cần thiết và loại bỏ những capabilities không dùng. \\
 \cline{2-4}
-& \textbf{Không sử dụng privileged container} & \textbf{Manual} & \textbf{Không sử dụng -\/-privileged flag cho container. Container privileged có toàn bộ kernel capabilities của host và có thể thoát khỏi container; chỉ dùng khi thực sự bắt buộc.} \\
+& Không sử dụng privileged container & Manual & Không sử dụng -\/-privileged flag cho container. Container privileged có toàn bộ kernel capabilities của host và có thể thoát khỏi container; chỉ dùng khi thực sự bắt buộc. \\
 \cline{2-4}
-& \textbf{Không mount các host system cần bảo vệ chặt trong container} & \textbf{Manual} & \textbf{Không mount các thư mục nhạy cảm của host (/, /boot, /dev, /etc, /lib, /proc, /sys, /usr) vào container. Mount các thư mục này có thể cho phép container truy cập và sửa đổi hệ thống host.} \\
+& Không mount các host system cần bảo vệ chặt trong container & Manual & Không mount các thư mục nhạy cảm của host (/, /boot, /dev, /etc, /lib, /proc, /sys, /usr) vào container. Mount các thư mục này có thể cho phép container truy cập và sửa đổi hệ thống host. \\
 \cline{2-4}
-& \textbf{SSHD không chạy trong containers} & \textbf{Manual} & \textbf{Không chạy SSH daemon bên trong container. Thay vào đó, sử dụng docker exec để vào container. Chạy SSHD trong container làm phức tạp quản lý key và tăng attack surface.} \\
+& SSHD không chạy trong containers & Manual & Không chạy SSH daemon bên trong container. Thay vào đó, sử dụng docker exec để vào container. Chạy SSHD trong container làm phức tạp quản lý key và tăng attack surface. \\
 \cline{2-4}
-& \textbf{Không chạy port đặc quyền trong container} & \textbf{Manual} & \textbf{Không map các privileged ports (\textless{} 1024) vào container. Các port đặc quyền yêu cầu quyền root; việc map chúng vào container có thể tạo ra rủi ro bảo mật.} \\
+& Không chạy port đặc quyền trong container & Manual & Không map các privileged ports (\textless{} 1024) vào container. Các port đặc quyền yêu cầu quyền root; việc map chúng vào container có thể tạo ra rủi ro bảo mật. \\
 \cline{2-4}
-& \textbf{Chỉ chạy port cần thiết cho container} & \textbf{Manual} & \textbf{Chỉ mở những port thực sự cần thiết cho container. Mỗi port mở thêm là một điểm tấn công tiềm ẩn; cần review và đóng những port không sử dụng.} \\
+& Chỉ chạy port cần thiết cho container & Manual & Chỉ mở những port thực sự cần thiết cho container. Mỗi port mở thêm là một điểm tấn công tiềm ẩn; cần review và đóng những port không sử dụng. \\
 \cline{2-4}
-& \textbf{Bảo mật network namespace} & \textbf{Manual} & \textbf{Không chia sẻ host network namespace với container (-\/-net=host). Chế độ host networking loại bỏ cô lập mạng, cho phép container truy cập trực tiếp vào network stack của host.} \\
+& Bảo mật network namespace & Manual & Không chia sẻ host network namespace với container (-\/-net=host). Chế độ host networking loại bỏ cô lập mạng, cho phép container truy cập trực tiếp vào network stack của host. \\
 \cline{2-4}
-& \textbf{Sử dụng tài nguyên hợp lý: Memory usage và CPU priority(5.11, 5.12)} & \textbf{Manual} & \textbf{Giới hạn memory usage và CPU priority cho container. Không giới hạn tài nguyên có thể dẫn đến một container tiêu thụ hết tài nguyên host (DoS); cần đặt -\/-memory và -\/-cpu-shares phù hợp.} \\
+& Sử dụng tài nguyên hợp lý: Memory usage và CPU priority(5.11, 5.12) & Manual & Giới hạn memory usage và CPU priority cho container. Không giới hạn tài nguyên có thể dẫn đến một container tiêu thụ hết tài nguyên host (DoS); cần đặt -\/-memory và -\/-cpu-shares phù hợp. \\
 \cline{2-4}
-& \textbf{Để filesystem của container's ở quyền ``read only''} & \textbf{Manual} & \textbf{Mount root filesystem của container ở chế độ read-only (-\/-read-only). Ngăn chặn ghi vào filesystem container giúp bảo vệ tính toàn vẹn của image và hạn chế tấn công persistence.} \\
+& Để filesystem của container's ở quyền ``read only'' & Manual & Mount root filesystem của container ở chế độ read-only (-\/-read-only). Ngăn chặn ghi vào filesystem container giúp bảo vệ tính toàn vẹn của image và hạn chế tấn công persistence. \\
 \cline{2-4}
-& \textbf{Mạng lưu thông phải đến một interface được đặt} & \textbf{Manual} & \textbf{Bind incoming container traffic vào một host interface cụ thể. Thay vì bind 0.0.0.0, chỉ định interface cụ thể để kiểm soát traffic vào container và giảm exposure.} \\
+& Mạng lưu thông phải đến một interface được đặt & Manual & Bind incoming container traffic vào một host interface cụ thể. Thay vì bind 0.0.0.0, chỉ định interface cụ thể để kiểm soát traffic vào container và giảm exposure. \\
 \cline{2-4}
-& \textbf{Có chính sách ``on-failure'' thì khởi động lại với giá trị 5} & \textbf{Manual} & \textbf{Đặt restart policy \textquotesingle on-failure\textquotesingle{} với giá trị tối đa 5 lần. Chính sách này đảm bảo container tự khởi động lại khi gặp lỗi nhưng không chạy vô hạn khi có vấn đề nghiêm trọng.} \\
+& Có chính sách ``on-failure'' thì khởi động lại với giá trị 5 & Manual & Đặt restart policy \textquotesingle on-failure\textquotesingle{} với giá trị tối đa 5 lần. Chính sách này đảm bảo container tự khởi động lại khi gặp lỗi nhưng không chạy vô hạn khi có vấn đề nghiêm trọng. \\
 \cline{2-4}
-& \textbf{Bảo mật Host's process namespace và IPC namespace(5.16, 5.17)} & \textbf{Manual} & \textbf{Không chia sẻ PID namespace và IPC namespace của host với container. Chia sẻ các namespace này cho phép container nhìn thấy và tương tác với tiến trình/IPC của host, phá vỡ cô lập.} \\
+& Bảo mật Host's process namespace và IPC namespace(5.16, 5.17) & Manual & Không chia sẻ PID namespace và IPC namespace của host với container. Chia sẻ các namespace này cho phép container nhìn thấy và tương tác với tiến trình/IPC của host, phá vỡ cô lập. \\
 \cline{2-4}
-& \textbf{Host Devices không nên tương tác chung với containers} & \textbf{Manual} & \textbf{Không expose host devices trực tiếp vào container trừ khi thực sự cần. Truy cập trực tiếp vào hardware của host có thể bị lợi dụng để thực hiện các cuộc tấn công đặc quyền.} \\
+& Host Devices không nên tương tác chung với containers & Manual & Không expose host devices trực tiếp vào container trừ khi thực sự cần. Truy cập trực tiếp vào hardware của host có thể bị lợi dụng để thực hiện các cuộc tấn công đặc quyền. \\
 \cline{2-4}
-& \textbf{Phải có default limit overwritten trong lúc chạy nếu cần thiết} & \textbf{Manual} & \textbf{Ghi đè default ulimit khi chạy container nếu cần thiết. Các giới hạn tài nguyên cần được điều chỉnh phù hợp với yêu cầu của từng container để cân bằng bảo mật và hiệu năng.} \\
+& Phải có default limit overwritten trong lúc chạy nếu cần thiết & Manual & Ghi đè default ulimit khi chạy container nếu cần thiết. Các giới hạn tài nguyên cần được điều chỉnh phù hợp với yêu cầu của từng container để cân bằng bảo mật và hiệu năng. \\
 \cline{2-4}
-& \textbf{Để mount propagation và host's UTS namespace bí mật(5.20,5.21)} & \textbf{Manual} & \textbf{Không đặt mount propagation ở chế độ shared và không chia sẻ UTS namespace của host. Shared mount propagation có thể cho phép container ảnh hưởng đến mount point của host; UTS namespace lộ hostname của host.} \\
+& Để mount propagation và host's UTS namespace bí mật(5.20,5.21) & Manual & Không đặt mount propagation ở chế độ shared và không chia sẻ UTS namespace của host. Shared mount propagation có thể cho phép container ảnh hưởng đến mount point của host; UTS namespace lộ hostname của host. \\
 \cline{2-4}
-& \textbf{Chế độ của default seccomp profile không tắt} & \textbf{Manual} & \textbf{Không vô hiệu hóa default seccomp profile. Seccomp lọc system calls của container; tắt seccomp để lộ toàn bộ kernel syscall interface và tăng rủi ro kernel exploit.} \\
+& Chế độ của default seccomp profile không tắt & Manual & Không vô hiệu hóa default seccomp profile. Seccomp lọc system calls của container; tắt seccomp để lộ toàn bộ kernel syscall interface và tăng rủi ro kernel exploit. \\
 \cline{2-4}
-& \textbf{Khi sử dụng docker exec commands, không sử dụng quyền priviledged option hoặc user=root(5.23,5.24)} & \textbf{Manual} & \textbf{Không dùng -\/-privileged hoặc -\/-user=root với lệnh docker exec. Các tùy chọn này cấp quyền cao nhất khi vào container đang chạy và có thể bị lạm dụng để thoát khỏi sandbox.} \\
+& Khi sử dụng docker exec commands, không sử dụng quyền priviledged option hoặc user=root(5.23,5.24) & Manual & Không dùng -\/-privileged hoặc -\/-user=root với lệnh docker exec. Các tùy chọn này cấp quyền cao nhất khi vào container đang chạy và có thể bị lạm dụng để thoát khỏi sandbox. \\
 \cline{2-4}
-& \textbf{Phải có cgroup usage} & \textbf{Manual} & \textbf{Xác nhận cgroup usage khi chạy container. Đảm bảo container chạy trong cgroup đã được xác định để kiểm soát và giám sát tài nguyên đúng cách.} \\
+& Phải có cgroup usage & Manual & Xác nhận cgroup usage khi chạy container. Đảm bảo container chạy trong cgroup đã được xác định để kiểm soát và giám sát tài nguyên đúng cách. \\
 \cline{2-4}
-& \textbf{Container chỉ cho quyền cần thiết và không thêm quyền không cần thiết} & \textbf{Manual} & \textbf{Hạn chế container không được nhận thêm đặc quyền (-\/-security-opt=no-new-privileges). Ngăn chặn leo thang đặc quyền thông qua suid/sgid bits trong runtime.} \\
+& Container chỉ cho quyền cần thiết và không thêm quyền không cần thiết & Manual & Hạn chế container không được nhận thêm đặc quyền (-\/-security-opt=no-new-privileges). Ngăn chặn leo thang đặc quyền thông qua suid/sgid bits trong runtime. \\
 \cline{2-4}
-& \textbf{Container health luôn chạy} & \textbf{Manual} & \textbf{Kiểm tra container health khi chạy bằng -\/-health-cmd nếu image không có HEALTHCHECK. Giám sát tình trạng container runtime giúp phát hiện và xử lý sự cố kịp thời.} \\
+& Container health luôn chạy & Manual & Kiểm tra container health khi chạy bằng -\/-health-cmd nếu image không có HEALTHCHECK. Giám sát tình trạng container runtime giúp phát hiện và xử lý sự cố kịp thời. \\
 \cline{2-4}
-& \textbf{Docker command phải sử dụng lệnh mới nhất của image} & \textbf{Manual} & \textbf{Luôn sử dụng image version mới nhất từ repository. Sử dụng image cũ đã cache có thể bỏ qua các bản vá bảo mật quan trọng đã được cập nhật trong image mới.} \\
+& Docker command phải sử dụng lệnh mới nhất của image & Manual & Luôn sử dụng image version mới nhất từ repository. Sử dụng image cũ đã cache có thể bỏ qua các bản vá bảo mật quan trọng đã được cập nhật trong image mới. \\
 \cline{2-4}
-& \textbf{PIDs cgroup limit phải được sử dụng} & \textbf{Manual} & \textbf{Sử dụng -\/-pids-limit flag khi chạy container. Giới hạn số lượng process trong container ngăn chặn tấn công fork bomb và bảo vệ host khỏi cạn kiệt tài nguyên PID.} \\
+& PIDs cgroup limit phải được sử dụng & Manual & Sử dụng -\/-pids-limit flag khi chạy container. Giới hạn số lượng process trong container ngăn chặn tấn công fork bomb và bảo vệ host khỏi cạn kiệt tài nguyên PID. \\
 \cline{2-4}
-& \textbf{Không sử dụng default bridge `docker0'} & \textbf{Manual} & \textbf{Không sử dụng default bridge network \textquotesingle docker0\textquotesingle. Thay vào đó dùng user-defined networks để có tên DNS tự động, cô lập tốt hơn và kiểm soát traffic chặt chẽ hơn.} \\
+& Không sử dụng default bridge `docker0' & Manual & Không sử dụng default bridge network \textquotesingle docker0\textquotesingle. Thay vào đó dùng user-defined networks để có tên DNS tự động, cô lập tốt hơn và kiểm soát traffic chặt chẽ hơn. \\
 \cline{2-4}
-& \textbf{Không chia sẽ host's user namespace} & \textbf{Manual} & \textbf{Không chia sẻ user namespace của host với container. Chia sẻ user namespace loại bỏ sự cô lập user giữa container và host, có thể cho phép root trong container ánh xạ tới root ngoài host.} \\
+& Không chia sẽ host's user namespace & Manual & Không chia sẻ user namespace của host với container. Chia sẻ user namespace loại bỏ sự cô lập user giữa container và host, có thể cho phép root trong container ánh xạ tới root ngoài host. \\
 \cline{2-4}
-& \textbf{Docker socker không được mount vào bất kỳ container nào} & \textbf{Manual} & \textbf{Không mount Docker socket (docker.sock) vào container. Mount Docker socket cho phép container kiểm soát toàn bộ Docker daemon, tương đương quyền root trên host.} \\
+& Docker socker không được mount vào bất kỳ container nào & Manual & Không mount Docker socket (docker.sock) vào container. Mount Docker socket cho phép container kiểm soát toàn bộ Docker daemon, tương đương quyền root trên host. \\
 \hline
-\multirow{2}{=}{\textbf{6}} & \textbf{Tránh Image sprawl} & \textbf{Manual} & \textbf{Tránh duy trì quá nhiều image không cần thiết trên cùng một host. Chỉ giữ lại các image đang được sử dụng với tag rõ ràng; xóa image cũ để giảm attack surface và tiết kiệm tài nguyên.} \\
+\multirow{2}{=}{6} & Tránh Image sprawl & Manual & Tránh duy trì quá nhiều image không cần thiết trên cùng một host. Chỉ giữ lại các image đang được sử dụng với tag rõ ràng; xóa image cũ để giảm attack surface và tiết kiệm tài nguyên. \\
 \cline{2-4}
-& \textbf{Tránh container sprawl} & \textbf{Manual} & \textbf{Tránh duy trì quá nhiều container không cần thiết trên cùng một host. Xóa container đã dừng và không dùng đến; số lượng container quá nhiều gây khó quản lý và tăng rủi ro bảo mật.} \\
+& Tránh container sprawl & Manual & Tránh duy trì quá nhiều container không cần thiết trên cùng một host. Xóa container đã dừng và không dùng đến; số lượng container quá nhiều gây khó quản lý và tăng rủi ro bảo mật. \\
 \hline
 \end{longtable}
 }

@@ -1,0 +1,35 @@
+\subsection{Code chi tiết cho Section 6}\label{phu-luc-code-section-6}
+
+\begin{enumerate}
+    \item \textbf{6.1 -- Loại bỏ Docker images dư thừa (Image sprawl):}
+    Dọn dẹp các images không còn được sử dụng bởi bất kỳ container nào:
+{\footnotesize
+\begin{verbatim}
+# Phương án 1: Dọn dẹp triệt để toàn bộ image không sử dụng
+docker image prune -a -f
+
+# Phương án 2: Dọn dẹp có chọn lọc (giữ lại các image mới hơn 30 ngày)
+docker image prune -a --filter "until=720h" -f
+
+# Thiết lập cron job để tự động dọn dẹp hàng tuần vào 3h sáng Chủ Nhật
+echo '0 3 * * 0 root docker image prune -a --filter "until=720h" -f >> /var/log/docker-prune.log 2>&1' | \
+  sudo tee -a /etc/cron.d/docker-cleanup
+\end{verbatim}
+}
+
+    \item \textbf{6.2 -- Loại bỏ các Docker container đã dừng (Container sprawl):}
+    Dọn dẹp các container mồ côi đã kết thúc phiên chạy:
+{\footnotesize
+\begin{verbatim}
+# Xóa bỏ tất cả các container đang ở trạng thái dừng
+docker container prune -f
+
+# Phòng ngừa: Khuyến khích sử dụng cờ --rm cho container chạy kiểm thử (one-off)
+docker run --rm <image_name> <command>
+
+# Thiết lập cron job tự động dọn container dừng cũ hơn 48 giờ hàng ngày lúc 4h sáng
+echo '0 4 * * * root docker container prune --filter "until=48h" -f >> /var/log/docker-prune.log 2>&1' | \
+  sudo tee -a /etc/cron.d/docker-cleanup
+\end{verbatim}
+}
+\end{enumerate}

@@ -22,15 +22,15 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 \end{minipage} \\
 \hline
 \endhead
-\multirow{4}{=}{\textbf{1}} & 1.1.3 - 1.1.18: Cấu hình kiểm toán tệp và thư mục. & Module \texttt{ansible.builtin.shell} và \texttt{ansible.builtin.stat}. & Trạng thái hoạt động của auditd và các quy tắc cấu hình khớp khuyến nghị. \\
+\multirow{4}{=}{1} & 1.1.3 - 1.1.18: Cấu hình kiểm toán tệp và thư mục. & Module \texttt{ansible.builtin.shell} và \texttt{ansible.builtin.stat}. & Trạng thái hoạt động của auditd và các quy tắc cấu hình khớp khuyến nghị. \\
 \cline{2-4}
 & 1.2.2: Kiểm tra phiên bản Docker. & Module \texttt{ansible.builtin.command} để gọi lệnh \texttt{docker version}. & Phiên bản Docker mới nhất được cập nhật và ghi nhận. \\
 \hline
-\textbf{2} & & & \\
+2 & & & \\
 \hline
-\textbf{3} & & & \\
+3 & & & \\
 \hline
-\multirow{5}{=}{\textbf{4}} & 4.1: Đảm bảo non-root user cho container. & Module \texttt{ansible.builtin.command} và \texttt{ansible.builtin.shell}; kiểm tra \texttt{docker inspect}. & Biến User từ docker inspect KHÔNG phải là: 0, root, [] hoặc \texttt{<no value>}. \\
+\multirow{5}{=}{4} & 4.1: Đảm bảo non-root user cho container. & Module \texttt{ansible.builtin.command} và \texttt{ansible.builtin.shell}; kiểm tra \texttt{docker inspect}. & Biến User từ docker inspect KHÔNG phải là: 0, root, [] hoặc \texttt{<no value>}. \\
 \cline{2-4}
 & 4.5: Bật Docker Content Trust. & Kiểm tra biến môi trường Docker Content Trust bằng shell. & Lệnh echo trả về đúng giá trị 1. \\
 \cline{2-4}
@@ -40,7 +40,7 @@ Kiểm toán tự động được thực hiện qua các playbook Ansible chạ
 \cline{2-4}
 & 4.9: Sử dụng COPY thay cho ADD. & Kiểm tra lịch sử build bằng \texttt{docker history}. & Không bắt được cờ FOUND (không có lệnh ADD) trong lịch sử build. \\
 \hline
-\multirow{2}{=}{\textbf{6}} & 6.1 - 6.2: Tránh image sprawl và container sprawl. & Module \texttt{ansible.builtin.command} để gọi các lệnh Docker CLI. & Xuất báo cáo đếm số lượng image và container dư thừa ở định dạng JSON. \\
+\multirow{2}{=}{6} & 6.1 - 6.2: Tránh image sprawl và container sprawl. & Module \texttt{ansible.builtin.command} để gọi các lệnh Docker CLI. & Xuất báo cáo đếm số lượng image và container dư thừa ở định dạng JSON. \\
 \hline
 \end{longtable}
 }

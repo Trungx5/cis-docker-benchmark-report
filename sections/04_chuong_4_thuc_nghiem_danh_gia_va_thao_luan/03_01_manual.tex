@@ -23,323 +23,190 @@ Khắc phục thủ công được áp dụng đối với các khuyến nghị 
 \hline
 \endhead
 
-\multirow{19}{=}{\textbf{1}} & \textbf{Phân vùng riêng cho các container} & \textbf{Tạo phân vùng LVM riêng và định dạng ext4} & \textbf{Dừng Docker, backup dữ liệu, mount phân vùng mới, cập nhật /etc/fstab, và khởi động lại Docker} \\
+\multirow{19}{=}{1} & Phân vùng riêng cho các container & Tạo phân vùng LVM riêng và định dạng ext4 & Dừng Docker, backup dữ liệu, mount phân vùng mới, cập nhật /etc/fstab, và khởi động lại Docker \\
 \cline{2-4}
-& \textbf{Chỉ cho trusted user kiểm soát Docker Daemon} & \textbf{Sử dụng gpasswd để xóa các user không được phép khỏi nhóm docker} & \textbf{Chạy lệnh sudo gpasswd -d <username> docker để gỡ bỏ user} \\
+& Chỉ cho trusted user kiểm soát Docker Daemon & Sử dụng gpasswd để xóa các user không được phép khỏi nhóm docker & Chạy lệnh sudo gpasswd -d <username> docker để gỡ bỏ user \\
 \cline{2-4}
-& \textbf{Cấu hình kiểm tra nhật ký cho Docker Daemon} & \textbf{Cấu hình audit rule cho dockerd trong docker.rules} & \textbf{Ghi cấu hình -w /usr/bin/dockerd -k docker và reload auditd} \\
+& Cấu hình kiểm tra nhật ký cho Docker Daemon & Cấu hình audit rule cho dockerd trong docker.rules & Ghi cấu hình -w /usr/bin/dockerd -k docker và reload auditd \\
 \cline{2-4}
-& \textbf{Audit folder /run/containerd} & \textbf{Cấu hình audit rule cho /run/containerd trong docker.rules} & \textbf{Ghi cấu hình -a exit,always -F path=/run/containerd -F perm=war -k docker và reload auditd} \\
+& Audit folder /run/containerd & Cấu hình audit rule cho /run/containerd trong docker.rules & Ghi cấu hình -a exit,always -F path=/run/containerd -F perm=war -k docker và reload auditd \\
 \cline{2-4}
-& \textbf{Audit folder /var/lib/docker} & \textbf{Cấu hình audit rule cho /var/lib/docker trong docker.rules} & \textbf{Ghi cấu hình -a exit,always -F path=/var/lib/docker -F perm=war -k docker và reload auditd} \\
+& Audit folder /var/lib/docker & Cấu hình audit rule cho /var/lib/docker trong docker.rules & Ghi cấu hình -a exit,always -F path=/var/lib/docker -F perm=war -k docker và reload auditd \\
 \cline{2-4}
-& \textbf{Audit folder /etc/Docker} & \textbf{Cấu hình audit rule cho /etc/docker trong docker.rules} & \textbf{Ghi cấu hình -w /etc/docker -k docker và reload auditd} \\
+& Audit folder /etc/Docker & Cấu hình audit rule cho /etc/docker trong docker.rules & Ghi cấu hình -w /etc/docker -k docker và reload auditd \\
 \cline{2-4}
-& \textbf{Audit docker.service} & \textbf{Cấu hình audit rule cho docker.service trong docker.rules} & \textbf{Ghi cấu hình -w /usr/lib/systemd/system/docker.service -k docker} \\
+& Audit docker.service & Cấu hình audit rule cho docker.service trong docker.rules & \begin{minipage}[t]{\linewidth}\raggedright
+Ghi cấu hình -w /usr/lib/systemd/\\
+system/docker.service -k docker\strut
+\end{minipage} \\
 \cline{2-4}
-& \textbf{Audt containerd.sock} & \textbf{Cấu hình audit rule cho containerd.sock trong docker.rules} & \textbf{Ghi cấu hình -w /run/containerd/containerd.sock -k docker} \\
+& Audt containerd.sock & Cấu hình audit rule cho containerd.sock trong docker.rules & Ghi cấu hình -w /run/containerd/containerd.sock -k docker \\
 \cline{2-4}
-& \textbf{Audit docker.sock} & \textbf{Cấu hình audit rule cho docker.sock trong docker.rules} & \textbf{Ghi cấu hình -w /run/docker.sock -k docker} \\
+& Audit docker.sock & Cấu hình audit rule cho docker.sock trong docker.rules & Ghi cấu hình -w /run/docker.sock -k docker \\
 \cline{2-4}
-& \textbf{Audt /etc/default/docker} & \textbf{Cấu hình audit rule cho /etc/default/docker trong docker.rules} & \textbf{Ghi cấu hình -w /etc/default/docker -k docker} \\
+& Audt /etc/default/docker & Cấu hình audit rule cho /etc/default/docker trong docker.rules & Ghi cấu hình -w /etc/default/docker -k docker \\
 \cline{2-4}
-& \textbf{Audit /etc/docker/daemon.json} & \textbf{Cấu hình audit rule cho /etc/docker/daemon.json trong docker.rules} & \textbf{Ghi cấu hình -w /etc/docker/daemon.json -k docker} \\
+& Audit /etc/docker/daemon.json & Cấu hình audit rule cho /etc/docker/daemon.json trong docker.rules & Ghi cấu hình -w /etc/docker/daemon.json -k docker \\
 \cline{2-4}
-& \textbf{Audit /etc/containerd/config.toml} & \textbf{Cấu hình audit rule cho /etc/containerd/config.toml} & \textbf{Ghi cấu hình -w /etc/containerd/config.toml -k docker} \\
+& Audit /etc/containerd/config.toml & Cấu hình audit rule cho /etc/containerd/config.toml & Ghi cấu hình -w /etc/containerd/config.toml -k docker \\
 \cline{2-4}
-& \textbf{Aduti /etc/sysconfig/docker} & \textbf{Cấu hình audit rule cho /etc/sysconfig/docker} & \textbf{Ghi cấu hình -w /etc/sysconfig/docker -k docker} \\
+& Aduti /etc/sysconfig/docker & Cấu hình audit rule cho /etc/sysconfig/docker & Ghi cấu hình -w /etc/sysconfig/docker -k docker \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/containerd-shim} & \textbf{Cấu hình audit rule cho /usr/bin/containerd-shim} & \textbf{Ghi cấu hình -w /usr/bin/containerd-shim -k docker} \\
+& Audit /usr/bin/containerd-shim & Cấu hình audit rule cho /usr/bin/containerd-shim & Ghi cấu hình -w /usr/bin/containerd-shim -k docker \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/containerd-shim-runc-v1} & \textbf{Cấu hình audit rule cho containerd-shim-runc-v1} & \textbf{Ghi cấu hình -w /usr/bin/containerd-shim-runc-v1 -k docker} \\
+& Audit /usr/bin/containerd-shim-runc-v1 & Cấu hình audit rule cho containerd-shim-runc-v1 & Ghi cấu hình -w /usr/bin/containerd-shim-runc-v1 -k docker \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/containerd-shim-runc-v2} & \textbf{Cấu hình audit rule cho containerd-shim-runc-v2} & \textbf{Ghi cấu hình -w /usr/bin/containerd-shim-runc-v2 -k docker} \\
+& Audit /usr/bin/containerd-shim-runc-v2 & Cấu hình audit rule cho containerd-shim-runc-v2 & Ghi cấu hình -w /usr/bin/containerd-shim-runc-v2 -k docker \\
 \cline{2-4}
-& \textbf{Audit /usr/bin/runc} & \textbf{Cấu hình audit rule cho runc} & \textbf{Ghi cấu hình -w /usr/bin/runc -k docker} \\
+& Audit /usr/bin/runc & Cấu hình audit rule cho runc & Ghi cấu hình -w /usr/bin/runc -k docker \\
 \cline{2-4}
-& \textbf{Đảm báo bảo mật cho container} & \textbf{Cấu hình hardening OS của container host} & \textbf{Cập nhật OS, tắt dịch vụ thừa, cấu hình SSH và tường lửa} \\
+& Đảm báo bảo mật cho container & Cấu hình hardening OS của container host & Cập nhật OS, tắt dịch vụ thừa, cấu hình SSH và tường lửa \\
 \cline{2-4}
-& \textbf{Đảm bảo phiên bản mới cho Docker kt} & \textbf{Cập nhật Docker lên phiên bản mới nhất} & \textbf{Cập nhật danh sách gói và chạy apt install --only-upgrade docker-ce} \\
+& Đảm bảo phiên bản mới cho Docker kt & Cập nhật Docker lên phiên bản mới nhất & Cập nhật danh sách gói và chạy apt install --only-upgrade docker-ce \\
 \hline
-\multirow{19}{=}{\textbf{2}} & \textbf{Chạy docker daemon tránh quyền root} & & \\
+\multirow{19}{=}{2} & Chạy docker daemon tránh quyền root & & \\
 \cline{2-4}
-& \textbf{Network trafic được đặt hạn chế giữa các container ở default bridge} & & \\
+& Network trafic được đặt hạn chế giữa các container ở default bridge & & \\
 \cline{2-4}
-& \textbf{Logging level set ở ``info''} & & \\
+& Logging level set ở ``info'' & & \\
 \cline{2-4}
-& \textbf{Docker được quyền thay đổi iptables} & & \\
+& Docker được quyền thay đổi iptables & & \\
 \cline{2-4}
-& \textbf{Đảm bảo không sử dụng registry không an toàn} & & \\
+& Đảm bảo không sử dụng registry không an toàn & & \\
 \cline{2-4}
-& \textbf{Đảm bảo không sử dụng trình điều khiển aufs} & & \\
+& Đảm bảo không sử dụng trình điều khiển aufs & & \\
 \cline{2-4}
-& \textbf{Đảm bảo không dùng devicemapper} & & \\
+& Đảm bảo không dùng devicemapper & & \\
 \cline{2-4}
-& \textbf{Đảm bảo xác thực TLS cho Docker Daemon} & & \\
+& Đảm bảo xác thực TLS cho Docker Daemon & & \\
 \cline{2-4}
-& \textbf{Đảm bảo giới hạn ulimit mặc định} & & \\
+& Đảm bảo giới hạn ulimit mặc định & & \\
 \cline{2-4}
-& \textbf{Hỗ trợ user namespace} & & \\
+& Hỗ trợ user namespace & & \\
 \cline{2-4}
-& \textbf{Cgroup sử dụng được xác nhận} & & \\
+& Cgroup sử dụng được xác nhận & & \\
 \cline{2-4}
-& \textbf{Đảm bảo device size không thay đổi trừ khi cần thiết} & & \\
+& Đảm bảo device size không thay đổi trừ khi cần thiết & & \\
 \cline{2-4}
-& \textbf{Đảm bảo authorization cho Docker client} & & \\
+& Đảm bảo authorization cho Docker client & & \\
 \cline{2-4}
-& \textbf{Đảm bảo container bj hạn chế không cho quyền mới} & & \\
+& Đảm bảo container bj hạn chế không cho quyền mới & & \\
 \cline{2-4}
-& \textbf{Đảm bảo container có live restore} & & \\
+& Đảm bảo container có live restore & & \\
 \cline{2-4}
-& \textbf{Đảm bảo có log cho đăng nhập gần và từ xa} & & \\
+& Đảm bảo có log cho đăng nhập gần và từ xa & & \\
 \cline{2-4}
-& \textbf{Đảm bảo Userland Proxy đã tắt} & & \\
+& Đảm bảo Userland Proxy đã tắt & & \\
 \cline{2-4}
-& \textbf{Đảm bảo daemon-wide custom seccomp profile được thiết đặt} & & \\
+& Đảm bảo daemon-wide custom seccomp profile được thiết đặt & & \\
 \cline{2-4}
-& \textbf{Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất} & & \\
+& Đảm bảo các tính năng thử nghiệm không được triển khai trong môi trường sản xuất & & \\
 \hline
-\multirow{14}{=}{\textbf{3}} & \textbf{Đảm bảo quyền root:root cho docker.service} & & \\
+\multirow{14}{=}{3} & Đảm bảo quyền root:root cho docker.service & & \\
 \cline{2-4}
-& \textbf{Đảm bảo docker.service cho quyền hợp lý} & & \\
+& Đảm bảo docker.service cho quyền hợp lý & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root} & & \\
+& Đảm bảo quyền sở hữu của docker.socket được đặt thành root:root & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế} & & \\
+& Đảm bảo quyền truy cập tệp docker.socket được đặt thành 644 hoặc hạn chế & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền sỡ hữu thư mục /etc/docker được đặt thành root:root} & & \\
+& Đảm bảo quyền sỡ hữu thư mục /etc/docker được đặt thành root:root & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế} & & \\
+& Đảm bảo quyền truy cập thư mục /etc/docker được đặt thành 755 hoặc hạn chế & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập tệ docker.socker được đặt thành 644 hoặc hạn chế} & & \\
+& Đảm bảo quyền truy cập tệ docker.socker được đặt thành 644 hoặc hạn chế & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền root:root cho sỡ hữu tệp chứng chỉ} & & \\
+& Đảm bảo quyền root:root cho sỡ hữu tệp chứng chỉ & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền truy cập chứng trí registry được đặt thành 444 hoặc hạn chế hơn} & & \\
+& Đảm bảo quyền truy cập chứng trí registry được đặt thành 444 hoặc hạn chế hơn & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền sỡ hữu Docker server là root:root và file permission 4444} & & \\
+& Đảm bảo quyền sỡ hữu Docker server là root:root và file permission 4444 & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền Docker socker file ownership là root:docker và để file permission 660} & & \\
+& Đảm bảo quyền Docker socker file ownership là root:docker và để file permission 660 & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền daemon.json là root:root và file permssion 644} & & \\
+& Đảm bảo quyền daemon.json là root:root và file permssion 644 & & \\
 \cline{2-4}
-& \textbf{Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644} & & \\
+& Đảm bảo quyền /etc/sysconfig/docker là root:root và file permission 644 & & \\
 \cline{2-4}
-& \textbf{Đảm bảo Containered socket có quyền là root:root và file permission 660} & & \\
+& Đảm bảo Containered socket có quyền là root:root và file permission 660 & & \\
 \hline
-\multirow{9}{=}{\textbf{4}} & \textbf{Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về.} & & \\
+\multirow{9}{=}{4} & Phải có container tạo, chạy trong trusted base images và không có package dư thừa không cần thiết được tải về. & & \\
 \cline{2-4}
-& \textbf{Đảm bảo image được scan và phải có security patches} & & \\
+& Đảm bảo image được scan và phải có security patches & & \\
 \cline{2-4}
-& \textbf{Phải có HEALTHCHECK instruction} & & \\
+& Phải có HEALTHCHECK instruction & & \\
 \cline{2-4}
-& \textbf{Phải có update instruction và không sử dụng một mình trong Dockerfiles} & & \\
+& Phải có update instruction và không sử dụng một mình trong Dockerfiles & & \\
 \cline{2-4}
-& \textbf{Không cung cấp quyền Setuid và Getuid} & & \\
+& Không cung cấp quyền Setuid và Getuid & & \\
 \cline{2-4}
-& \textbf{Dùng COPY thay vì ADD} & & \\
+& Dùng COPY thay vì ADD & & \\
 \cline{2-4}
-& \textbf{Secrets không được bỏ vào Dockerfiles} & & \\
+& Secrets không được bỏ vào Dockerfiles & & \\
 \cline{2-4}
-& \textbf{Các package phải chính thống khi tải về} & & \\
+& Các package phải chính thống khi tải về & & \\
 \cline{2-4}
-& \textbf{Các signed artifacts phải được kiểm chứng} & & \\
+& Các signed artifacts phải được kiểm chứng & & \\
 \hline
-\multirow{28}{=}{\textbf{5}} & \textbf{Không bật swarm mode nếu không cần thiết} & & \\
+\multirow{28}{=}{5} & Không bật swarm mode nếu không cần thiết & & \\
 \cline{2-4}
-& \textbf{Bật AppArmor Profile} & & \\
+& Bật AppArmor Profile & & \\
 \cline{2-4}
-& \textbf{Phải có SELinux} & & \\
+& Phải có SELinux & & \\
 \cline{2-4}
-& \textbf{Linux Kernel phải để chế độ hạn chế trong containers} & & \\
+& Linux Kernel phải để chế độ hạn chế trong containers & & \\
 \cline{2-4}
-& \textbf{Không sử dụng privileged container} & & \\
+& Không sử dụng privileged container & & \\
 \cline{2-4}
-& \textbf{Không mount các host system cần bảo vệ chặt trong container} & & \\
+& Không mount các host system cần bảo vệ chặt trong container & & \\
 \cline{2-4}
-& \textbf{SSHD không chạy trong containers} & & \\
+& SSHD không chạy trong containers & & \\
 \cline{2-4}
-& \textbf{Không chạy port đặc quyền trong container} & & \\
+& Không chạy port đặc quyền trong container & & \\
 \cline{2-4}
-& \textbf{Chỉ chạy port cần thiết cho container} & & \\
+& Chỉ chạy port cần thiết cho container & & \\
 \cline{2-4}
-& \textbf{Bảo mật network namespace} & & \\
+& Bảo mật network namespace & & \\
 \cline{2-4}
-& \textbf{Sử dụng tài nguyên hợp lý: Memory usage và CPU priority(5.11, 5.12)} & & \\
+& Sử dụng tài nguyên hợp lý: Memory usage và CPU priority(5.11, 5.12) & & \\
 \cline{2-4}
-& \textbf{Để filesystem của container's ở quyền ``read only''} & & \\
+& Để filesystem của container's ở quyền ``read only'' & & \\
 \cline{2-4}
-& \textbf{Mạng lưu thông phải đến một interface được đặt} & & \\
+& Mạng lưu thông phải đến một interface được đặt & & \\
 \cline{2-4}
-& \textbf{Có chính sách ``on-failure'' thì khởi động lại với giá trị 5} & & \\
+& Có chính sách ``on-failure'' thì khởi động lại với giá trị 5 & & \\
 \cline{2-4}
-& \textbf{Bảo mật Host's process namespace và IPC namespace(5.16, 5.17)} & & \\
+& Bảo mật Host's process namespace và IPC namespace(5.16, 5.17) & & \\
 \cline{2-4}
-& \textbf{Host Devices không nên tương tác chung với containers} & & \\
+& Host Devices không nên tương tác chung với containers & & \\
 \cline{2-4}
-& \textbf{Phải có default limit overwritten trong lúc chạy nếu cần thiết} & & \\
+& Phải có default limit overwritten trong lúc chạy nếu cần thiết & & \\
 \cline{2-4}
-& \textbf{Để mount propagation và host's UTS namespace bí mật(5.20,5.21)} & & \\
+& Để mount propagation và host's UTS namespace bí mật(5.20,5.21) & & \\
 \cline{2-4}
-& \textbf{Chế độ của default seccomp profile không tắt} & & \\
+& Chế độ của default seccomp profile không tắt & & \\
 \cline{2-4}
-& \textbf{Khi sử dụng docker exec commands, không sử dụng quyền priviledged option hoặc user=root(5.23,5.24)} & & \\
+& Khi sử dụng docker exec commands, không sử dụng quyền priviledged option hoặc user=root(5.23,5.24) & & \\
 \cline{2-4}
-& \textbf{Phải có cgroup usage} & & \\
+& Phải có cgroup usage & & \\
 \cline{2-4}
-& \textbf{Container chỉ cho quyền cần thiết và không thêm quyền không cần thiết} & & \\
+& Container chỉ cho quyền cần thiết và không thêm quyền không cần thiết & & \\
 \cline{2-4}
-& \textbf{Container health luôn chạy} & & \\
+& Container health luôn chạy & & \\
 \cline{2-4}
-& \textbf{Docker command phải sử dụng lệnh mới nhất của image} & & \\
+& Docker command phải sử dụng lệnh mới nhất của image & & \\
 \cline{2-4}
-& \textbf{PIDs cgroup limit phải được sử dụng} & & \\
+& PIDs cgroup limit phải được sử dụng & & \\
 \cline{2-4}
-& \textbf{Không sử dụng default bridge `docker0'} & & \\
+& Không sử dụng default bridge `docker0' & & \\
 \cline{2-4}
-& \textbf{Không chia sẽ host's user namespace} & & \\
+& Không chia sẽ host's user namespace & & \\
 \cline{2-4}
-& \textbf{Docker socker không được mount vào bất kỳ container nào} & & \\
+& Docker socker không được mount vào bất kỳ container nào & & \\
 \hline
-\multirow{2}{=}{\textbf{6}} & \textbf{Tránh Image sprawl} & \textbf{Xóa bỏ các images không sử dụng thủ công} & \textbf{Chạy lệnh docker image prune -a --force} \\
+\multirow{2}{=}{6} & Tránh Image sprawl & Xóa bỏ các images không sử dụng thủ công & Chạy lệnh docker image prune -a --force \\
 \cline{2-4}
-& \textbf{Tránh container sprawl} & \textbf{Xóa bỏ các containers đã dừng thủ công} & \textbf{Chạy lệnh docker container prune --force} \\
+& Tránh container sprawl & Xóa bỏ các containers đã dừng thủ công & Chạy lệnh docker container prune --force \\
 \hline
 \end{longtable}
 }
-
-\noindent\textbf{Chi tiết quy trình khắc phục thủ công (Manual Remediation) cho Section 1 và Section 6:}
-
-Dưới đây là chi tiết các bước và câu lệnh CLI được quản trị viên hệ thống chạy thủ công trực tiếp để khắc phục các lỗi cấu hình bảo mật được phát hiện trong Section 1 và Section 6:
-
-\noindent\textbf{Section 1 -- Host Configuration (Manual Remediation)}
-
-\begin{enumerate}
-    \item \textbf{1.1.1 -- Tạo phân vùng Docker riêng:}
-    Nếu thư mục gốc của Docker (\texttt{/var/lib/docker}) nằm chung phân vùng hệ thống, hãy di chuyển nó sang một phân vùng riêng (ví dụ dùng LVM):
-{\footnotesize
-\begin{verbatim}
-# Bước 1: Tạo logical volume mới và định dạng ext4
-sudo lvcreate -L 50G -n docker vg_data
-sudo mkfs.ext4 /dev/vg_data/docker
-
-# Bước 2: Dừng dịch vụ Docker để tránh ghi đè dữ liệu
-sudo systemctl stop docker
-
-# Bước 3: Sao lưu dữ liệu Docker hiện tại sang thư mục tạm thời
-sudo cp -rp /var/lib/docker /var/lib/docker.bak
-
-# Bước 4: Mount phân vùng mới vào thư mục gốc của Docker
-sudo mount /dev/vg_data/docker /var/lib/docker
-
-# Bước 5: Cấu hình mount tự động khi khởi động lại hệ thống trong /etc/fstab
-echo '/dev/vg_data/docker /var/lib/docker ext4 defaults 0 2' | sudo tee -a /etc/fstab
-
-# Bước 6: Khởi chạy lại Docker dịch vụ
-sudo systemctl start docker
-\end{verbatim}
-}
-
-    \item \textbf{1.1.2 -- Chỉ cho phép người dùng tin cậy kiểm soát Docker daemon:}
-    Gỡ bỏ những tài khoản không cần thiết khỏi nhóm \texttt{docker}:
-{\footnotesize
-\begin{verbatim}
-sudo gpasswd -d <untrusted_user> docker
-\end{verbatim}
-}
-
-    \item \textbf{1.1.3 đến 1.1.18 -- Khắc phục cấu hình kiểm toán (Auditing Rules):}
-    Cài đặt dịch vụ \texttt{auditd} và ghi đè các cấu hình rules chuẩn bảo mật của Docker daemon và các tệp cấu hình:
-{\footnotesize
-\begin{verbatim}
-# Bước 1: Cài đặt gói auditd
-sudo apt install -y auditd
-
-# Bước 2: Ghi danh sách rules bảo mật vào tệp cấu hình quy tắc của auditd
-sudo tee /etc/audit/rules.d/docker.rules << 'EOF'
--w /usr/bin/dockerd -k docker
--a exit,always -F path=/run/containerd -F perm=war -k docker
--a exit,always -F path=/var/lib/docker -F perm=war -k docker
--w /etc/docker -k docker
--w /usr/lib/systemd/system/docker.service -k docker
--w /run/containerd/containerd.sock -k docker
--w /lib/systemd/system/docker.socket -k docker
--w /etc/default/docker -k docker
--w /etc/docker/daemon.json -k docker
--w /etc/containerd/config.toml -k docker
--w /usr/bin/containerd-shim-runc-v2 -k docker
--w /usr/bin/runc -k docker
--w /run/docker.sock -k docker
-EOF
-
-# Bước 3: Tải lại cấu hình quy tắc của auditd
-sudo augenrules --load
-\end{verbatim}
-}
-
-    \item \textbf{1.2.1 -- Làm cứng (Hardening) hệ điều hành Host:}
-    Thực hiện các biện pháp làm cứng hệ thống cơ bản dựa trên báo cáo của Lynis:
-{\footnotesize
-\begin{verbatim}
-# 1. Kích hoạt và cấu hình tường lửa cơ bản (UFW)
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 22/tcp # Đảm bảo không khóa SSH
-sudo ufw enable
-
-# 2. Vô hiệu hóa các dịch vụ mạng không cần thiết
-sudo systemctl disable --now avahi-daemon
-sudo systemctl disable --now cups
-
-# 3. Làm cứng dịch vụ SSH (tắt root login trực tiếp)
-sudo sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
-sudo systemctl restart sshd
-\end{verbatim}
-}
-
-    \item \textbf{1.2.2 -- Cập nhật phiên bản Docker lên bản mới nhất:}
-    Nâng cấp các gói phần mềm liên quan đến Docker Engine:
-{\footnotesize
-\begin{verbatim}
-sudo apt update
-sudo apt upgrade -y docker-ce docker-ce-cli containerd.io \
-  docker-buildx-plugin docker-compose-plugin
-\end{verbatim}
-}
-\end{enumerate}
-
-\noindent\textbf{Section 6 -- Docker Security Operations (Manual Remediation)}
-
-\begin{enumerate}
-    \item \textbf{6.1 -- Loại bỏ Docker images dư thừa (Image sprawl):}
-    Dọn dẹp các images không còn được sử dụng bởi bất kỳ container nào:
-{\footnotesize
-\begin{verbatim}
-# Phương án 1: Dọn dẹp triệt để toàn bộ image không sử dụng
-docker image prune -a -f
-
-# Phương án 2: Dọn dẹp có chọn lọc (giữ lại các image mới hơn 30 ngày)
-docker image prune -a --filter "until=720h" -f
-
-# Thiết lập cron job để tự động dọn dẹp hàng tuần vào 3h sáng Chủ Nhật
-echo '0 3 * * 0 root docker image prune -a --filter "until=720h" -f >> /var/log/docker-prune.log 2>&1' | \
-  sudo tee -a /etc/cron.d/docker-cleanup
-\end{verbatim}
-}
-
-    \item \textbf{6.2 -- Loại bỏ các Docker container đã dừng (Container sprawl):}
-    Dọn dẹp các container mồ côi đã kết thúc phiên chạy:
-{\footnotesize
-\begin{verbatim}
-# Xóa bỏ tất cả các container đang ở trạng thái dừng
-docker container prune -f
-
-# Phòng ngừa: Khuyến khích sử dụng cờ --rm cho container chạy kiểm thử (one-off)
-docker run --rm <image_name> <command>
-
-# Thiết lập cron job tự động dọn container dừng cũ hơn 48 giờ hàng ngày lúc 4h sáng
-echo '0 4 * * * root docker container prune --filter "until=48h" -f >> /var/log/docker-prune.log 2>&1' | \
-  sudo tee -a /etc/cron.d/docker-cleanup
-\end{verbatim}
-}
-\end{enumerate}

@@ -1,0 +1,99 @@
+\subsection{Code chi tiết cho Section 1}\label{phu-luc-code-section-1}
+
+\noindent\textbf{Chi tiết quy trình khắc phục thủ công (Manual Remediation) cho Section 1 và Section 6:}
+
+Dưới đây là chi tiết các bước và câu lệnh CLI được quản trị viên hệ thống chạy thủ công trực tiếp để khắc phục các lỗi cấu hình bảo mật được phát hiện trong Section 1 và Section 6:
+
+\begin{enumerate}
+    \item \textbf{1.1.1 -- Tạo phân vùng Docker riêng:}
+    Nếu thư mục gốc của Docker (\texttt{/var/lib/docker}) nằm chung phân vùng hệ thống, hãy di chuyển nó sang một phân vùng riêng (ví dụ dùng LVM):
+{\footnotesize
+\begin{verbatim}
+# Bước 1: Tạo logical volume mới và định dạng ext4
+sudo lvcreate -L 50G -n docker vg_data
+sudo mkfs.ext4 /dev/vg_data/docker
+
+# Bước 2: Dừng dịch vụ Docker để tránh ghi đè dữ liệu
+sudo systemctl stop docker
+
+# Bước 3: Sao lưu dữ liệu Docker hiện tại sang thư mục tạm thời
+sudo cp -rp /var/lib/docker /var/lib/docker.bak
+
+# Bước 4: Mount phân vùng mới vào thư mục gốc của Docker
+sudo mount /dev/vg_data/docker /var/lib/docker
+
+# Bước 5: Cấu hình mount tự động khi khởi động lại hệ thống trong /etc/fstab
+echo '/dev/vg_data/docker /var/lib/docker ext4 defaults 0 2' | sudo tee -a /etc/fstab
+
+# Bước 6: Khởi chạy lại Docker dịch vụ
+sudo systemctl start docker
+\end{verbatim}
+}
+
+    \item \textbf{1.1.2 -- Chỉ cho phép người dùng tin cậy kiểm soát Docker daemon:}
+    Gỡ bỏ những tài khoản không cần thiết khỏi nhóm \texttt{docker}:
+{\footnotesize
+\begin{verbatim}
+sudo gpasswd -d <untrusted_user> docker
+\end{verbatim}
+}
+
+    \item \textbf{1.1.3 đến 1.1.18 -- Khắc phục cấu hình kiểm toán (Auditing Rules):}
+    Cài đặt dịch vụ \texttt{auditd} và ghi đè các cấu hình rules chuẩn bảo mật của Docker daemon và các tệp cấu hình:
+{\footnotesize
+\begin{verbatim}
+# Bước 1: Cài đặt gói auditd
+sudo apt install -y auditd
+
+# Bước 2: Ghi danh sách rules bảo mật vào tệp cấu hình quy tắc của auditd
+sudo tee /etc/audit/rules.d/docker.rules << 'EOF'
+-w /usr/bin/dockerd -k docker
+-a exit,always -F path=/run/containerd -F perm=war -k docker
+-a exit,always -F path=/var/lib/docker -F perm=war -k docker
+-w /etc/docker -k docker
+-w /usr/lib/systemd/system/docker.service -k docker
+-w /run/containerd/containerd.sock -k docker
+-w /lib/systemd/system/docker.socket -k docker
+-w /etc/default/docker -k docker
+-w /etc/docker/daemon.json -k docker
+-w /etc/containerd/config.toml -k docker
+-w /usr/bin/containerd-shim-runc-v2 -k docker
+-w /usr/bin/runc -k docker
+-w /run/docker.sock -k docker
+EOF
+
+# Bước 3: Tải lại cấu hình quy tắc của auditd
+sudo augenrules --load
+\end{verbatim}
+}
+
+    \item \textbf{1.2.1 -- Làm cứng (Hardening) hệ điều hành Host:}
+    Thực hiện các biện pháp làm cứng hệ thống cơ bản dựa trên báo cáo của Lynis:
+{\footnotesize
+\begin{verbatim}
+# 1. Kích hoạt và cấu hình tường lửa cơ bản (UFW)
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp # Đảm bảo không khóa SSH
+sudo ufw enable
+
+# 2. Vô hiệu hóa các dịch vụ mạng không cần thiết
+sudo systemctl disable --now avahi-daemon
+sudo systemctl disable --now cups
+
+# 3. Làm cứng dịch vụ SSH (tắt root login trực tiếp)
+sudo sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sudo systemctl restart sshd
+\end{verbatim}
+}
+
+    \item \textbf{1.2.2 -- Cập nhật phiên bản Docker lên bản mới nhất:}
+    Nâng cấp các gói phần mềm liên quan đến Docker Engine:
+{\footnotesize
+\begin{verbatim}
+sudo apt update
+sudo apt upgrade -y docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin
+\end{verbatim}
+}
+\end{enumerate}
