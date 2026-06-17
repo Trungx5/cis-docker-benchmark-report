@@ -38,4 +38,5 @@ Notes:
 - Every table uses vertical rules, horizontal rules, and an outer border.
 - Every table remains portrait and uses the full text width.
 - Empty `longtable` footer rules were removed so table bottoms use the normal final-row `\\` plus `\hline` pattern without detached footer lines or vertical overhangs.
+- In the Chapter 3 activity tables, the `Phần` column is grouped by section number; internal row separators use `\cline{2-4}` so the `Phần` cell is split only at sections 1, 2, 3, 4, 5, and 6.
 - Wide tables still produce normal underfull-cell layout warnings because the source contains narrow columns and long technical text. These are layout warnings, not table-loss or build failures.
