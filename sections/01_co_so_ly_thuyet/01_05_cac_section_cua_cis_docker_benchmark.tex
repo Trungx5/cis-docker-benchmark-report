@@ -1,0 +1,30 @@
+\subsubsection{Các Section của CIS Docker Benchmark}\label{cuxe1c-section-cux1ee7a-cis-docker-benchmark}
+
+\begin{quote}
+CIS Docker Benchmark được tổ chức thành 7 Section:
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\item
+  Host Configuration: Kiểm soát máy chủ chạy Docker trước khi cài đặt, bao gồm tạo phân vùng riêng cho /var/lib/docker, cấu hình auditd ghi nhật ký hoạt động Docker và kiểm soát danh sách người dùng trong nhóm Docker.
+\item
+  Docker Daemon Configuration: Kiểm soát các tham số khởi động của dockerd, bao gồm bật xác thực TLS, bật user namespace, hạn chế lưu lượng mạng giữa các con- tainer.
+\item
+  Docker Daemon Configuration Files: Kiểm tra quyền sở hữu và phân quyền truy cập của tất cả file cấu hình liên quan đến Docker daemon như docker.service, docker.socket,
+\end{enumerate}
+
+\begin{quote}
+...
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\setcounter{enumi}{3}
+\item
+  Container Images và Build Files: tập trung vào bảo mật trong giai đoạn xây dựng như Content Trust, HEALTHCHECK,...
+\item
+  Container Runtime: Kiểm tra bảo mật trong lúc container đang chạy như kiểm cờ --privieged, không mount thư mục nhạy cảm,...
+\item
+  Docker Security Operations: Quy trình, thực hành vận hành. Tất cả các khuyến nghị trong mục này đều yêu cầu kiểm tra thủ công (manual), chủ yếu xoay quanh quy trình kiểm tra và cập nhật image định kỳ.
+\end{enumerate}

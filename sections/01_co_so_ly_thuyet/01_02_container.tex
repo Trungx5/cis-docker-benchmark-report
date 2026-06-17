@@ -1,0 +1,58 @@
+\subsubsection{Container}\label{container}
+
+\begin{quote}
+Container là một đơn vị phần mềm tiêu chuẩn hóa đóng gói toàn bộ những gì cần thiết để chạy một ứng dụng: mã nguồn, runtime, thư viện hệ thống và các tệp cấu hình. Container đảm bảo ứng dụng chạy nhất quán trên mọi môi trường - từ máy tính cá nhân của nhà phát triển đến môi trường production trên cloud.
+
+Về mặt kỹ thuật, container Linux được xây dựng trên hai tính năng cốt lõi của kernel Linux:
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\item
+  Namespaces: Cung cấp sự cách ly tài nguyên giữa các container. Docker sử dụng sáu loại namespace chính:
+\end{enumerate}
+
+\begin{quote}
+\(\diamond\) pid - Cách ly không gian process ID.
+
+\(\diamond\) net - Cách ly network interface.
+
+\(\diamond\) mnt - Cách ly filesystem mount points.
+
+\(\diamond\) uts - Cách ly hostname và domain name.
+
+\(\diamond\) ipc - Cách ly inter-process communication.
+
+\(\diamond\) user - Ánh xạ UID/GID giữa container và host.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\setcounter{enumi}{1}
+\item
+  Control Groups (cgroups): Cung cấp cơ chế giới hạn và giám sát tài nguyên (CPU, RAM, I/O, network bandwidth) mà một container được phép sử dụng, ngăn chặn một container chiếm dụng toàn bộ tài nguyên host (tấn công resource exhaustion).
+\end{enumerate}
+
+\begin{quote}
+Vòng đời của một container trải qua các trạng thái sau:
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Created: Container được tạo từ image nhưng chưa chạy.
+\item
+  Running: Container đang thực thi tiến trình chính.
+\item
+  Paused: Container bị tạm dừng, tiến trình bị đóng băng.
+\item
+  Stopped: Tiến trình chính kết thúc, container dừng lại.
+\item
+  Deleted: Container bị xóa khỏi hệ thống.
+\end{enumerate}
+
+\begin{quote}
+Từ góc độ bảo mật, mỗi container tuân thủ nguyên tắc least privilege - chỉ được cấp đúng những quyền, tài nguyên và khả năng truy cập tối thiểu cần thiết để thực hiện chức năng của mình. Đây là nền tảng lý thuyết cho toàn bộ các khuyến nghị trong CIS Docker
+\end{quote}
+
+\protect\phantomsection\label{CIS_Docker_Benchmark}{}

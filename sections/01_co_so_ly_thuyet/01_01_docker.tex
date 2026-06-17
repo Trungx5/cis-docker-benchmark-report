@@ -1,0 +1,53 @@
+\subsubsection{Docker}\label{docker}
+
+\begin{quote}
+Docker là một nền tảng mã nguồn mở cho phép các nhà phát triển xây dựng, đóng gói và triển khai ứng dụng dưới dạng \textbf{container}. Docker nhanh chóng trở thành tiêu chuẩn công nghiệp cho việc ảo hóa ở cấp độ ứng dụng, khác biệt hoàn toàn so với ảo hóa máy ảo (Virtual Machine) truyền thống.
+
+Docker hoạt động dựa trên kiến trúc client-server, gồm ba thành phần cốt lõi:
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{(\arabic{enumi})}
+\item
+  Docker Daemon : Tiến trình nền quản lý toàn bộ container, image, network, volume. Daemon lắng nghe các yêu cầu từ Docker Client thông qua REST API.
+\item
+  Docker Client: Công cụ CLI để người dùng tương tác với daemon thông qua các lệnh như docker run, docker build, docker pull
+\item
+  Docker Registry: Kho lưu trữ và phân phối Docker Image. Registry phổ biến nhất là Docker Hub.
+\end{enumerate}
+
+\begin{quote}
+So với máy ảo truyền thống, Docker container chia sẻ kernel với hệ điều hành host thay vì chạy một kernel riêng biệt. Điều này giúp container khởi động nhanh hơn, tiêu thụ ít tài nguyên hơn, nhưng đồng thời tạo ra bề mặt tấn công chung - một container bị xâm phạm có thể ảnh hưởng đến host hoặc các container khác nếu không được cách ly đúng cách.
+\end{quote}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}|
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.2558}}|
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.3721}}|
+  >{\centering\arraybackslash}p{(\linewidth - 6\tabcolsep - 4\arrayrulewidth) * \real{0.3721}}|@{}}
+\hline
+\begin{minipage}[b]{\linewidth}\raggedright
+\protect\phantomsection\label{_bookmark14}{}\textbf{Tiêu chí}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Container}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+\textbf{Máy ảo (VM)}
+\end{minipage} \\
+\hline
+\endhead
+Kernel & Chia sẻ với host & Kernel riêng biệt \\
+\hline
+Thời gian khởi động & Vài giây & Vài phút \\
+\hline
+Dung lượng & MB & GB \\
+\hline
+Cách ly & Cấp tiến trình & Cấp phần cứng \\
+\hline
+Bảo mật & Phụ thuộc cấu hình & Cách ly mạnh hơn \\
+\hline
+\end{longtable}
+}
+
+\begin{quote}
+Bảng 2.1. So sánh Container và Máy ảo
+\end{quote}

@@ -1,0 +1,83 @@
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage{unicode-math}
+\defaultfontfeatures{Scale=MatchLowercase}
+\defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{longtable,booktabs,array}
+\newcounter{none}
+\usepackage{multirow}
+\usepackage{calc}
+\usepackage{etoolbox}
+\usepackage{graphicx}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{}
+\urlstyle{same}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+\raggedbottom
+\setlength{\emergencystretch}{3em}
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\setlength{\tabcolsep}{3pt}
+\setlength{\arrayrulewidth}{0.45pt}
+\setlength{\extrarowheight}{2pt}
+\renewcommand{\arraystretch}{1.14}
+
+\newcommand{\TableFont}{\footnotesize}
+\AtBeginEnvironment{longtable}{\TableFont\sloppy}
+\AtEndEnvironment{longtable}{\normalsize\fussy}
+
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{%
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi%
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+\def\fps@figure{htbp}
+\makeatother
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\newcommand{\chaptersection}[1]{%
+  \refstepcounter{section}%
+  \section*{Chương \thesection.\ #1}%
+  \phantomsection%
+  \addcontentsline{toc}{section}{Chương \thesection.\ #1}%
+}
+
+\newcommand{\appendixsection}[1]{%
+  \section*{Phụ lục A.\ #1}%
+  \phantomsection%
+  \addcontentsline{toc}{section}{Phụ lục A.\ #1}%
+}
+
+\hypersetup{
+  pdftitle={Automatic Report},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}

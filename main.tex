@@ -1,0 +1,54 @@
+﻿% !TEX program = xelatex
+\documentclass[11pt,a4paper]{article}
+\input{preamble.tex}
+
+\begin{document}
+
+% Front page first.
+\input{sections/00_front_matter/00_cover.tex}
+\clearpage
+\setcounter{page}{2}
+
+% Front matter.
+\input{sections/00_front_matter/01_loi_cam_on.tex}
+\clearpage
+\input{sections/00_front_matter/02_tom_tat.tex}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Mục lục}
+\tableofcontents
+\clearpage
+\input{sections/00_front_matter/03_danh_muc_bang.tex}
+\clearpage
+\input{sections/00_front_matter/04_danh_muc_hinh.tex}
+\clearpage
+\input{sections/00_front_matter/05_danh_muc_tu_viet_tat.tex}
+\clearpage
+
+% Main sections.
+\input{sections/01_mo_dau/00_section.tex}
+\input{sections/01_mo_dau/01_gioi_thieu_tong_quan.tex}
+\input{sections/01_mo_dau/01_01_gioi_thieu_muc_dich.tex}
+\input{sections/01_mo_dau/01_02_tong_quan_va_yeu_cau_cua_do_an.tex}
+\input{sections/01_mo_dau/01_03_cau_truc_bai_viet.tex}
+\input{sections/01_co_so_ly_thuyet/00_section.tex}
+\input{sections/01_co_so_ly_thuyet/01_cac_thanh_phan_docker.tex}
+\input{sections/01_co_so_ly_thuyet/01_01_docker.tex}
+\input{sections/01_co_so_ly_thuyet/01_02_container.tex}
+\input{sections/01_co_so_ly_thuyet/02_cis_docker_benchmark.tex}
+\input{sections/01_co_so_ly_thuyet/01_03_cis_benchmark.tex}
+\input{sections/01_co_so_ly_thuyet/01_04_automated_vs_manual.tex}
+\input{sections/01_co_so_ly_thuyet/01_05_cac_section_cua_cis_docker_benchmark.tex}
+\input{sections/03_phuong_phap_thuc_hien/00_section.tex}
+\input{sections/03_phuong_phap_thuc_hien/01_cong_cu_su_dung.tex}
+\input{sections/03_phuong_phap_thuc_hien/02_cac_hoat_dong_automatic.tex}
+\input{sections/04_chuong_4_thuc_nghiem_danh_gia_va_thao_luan/00_section.tex}
+\input{sections/04_chuong_4_thuc_nghiem_danh_gia_va_thao_luan/01_01_noi_dung_1.tex}
+\input{sections/05_chuong_5_ket_luan_va_huong_phat_trien/00_section.tex}
+\input{sections/05_chuong_5_ket_luan_va_huong_phat_trien/01_01_ket_luan.tex}
+\input{sections/05_chuong_5_ket_luan_va_huong_phat_trien/01_02_han_che.tex}
+\input{sections/05_chuong_5_ket_luan_va_huong_phat_trien/01_03_huong_phat_trien.tex}
+\input{sections/appendix_phu_luc_a/00_section.tex}
+\input{sections/99_tai_lieu_tham_khao.tex}
+
+\end{document}
